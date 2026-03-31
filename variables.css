@@ -1,0 +1,241 @@
+/* ============================================================
+   Recruiting Intelligence System — Design Tokens
+   Источник: прототипы vacancy.html, candidate.html, roadmap.html, compare.html
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Light Theme (default) ───────────────────────────────── */
+:root {
+  /* Brand */
+  --amber:            #E8920A;
+  --amber-bg:         #FEF3DC;
+  --amber-border:     #F0A830;
+  --amber-dark:       #A06200;
+  --amber-darker:     #7A4500;
+
+  /* Backgrounds */
+  --bg-primary:       #ffffff;
+  --bg-secondary:     #f5f5f5;
+  --bg-tertiary:      #eeeeee;
+
+  /* Borders */
+  --border-tertiary:  rgba(0, 0, 0, 0.07);
+  --border-secondary: rgba(0, 0, 0, 0.11);
+  --border-primary:   rgba(0, 0, 0, 0.18);
+
+  /* Text */
+  --text-primary:     #111111;
+  --text-secondary:   #555555;
+  --text-tertiary:    #999999;
+
+  /* Navigation bar */
+  --nav-bg:           #E8920A;
+  --nav-border:       #C97A08;
+  --nav-height:       52px;
+  --nav-item-active:  rgba(255, 255, 255, 0.88);
+  --nav-item-hover:   rgba(255, 255, 255, 0.18);
+  --nav-text:         rgba(255, 255, 255, 0.9);
+  --nav-text-dim:     rgba(255, 255, 255, 0.6);
+
+  /* Sidebar */
+  --sidebar-bg:       #ffffff;
+  --sidebar-width:    220px;
+
+  /* Dropdown */
+  --dd-bg:            #ffffff;
+
+  /* Requirements chips */
+  --req-bg:           #FFF4E0;  /* MIN — обязательные */
+  --req-color:        #7A4500;
+  --req-border:       #E8920A;
+
+  --opt-bg:           #EDF4FF;  /* MAX — желательные */
+  --opt-color:        #1a4d8c;
+  --opt-border:       #6FA3DC;
+
+  /* Neutral chips */
+  --chip-bg:          #f0f0f0;
+  --chip-color:       #666666;
+  --chip-border:      #dddddd;
+
+  /* Chip variants */
+  --chip-amber-bg:    #FEF3DC;
+  --chip-amber-color: #8C5A00;
+  --chip-amber-border:#F0A830;
+
+  --chip-blue-bg:     #E6F1FB;
+  --chip-blue-color:  #0C447C;
+  --chip-blue-border: #B5D4F4;
+
+  --chip-green-bg:    #EAF3DE;
+  --chip-green-color: #27500A;
+  --chip-green-border:#C0DD97;
+
+  /* Match colours (±-лист сравнения) */
+  --match:            #22c55e;
+  --match-dim:        rgba(34, 197, 94, 0.13);
+  --match-dim2:       rgba(34, 197, 94, 0.22);
+  --gap:              #ef4444;
+  --gap-dim:          rgba(239, 68, 68, 0.13);
+  --gap-dim2:         rgba(239, 68, 68, 0.22);
+  --extra:            #a78bfa;
+  --extra-dim:        rgba(167, 139, 250, 0.13);
+  --extra-dim2:       rgba(167, 139, 250, 0.22);
+
+  /* Vacancy vs Candidate accent */
+  --vac-color:        #E8920A; /* amber */
+  --vac-dim:          rgba(240, 160, 48, 0.14);
+  --cand-color:       #5b9cf6; /* blue */
+  --cand-dim:         rgba(91, 156, 246, 0.14);
+
+  /* Grades */
+  --c-intern:         #94a3b8;  --bg-intern: #f1f5f9;   --tx-intern: #475569;
+  --c-jun:            #22c55e;  --bg-jun:    #eaf7f0;   --tx-jun:    #0a5c3a;   --bd-jun: #9FE1CB;
+  --c-mid:            #5b9cf6;  --bg-mid:    #e6f1fb;   --tx-mid:    #0c447c;   --bd-mid: #B5D4F4;
+  --c-sen:            #f0a030;  --bg-sen:    #fef3dc;   --tx-sen:    #7a4500;   --bd-sen: #F0A830;
+  --c-lea:            #e0234e;  --bg-lea:    #fbeaf0;   --tx-lea:    #8c0025;   --bd-lea: #ED93B1;
+  --c-pri:            #9333ea;  --bg-pri:    #f3e8ff;   --tx-pri:    #581c87;
+
+  /* Status */
+  --status-open-bg:      #dcfce7;  --status-open-color:      #166534;
+  --status-closed-bg:    #f1f5f9;  --status-closed-color:    #475569;
+  --status-offer-bg:     #fef9c3;  --status-offer-color:     #854d0e;
+  --status-hired-bg:     #d1fae5;  --status-hired-color:     #065f46;
+
+  /* Modal */
+  --modal-overlay:    rgba(0, 0, 0, 0.4);
+  --modal-bg:         #ffffff;
+
+  /* Card */
+  --card-bg:          #ffffff;
+  --card-border:      rgba(0, 0, 0, 0.08);
+  --card-shadow:      0 2px 8px rgba(0, 0, 0, 0.08);
+  --card-shadow-hover:0 4px 16px rgba(0, 0, 0, 0.14);
+
+  /* Geometry */
+  --radius-sm:        4px;
+  --radius-md:        8px;
+  --radius-lg:        12px;
+  --radius-xl:        16px;
+  --radius-pill:      999px;
+
+  /* Typography */
+  --font-sans:        'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:        'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Z-index layers */
+  --z-nav:            20;
+  --z-dropdown:       200;
+  --z-modal:          400;
+  --z-toast:          600;
+}
+
+/* ── Dark Theme ───────────────────────────────────────────── */
+[data-theme="dark"] {
+  --amber-bg:         #2e1f00;
+  --amber-border:     #7a5200;
+
+  --bg-primary:       #1a1a1a;
+  --bg-secondary:     #222222;
+  --bg-tertiary:      #141414;
+
+  --border-tertiary:  rgba(255, 255, 255, 0.07);
+  --border-secondary: rgba(255, 255, 255, 0.11);
+  --border-primary:   rgba(255, 255, 255, 0.18);
+
+  --text-primary:     #f0f0f0;
+  --text-secondary:   #aaaaaa;
+  --text-tertiary:    #666666;
+
+  --nav-bg:           #7a4a00;
+  --nav-border:       #5a3600;
+
+  --sidebar-bg:       #1a1a1a;
+  --dd-bg:            #242424;
+
+  --req-bg:           #2e1f00;
+  --req-color:        #f0a830;
+  --req-border:       #7a5200;
+
+  --opt-bg:           #0d1e35;
+  --opt-color:        #6eb4f7;
+  --opt-border:       #1e3f60;
+
+  --chip-bg:          #2a2a2a;
+  --chip-color:       #999999;
+  --chip-border:      #3a3a3a;
+
+  --chip-amber-bg:    #2e1f00;
+  --chip-amber-color: #f0a830;
+  --chip-amber-border:#7a5200;
+
+  --chip-blue-bg:     #0c1e30;
+  --chip-blue-color:  #6eb4f7;
+  --chip-blue-border: #1e3f5c;
+
+  --chip-green-bg:    #0f1f05;
+  --chip-green-color: #7ec94a;
+  --chip-green-border:#2a4a10;
+
+  --modal-overlay:    rgba(0, 0, 0, 0.7);
+  --modal-bg:         #1e1e1e;
+
+  --card-bg:          #1e1e1e;
+  --card-border:      rgba(255, 255, 255, 0.07);
+  --card-shadow:      0 2px 8px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover:0 4px 16px rgba(0, 0, 0, 0.5);
+
+  --bg-jun:    #0a2e1a;   --tx-jun: #4CC98A;  --bd-jun: #1a5530;
+  --bg-mid:    #0a1e30;   --tx-mid: #5b9cf6;  --bd-mid: #1a3f60;
+  --bg-sen:    #2a1a00;   --tx-sen: #f0a030;  --bd-sen: #6a4000;
+  --bg-lea:    #2a0810;   --tx-lea: #E0234E;  --bd-lea: #5a1028;
+
+  --status-open-bg:    #052e16;  --status-open-color:    #4ade80;
+  --status-closed-bg:  #1e293b;  --status-closed-color:  #94a3b8;
+  --status-offer-bg:   #422006;  --status-offer-color:   #fcd34d;
+  --status-hired-bg:   #022c22;  --status-hired-color:   #34d399;
+}
+
+/* ── Base Styles ─────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Utility classes (global) ────────────────────────────── */
+.font-mono  { font-family: var(--font-mono); }
+.text-xs    { font-size: 11px; }
+.text-sm    { font-size: 12px; }
+.text-base  { font-size: 13px; }
+.text-md    { font-size: 14px; }
+.text-lg    { font-size: 16px; }
+.text-xl    { font-size: 18px; }
+
+.text-primary   { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary  { color: var(--text-tertiary); }
+.text-amber     { color: var(--amber); }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-secondary); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }

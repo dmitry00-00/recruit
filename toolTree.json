@@ -1,0 +1,619 @@
+{
+  "categories": [
+    {
+      "id": "cat_languages",
+      "name": "Языки",
+      "icon": "Code",
+      "subcategories": [
+        {
+          "id": "sub_javascript",
+          "categoryId": "cat_languages",
+          "name": "JavaScript / TypeScript",
+          "tools": [
+            { "id": "t_js",         "name": "JavaScript",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+            { "id": "t_ts",         "name": "TypeScript",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+            { "id": "t_react",      "name": "React",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+            { "id": "t_nextjs",     "name": "Next.js",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+            { "id": "t_vue",        "name": "Vue.js",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
+            { "id": "t_nuxt",       "name": "Nuxt.js",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nuxtjs/nuxtjs-original.svg" },
+            { "id": "t_angular",    "name": "Angular",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" },
+            { "id": "t_svelte",     "name": "Svelte",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg" },
+            { "id": "t_nodejs",     "name": "Node.js",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+            { "id": "t_nestjs",     "name": "NestJS",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg" },
+            { "id": "t_express",    "name": "Express.js",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
+            { "id": "t_redux",      "name": "Redux",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" },
+            { "id": "t_mobx",       "name": "MobX",        "logoUrl": null },
+            { "id": "t_rxjs",       "name": "RxJS",        "logoUrl": null },
+            { "id": "t_webpack",    "name": "Webpack",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg" },
+            { "id": "t_vite",       "name": "Vite",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" },
+            { "id": "t_jest",       "name": "Jest",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg" },
+            { "id": "t_graphql",    "name": "GraphQL",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
+            { "id": "t_d3",         "name": "D3.js",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/d3js/d3js-original.svg" },
+            { "id": "t_threejs",    "name": "Three.js",    "logoUrl": null },
+            { "id": "t_expo",       "name": "Expo",        "logoUrl": null },
+            { "id": "t_reactnative","name": "React Native","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+            { "id": "t_storybook",  "name": "Storybook",   "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_python",
+          "categoryId": "cat_languages",
+          "name": "Python",
+          "tools": [
+            { "id": "t_python",    "name": "Python",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+            { "id": "t_django",    "name": "Django",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" },
+            { "id": "t_fastapi",   "name": "FastAPI",     "logoUrl": null },
+            { "id": "t_flask",     "name": "Flask",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
+            { "id": "t_celery",    "name": "Celery",      "logoUrl": null },
+            { "id": "t_aiohttp",   "name": "aiohttp",     "logoUrl": null },
+            { "id": "t_sqlalchemy","name": "SQLAlchemy",  "logoUrl": null },
+            { "id": "t_pydantic",  "name": "Pydantic",    "logoUrl": null },
+            { "id": "t_alembic",   "name": "Alembic",     "logoUrl": null },
+            { "id": "t_pytest",    "name": "pytest",      "logoUrl": null },
+            { "id": "t_pandas",    "name": "Pandas",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
+            { "id": "t_numpy",     "name": "NumPy",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
+            { "id": "t_scipy",     "name": "SciPy",       "logoUrl": null },
+            { "id": "t_poetry",    "name": "Poetry",      "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_java",
+          "categoryId": "cat_languages",
+          "name": "Java",
+          "tools": [
+            { "id": "t_java",       "name": "Java",         "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+            { "id": "t_spring",     "name": "Spring",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" },
+            { "id": "t_springboot", "name": "Spring Boot",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" },
+            { "id": "t_hibernate",  "name": "Hibernate",    "logoUrl": null },
+            { "id": "t_maven",      "name": "Maven",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/maven/maven-original.svg" },
+            { "id": "t_gradle",     "name": "Gradle",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-plain.svg" },
+            { "id": "t_junit",      "name": "JUnit",        "logoUrl": null },
+            { "id": "t_mockito",    "name": "Mockito",      "logoUrl": null },
+            { "id": "t_lombok",     "name": "Lombok",       "logoUrl": null },
+            { "id": "t_rxjava",     "name": "RxJava",       "logoUrl": null },
+            { "id": "t_quarkus",    "name": "Quarkus",      "logoUrl": null },
+            { "id": "t_kafka_java", "name": "Kafka (Java)", "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_csharp",
+          "categoryId": "cat_languages",
+          "name": "C# / .NET",
+          "tools": [
+            { "id": "t_csharp",    "name": "C#",          "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" },
+            { "id": "t_dotnet",    "name": ".NET",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg" },
+            { "id": "t_aspnet",    "name": "ASP.NET",     "logoUrl": null },
+            { "id": "t_ef_core",   "name": "Entity Framework Core", "logoUrl": null },
+            { "id": "t_wpf",       "name": "WPF",         "logoUrl": null },
+            { "id": "t_signalr",   "name": "SignalR",     "logoUrl": null },
+            { "id": "t_masstransit","name": "MassTransit","logoUrl": null },
+            { "id": "t_nunit",     "name": "NUnit",       "logoUrl": null },
+            { "id": "t_xunit",     "name": "xUnit",       "logoUrl": null },
+            { "id": "t_dapper",    "name": "Dapper",      "logoUrl": null },
+            { "id": "t_linq",      "name": "LINQ",        "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_golang",
+          "categoryId": "cat_languages",
+          "name": "Go",
+          "tools": [
+            { "id": "t_go",       "name": "Go",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" },
+            { "id": "t_gin",      "name": "Gin",      "logoUrl": null },
+            { "id": "t_echo_go",  "name": "Echo",     "logoUrl": null },
+            { "id": "t_grpc_go",  "name": "gRPC (Go)","logoUrl": null },
+            { "id": "t_testify",  "name": "Testify",  "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_kotlin",
+          "categoryId": "cat_languages",
+          "name": "Kotlin",
+          "tools": [
+            { "id": "t_kotlin",        "name": "Kotlin",               "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" },
+            { "id": "t_kotlin_corout", "name": "Coroutines",           "logoUrl": null },
+            { "id": "t_ktor",          "name": "Ktor",                  "logoUrl": null },
+            { "id": "t_kmm",           "name": "Kotlin Multiplatform", "logoUrl": null },
+            { "id": "t_compose_kmp",   "name": "Compose Multiplatform","logoUrl": null },
+            { "id": "t_sqldelight",    "name": "SQLDelight",           "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_swift",
+          "categoryId": "cat_languages",
+          "name": "Swift",
+          "tools": [
+            { "id": "t_swift",      "name": "Swift",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg" },
+            { "id": "t_swiftui",    "name": "SwiftUI",     "logoUrl": null },
+            { "id": "t_uikit",      "name": "UIKit",       "logoUrl": null },
+            { "id": "t_combine",    "name": "Combine",     "logoUrl": null },
+            { "id": "t_rxswift",    "name": "RxSwift",     "logoUrl": null },
+            { "id": "t_alamofire",  "name": "Alamofire",   "logoUrl": null },
+            { "id": "t_snapkit",    "name": "SnapKit",     "logoUrl": null },
+            { "id": "t_kingfisher", "name": "Kingfisher",  "logoUrl": null },
+            { "id": "t_spm",        "name": "Swift Package Manager", "logoUrl": null },
+            { "id": "t_cocoapods",  "name": "CocoaPods",   "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_objc",
+          "categoryId": "cat_languages",
+          "name": "Objective-C",
+          "tools": [
+            { "id": "t_objc",      "name": "Objective-C",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/objectivec/objectivec-plain.svg" },
+            { "id": "t_afnetwork", "name": "AFNetworking",  "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_php",
+          "categoryId": "cat_languages",
+          "name": "PHP",
+          "tools": [
+            { "id": "t_php",       "name": "PHP",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
+            { "id": "t_laravel",   "name": "Laravel",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg" },
+            { "id": "t_symfony",   "name": "Symfony",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/symfony/symfony-original.svg" },
+            { "id": "t_wordpress", "name": "WordPress",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg" },
+            { "id": "t_bitrix",    "name": "Bitrix",     "logoUrl": null },
+            { "id": "t_yii",       "name": "Yii",        "logoUrl": null },
+            { "id": "t_phpunit",   "name": "PHPUnit",    "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_cpp",
+          "categoryId": "cat_languages",
+          "name": "C / C++",
+          "tools": [
+            { "id": "t_cpp",    "name": "C++",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
+            { "id": "t_c",      "name": "C",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" },
+            { "id": "t_qt",     "name": "Qt",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg" },
+            { "id": "t_boost",  "name": "Boost",  "logoUrl": null },
+            { "id": "t_cmake",  "name": "CMake",  "logoUrl": null },
+            { "id": "t_stl",    "name": "STL",    "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_dart",
+          "categoryId": "cat_languages",
+          "name": "Dart / Flutter",
+          "tools": [
+            { "id": "t_dart",    "name": "Dart",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg" },
+            { "id": "t_flutter", "name": "Flutter", "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
+            { "id": "t_bloc",    "name": "BLoC",    "logoUrl": null },
+            { "id": "t_riverpod","name": "Riverpod","logoUrl": null },
+            { "id": "t_getit",   "name": "GetIt",   "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_ruby",
+          "categoryId": "cat_languages",
+          "name": "Ruby",
+          "tools": [
+            { "id": "t_ruby",     "name": "Ruby",          "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg" },
+            { "id": "t_ror",      "name": "Ruby on Rails", "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rails/rails-plain.svg" },
+            { "id": "t_rspec",    "name": "RSpec",         "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_scala",
+          "categoryId": "cat_languages",
+          "name": "Scala / Rust / другие",
+          "tools": [
+            { "id": "t_scala",      "name": "Scala",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scala/scala-original.svg" },
+            { "id": "t_rust",       "name": "Rust",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" },
+            { "id": "t_lua",        "name": "Lua",        "logoUrl": null },
+            { "id": "t_groovy",     "name": "Groovy",     "logoUrl": null },
+            { "id": "t_bash",       "name": "Bash",       "logoUrl": null },
+            { "id": "t_powershell", "name": "PowerShell", "logoUrl": null },
+            { "id": "t_r",          "name": "R",          "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg" },
+            { "id": "t_solidity",   "name": "Solidity",   "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_1c",
+          "categoryId": "cat_languages",
+          "name": "1С",
+          "tools": [
+            { "id": "t_1c",        "name": "1С",                  "logoUrl": null },
+            { "id": "t_1c_erp",    "name": "1С ERP",              "logoUrl": null },
+            { "id": "t_1c_buh",    "name": "1С Бухгалтерия",     "logoUrl": null },
+            { "id": "t_1c_zup",    "name": "1С ЗУП",             "logoUrl": null },
+            { "id": "t_1c_ut",     "name": "1С УТ",              "logoUrl": null },
+            { "id": "t_1c_bss",    "name": "БСП (Библиотека стандартных подсистем)", "logoUrl": null },
+            { "id": "t_1c_kd",     "name": "Конвертация данных",  "logoUrl": null },
+            { "id": "t_onescript", "name": "OneScript",           "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_html_css",
+          "categoryId": "cat_languages",
+          "name": "HTML / CSS",
+          "tools": [
+            { "id": "t_html",      "name": "HTML",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+            { "id": "t_css",       "name": "CSS",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+            { "id": "t_sass",      "name": "SASS/SCSS",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" },
+            { "id": "t_tailwind",  "name": "Tailwind CSS","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" },
+            { "id": "t_bootstrap", "name": "Bootstrap",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_tools",
+      "name": "Инструменты",
+      "icon": "Wrench",
+      "subcategories": [
+        {
+          "id": "sub_db_sql",
+          "categoryId": "cat_tools",
+          "name": "SQL базы данных",
+          "tools": [
+            { "id": "t_postgres",  "name": "PostgreSQL",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+            { "id": "t_mysql",     "name": "MySQL",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+            { "id": "t_mariadb",   "name": "MariaDB",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg" },
+            { "id": "t_mssql",     "name": "MS SQL Server","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg" },
+            { "id": "t_oracle_db", "name": "Oracle DB",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg" },
+            { "id": "t_sqlite",    "name": "SQLite",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" },
+            { "id": "t_db2",       "name": "IBM DB2",     "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_db_nosql",
+          "categoryId": "cat_tools",
+          "name": "NoSQL базы данных",
+          "tools": [
+            { "id": "t_mongodb",   "name": "MongoDB",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+            { "id": "t_redis",     "name": "Redis",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
+            { "id": "t_cassandra", "name": "Cassandra",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cassandra/cassandra-original.svg" },
+            { "id": "t_elastic",   "name": "Elasticsearch","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elasticsearch/elasticsearch-original.svg" },
+            { "id": "t_neo4j",     "name": "Neo4j",      "logoUrl": null },
+            { "id": "t_couchbase", "name": "Couchbase",  "logoUrl": null },
+            { "id": "t_dynamodb",  "name": "DynamoDB",   "logoUrl": null },
+            { "id": "t_firebase",  "name": "Firebase",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
+            { "id": "t_influxdb",  "name": "InfluxDB",   "logoUrl": null },
+            { "id": "t_clickhouse","name": "ClickHouse", "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_messaging",
+          "categoryId": "cat_tools",
+          "name": "Брокеры сообщений",
+          "tools": [
+            { "id": "t_kafka",    "name": "Apache Kafka", "logoUrl": null },
+            { "id": "t_rabbitmq", "name": "RabbitMQ",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg" },
+            { "id": "t_nats",     "name": "NATS",        "logoUrl": null },
+            { "id": "t_activemq", "name": "ActiveMQ",    "logoUrl": null },
+            { "id": "t_pulsar",   "name": "Pulsar",      "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_devops",
+          "categoryId": "cat_tools",
+          "name": "DevOps / Инфраструктура",
+          "tools": [
+            { "id": "t_docker",     "name": "Docker",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+            { "id": "t_k8s",        "name": "Kubernetes",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
+            { "id": "t_helm",       "name": "Helm",        "logoUrl": null },
+            { "id": "t_terraform",  "name": "Terraform",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" },
+            { "id": "t_ansible",    "name": "Ansible",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ansible/ansible-original.svg" },
+            { "id": "t_jenkins",    "name": "Jenkins",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" },
+            { "id": "t_github_actions","name": "GitHub Actions","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
+            { "id": "t_gitlab_ci",  "name": "GitLab CI/CD","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg" },
+            { "id": "t_argocd",     "name": "ArgoCD",      "logoUrl": null },
+            { "id": "t_nginx",      "name": "Nginx",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg" },
+            { "id": "t_prometheus", "name": "Prometheus",  "logoUrl": null },
+            { "id": "t_grafana",    "name": "Grafana",     "logoUrl": null },
+            { "id": "t_elk",        "name": "ELK Stack",   "logoUrl": null },
+            { "id": "t_vault",      "name": "Vault",       "logoUrl": null },
+            { "id": "t_istio",      "name": "Istio",       "logoUrl": null },
+            { "id": "t_linux",      "name": "Linux",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }
+          ]
+        },
+        {
+          "id": "sub_cloud",
+          "categoryId": "cat_tools",
+          "name": "Облачные платформы",
+          "tools": [
+            { "id": "t_aws",       "name": "AWS",          "logoUrl": null },
+            { "id": "t_aws_s3",    "name": "AWS S3",       "logoUrl": null },
+            { "id": "t_aws_ec2",   "name": "AWS EC2",      "logoUrl": null },
+            { "id": "t_aws_lambda","name": "AWS Lambda",   "logoUrl": null },
+            { "id": "t_azure",     "name": "Azure",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
+            { "id": "t_gcp",       "name": "Google Cloud", "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" },
+            { "id": "t_yandex_cloud","name": "Yandex Cloud","logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_vcs",
+          "categoryId": "cat_tools",
+          "name": "Контроль версий",
+          "tools": [
+            { "id": "t_git",       "name": "Git",      "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+            { "id": "t_github",    "name": "GitHub",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
+            { "id": "t_gitlab",    "name": "GitLab",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg" },
+            { "id": "t_bitbucket", "name": "Bitbucket","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bitbucket/bitbucket-original.svg" },
+            { "id": "t_mercurial", "name": "Mercurial","logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_testing",
+          "categoryId": "cat_tools",
+          "name": "Тестирование",
+          "tools": [
+            { "id": "t_selenium",   "name": "Selenium",      "logoUrl": null },
+            { "id": "t_playwright", "name": "Playwright",    "logoUrl": null },
+            { "id": "t_cypress",    "name": "Cypress",       "logoUrl": null },
+            { "id": "t_postman",    "name": "Postman",       "logoUrl": null },
+            { "id": "t_jmeter",     "name": "JMeter",        "logoUrl": null },
+            { "id": "t_appium",     "name": "Appium",        "logoUrl": null },
+            { "id": "t_allure",     "name": "Allure",        "logoUrl": null },
+            { "id": "t_sonarqube",  "name": "SonarQube",     "logoUrl": null },
+            { "id": "t_testcontainers","name": "Testcontainers","logoUrl": null },
+            { "id": "t_k6",         "name": "k6",            "logoUrl": null },
+            { "id": "t_gatling",    "name": "Gatling",       "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_bigdata",
+          "categoryId": "cat_tools",
+          "name": "Big Data / Data Engineering",
+          "tools": [
+            { "id": "t_spark",     "name": "Apache Spark",  "logoUrl": null },
+            { "id": "t_hadoop",    "name": "Hadoop",        "logoUrl": null },
+            { "id": "t_airflow",   "name": "Apache Airflow","logoUrl": null },
+            { "id": "t_flink",     "name": "Apache Flink",  "logoUrl": null },
+            { "id": "t_hive",      "name": "Hive",          "logoUrl": null },
+            { "id": "t_dbt",       "name": "dbt",           "logoUrl": null },
+            { "id": "t_nifi",      "name": "Apache NiFi",   "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_ml",
+          "categoryId": "cat_tools",
+          "name": "ML / AI",
+          "tools": [
+            { "id": "t_tensorflow","name": "TensorFlow",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" },
+            { "id": "t_pytorch",   "name": "PyTorch",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" },
+            { "id": "t_sklearn",   "name": "Scikit-learn",  "logoUrl": null },
+            { "id": "t_opencv",    "name": "OpenCV",        "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg" },
+            { "id": "t_langchain", "name": "LangChain",     "logoUrl": null },
+            { "id": "t_catboost",  "name": "CatBoost",      "logoUrl": null },
+            { "id": "t_xgboost",   "name": "XGBoost",       "logoUrl": null },
+            { "id": "t_huggingface","name": "Hugging Face",  "logoUrl": null },
+            { "id": "t_mlflow",    "name": "MLflow",        "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_mobile_ios",
+          "categoryId": "cat_tools",
+          "name": "iOS-разработка",
+          "tools": [
+            { "id": "t_xcode",      "name": "Xcode",          "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xcode/xcode-original.svg" },
+            { "id": "t_avfoundation","name": "AVFoundation",  "logoUrl": null },
+            { "id": "t_mapkit",     "name": "MapKit",         "logoUrl": null },
+            { "id": "t_storekit",   "name": "StoreKit",       "logoUrl": null },
+            { "id": "t_testflight", "name": "TestFlight",     "logoUrl": null },
+            { "id": "t_instruments","name": "Instruments",    "logoUrl": null },
+            { "id": "t_swinject",   "name": "Swinject",       "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_mobile_android",
+          "categoryId": "cat_tools",
+          "name": "Android-разработка",
+          "tools": [
+            { "id": "t_android_studio","name": "Android Studio",   "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg" },
+            { "id": "t_compose",       "name": "Jetpack Compose",  "logoUrl": null },
+            { "id": "t_retrofit",      "name": "Retrofit",         "logoUrl": null },
+            { "id": "t_room",          "name": "Room",             "logoUrl": null },
+            { "id": "t_koin",          "name": "Koin",             "logoUrl": null },
+            { "id": "t_dagger",        "name": "Dagger/Hilt",      "logoUrl": null },
+            { "id": "t_glide",         "name": "Glide",            "logoUrl": null },
+            { "id": "t_exoplayer",     "name": "ExoPlayer",        "logoUrl": null },
+            { "id": "t_navigation",    "name": "Navigation Component","logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_project_mgmt",
+          "categoryId": "cat_tools",
+          "name": "Управление проектами",
+          "tools": [
+            { "id": "t_jira",       "name": "Jira",       "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg" },
+            { "id": "t_confluence", "name": "Confluence", "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/confluence/confluence-original.svg" },
+            { "id": "t_trello",     "name": "Trello",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain.svg" },
+            { "id": "t_notion",     "name": "Notion",     "logoUrl": null },
+            { "id": "t_miro",       "name": "Miro",       "logoUrl": null },
+            { "id": "t_youtrack",   "name": "YouTrack",   "logoUrl": null },
+            { "id": "t_clickup",    "name": "ClickUp",    "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_design_tools",
+          "categoryId": "cat_tools",
+          "name": "Дизайн и прототипирование",
+          "tools": [
+            { "id": "t_figma",    "name": "Figma",    "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+            { "id": "t_sketch",   "name": "Sketch",   "logoUrl": null },
+            { "id": "t_zeplin",   "name": "Zeplin",   "logoUrl": null },
+            { "id": "t_blender",  "name": "Blender",  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/blender/blender-original.svg" },
+            { "id": "t_photoshop","name": "Photoshop","logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_skills",
+      "name": "Навыки",
+      "icon": "Brain",
+      "subcategories": [
+        {
+          "id": "sub_arch",
+          "categoryId": "cat_skills",
+          "name": "Архитектура",
+          "tools": [
+            { "id": "sk_microservices",  "name": "Микросервисная архитектура",   "logoUrl": null },
+            { "id": "sk_monolith",       "name": "Монолитная архитектура",       "logoUrl": null },
+            { "id": "sk_event_driven",   "name": "Event-Driven Architecture",    "logoUrl": null },
+            { "id": "sk_ddd",            "name": "Domain-Driven Design",         "logoUrl": null },
+            { "id": "sk_clean_arch",     "name": "Clean Architecture",           "logoUrl": null },
+            { "id": "sk_cqrs",           "name": "CQRS / Event Sourcing",        "logoUrl": null },
+            { "id": "sk_hexagonal",      "name": "Hexagonal Architecture",       "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_algo",
+          "categoryId": "cat_skills",
+          "name": "Алгоритмы и структуры данных",
+          "tools": [
+            { "id": "sk_algorithms",    "name": "Алгоритмы и структуры данных", "logoUrl": null },
+            { "id": "sk_complexity",    "name": "Оценка сложности (O-нотация)", "logoUrl": null },
+            { "id": "sk_concurrency",   "name": "Параллелизм и многопоточность","logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_security",
+          "categoryId": "cat_skills",
+          "name": "Безопасность",
+          "tools": [
+            { "id": "sk_auth",       "name": "Аутентификация / Авторизация",    "logoUrl": null },
+            { "id": "sk_owasp",      "name": "OWASP / Web Security",            "logoUrl": null },
+            { "id": "sk_crypto",     "name": "Криптография",                    "logoUrl": null },
+            { "id": "sk_pentest",    "name": "Пентестирование",                 "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_mobile_skills",
+          "categoryId": "cat_skills",
+          "name": "Мобильная разработка (навыки)",
+          "tools": [
+            { "id": "sk_mobile_arch",  "name": "MVVM / MVI / MVP / VIPER",     "logoUrl": null },
+            { "id": "sk_push",         "name": "Push Notifications",           "logoUrl": null },
+            { "id": "sk_biometrics",   "name": "Биометрическая аутентификация","logoUrl": null },
+            { "id": "sk_animations",   "name": "Анимации и переходы",          "logoUrl": null },
+            { "id": "sk_offline",      "name": "Offline-first разработка",     "logoUrl": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_standards",
+      "name": "Стандарты",
+      "icon": "BookOpen",
+      "subcategories": [
+        {
+          "id": "sub_api_standards",
+          "categoryId": "cat_standards",
+          "name": "API и протоколы",
+          "tools": [
+            { "id": "st_rest",      "name": "REST",        "logoUrl": null },
+            { "id": "st_graphql",   "name": "GraphQL",     "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
+            { "id": "st_grpc",      "name": "gRPC",        "logoUrl": null },
+            { "id": "st_soap",      "name": "SOAP",        "logoUrl": null },
+            { "id": "st_websocket", "name": "WebSockets",  "logoUrl": null },
+            { "id": "st_openapi",   "name": "OpenAPI/Swagger","logoUrl": null },
+            { "id": "st_oauth",     "name": "OAuth 2.0 / OIDC","logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_code_standards",
+          "categoryId": "cat_standards",
+          "name": "Стандарты кода",
+          "tools": [
+            { "id": "st_solid",    "name": "SOLID",            "logoUrl": null },
+            { "id": "st_patterns", "name": "Design Patterns",  "logoUrl": null },
+            { "id": "st_tdd",      "name": "TDD",              "logoUrl": null },
+            { "id": "st_bdd",      "name": "BDD",              "logoUrl": null },
+            { "id": "st_clean",    "name": "Clean Code",       "logoUrl": null },
+            { "id": "st_12factor", "name": "12-Factor App",    "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_db_standards",
+          "categoryId": "cat_standards",
+          "name": "Стандарты данных",
+          "tools": [
+            { "id": "st_sql92",   "name": "ANSI SQL",         "logoUrl": null },
+            { "id": "st_acid",    "name": "ACID / транзакции","logoUrl": null },
+            { "id": "st_cap",     "name": "CAP теорема",      "logoUrl": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_exp_domain",
+      "name": "Опыт профильный",
+      "icon": "Briefcase",
+      "subcategories": [
+        {
+          "id": "sub_domain",
+          "categoryId": "cat_exp_domain",
+          "name": "Отраслевые знания",
+          "tools": [
+            { "id": "ex_fintech",     "name": "Финтех / Банки",                  "logoUrl": null },
+            { "id": "ex_ecommerce",   "name": "E-commerce / Retail",             "logoUrl": null },
+            { "id": "ex_healthcare",  "name": "Healthcare / MedTech",            "logoUrl": null },
+            { "id": "ex_telecom",     "name": "Телеком",                         "logoUrl": null },
+            { "id": "ex_gamedev",     "name": "GameDev",                         "logoUrl": null },
+            { "id": "ex_logistics",   "name": "Логистика / Транспорт",           "logoUrl": null },
+            { "id": "ex_edtech",      "name": "EdTech",                          "logoUrl": null },
+            { "id": "ex_govtech",     "name": "Государственный сектор",          "logoUrl": null },
+            { "id": "ex_media",       "name": "Медиа / Стриминг",               "logoUrl": null },
+            { "id": "ex_hrtech",      "name": "HRTech / Recruiting",             "logoUrl": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_exp_company",
+      "name": "Опыт отраслевой",
+      "icon": "Building2",
+      "subcategories": [
+        {
+          "id": "sub_company_type",
+          "categoryId": "cat_exp_company",
+          "name": "Тип компании",
+          "tools": [
+            { "id": "oc_startup",     "name": "Стартап",                         "logoUrl": null },
+            { "id": "oc_enterprise",  "name": "Enterprise",                      "logoUrl": null },
+            { "id": "oc_b2b_saas",    "name": "B2B SaaS",                        "logoUrl": null },
+            { "id": "oc_outsource",   "name": "Аутсорс / Аутстаф",              "logoUrl": null },
+            { "id": "oc_product",     "name": "Продуктовая компания",            "logoUrl": null },
+            { "id": "oc_marketplace", "name": "Маркетплейс",                    "logoUrl": null }
+          ]
+        },
+        {
+          "id": "sub_team_scale",
+          "categoryId": "cat_exp_company",
+          "name": "Масштаб команды и продукта",
+          "tools": [
+            { "id": "oc_highload",    "name": "Highload-системы",                "logoUrl": null },
+            { "id": "oc_distributed", "name": "Распределённые системы",          "logoUrl": null },
+            { "id": "oc_team_lead",   "name": "Опыт тимлидства",                 "logoUrl": null },
+            { "id": "oc_agile",       "name": "Agile / Scrum / Kanban",          "logoUrl": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_meta",
+      "name": "META",
+      "icon": "Layers",
+      "subcategories": [
+        {
+          "id": "sub_meta_ecosystems",
+          "categoryId": "cat_meta",
+          "name": "Экосистемы",
+          "tools": [
+            { "id": "meta_android_eco", "name": "Android-экосистема",            "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg" },
+            { "id": "meta_ios_eco",     "name": "iOS-экосистема",                "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" },
+            { "id": "meta_aws_eco",     "name": "AWS-экосистема",                "logoUrl": null },
+            { "id": "meta_azure_eco",   "name": "Azure-экосистема",              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
+            { "id": "meta_gcp_eco",     "name": "GCP-экосистема",                "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" },
+            { "id": "meta_ms_eco",      "name": "Microsoft-экосистема",          "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" },
+            { "id": "meta_blockchain",  "name": "Blockchain",                    "logoUrl": null },
+            { "id": "meta_web3",        "name": "Web3",                          "logoUrl": null }
+          ]
+        }
+      ]
+    }
+  ]
+}

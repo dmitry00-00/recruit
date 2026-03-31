@@ -1,0 +1,230 @@
+{
+  "positions": [
+    {
+      "id": "pos_frontend",
+      "name": "Frontend Developer",
+      "category": "developer",
+      "subcategory": "Frontend",
+      "icon": "Monitor",
+      "grades": ["intern", "junior", "middle", "senior", "lead"],
+      "description": "Разработчик пользовательских интерфейсов для веб-приложений",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_javascript", "sub_html_css"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_arch"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards", "sub_code_standards"] }
+      ]
+    },
+    {
+      "id": "pos_backend",
+      "name": "Backend Developer",
+      "category": "developer",
+      "subcategory": "Backend",
+      "icon": "Server",
+      "grades": ["intern", "junior", "middle", "senior", "lead"],
+      "description": "Разработчик серверной части приложений и API",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_python", "sub_java", "sub_csharp", "sub_golang", "sub_php", "sub_ruby"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_db_sql", "sub_db_nosql", "sub_messaging", "sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_arch", "sub_security"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards", "sub_code_standards", "sub_db_standards"] }
+      ]
+    },
+    {
+      "id": "pos_fullstack",
+      "name": "Fullstack Developer",
+      "category": "developer",
+      "subcategory": "Fullstack",
+      "icon": "Layers",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Разработчик полного цикла — и frontend, и backend",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_javascript", "sub_html_css", "sub_python", "sub_java", "sub_csharp", "sub_nodejs"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_db_sql", "sub_db_nosql", "sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_arch"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards", "sub_code_standards"] }
+      ]
+    },
+    {
+      "id": "pos_ios",
+      "name": "iOS Developer",
+      "category": "developer",
+      "subcategory": "iOS",
+      "icon": "Smartphone",
+      "grades": ["intern", "junior", "middle", "senior", "lead"],
+      "description": "Разработчик мобильных приложений под iOS / macOS",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_swift", "sub_objc"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_mobile_ios", "sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_mobile_skills"] },
+        { "categoryId": "cat_meta",      "subcategoryIds": ["sub_meta_ecosystems"] }
+      ]
+    },
+    {
+      "id": "pos_android",
+      "name": "Android Developer",
+      "category": "developer",
+      "subcategory": "Android",
+      "icon": "Smartphone",
+      "grades": ["intern", "junior", "middle", "senior", "lead"],
+      "description": "Разработчик мобильных приложений под Android",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_kotlin", "sub_java"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_mobile_android", "sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_mobile_skills"] },
+        { "categoryId": "cat_meta",      "subcategoryIds": ["sub_meta_ecosystems"] }
+      ]
+    },
+    {
+      "id": "pos_mobile_cross",
+      "name": "Cross-Platform Mobile Developer",
+      "category": "developer",
+      "subcategory": "Mobile Cross-Platform",
+      "icon": "Smartphone",
+      "grades": ["junior", "middle", "senior"],
+      "description": "Разработчик кроссплатформенных мобильных приложений (Flutter / React Native / KMM)",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_dart", "sub_javascript", "sub_kotlin"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_vcs", "sub_testing"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_mobile_skills"] }
+      ]
+    },
+    {
+      "id": "pos_devops",
+      "name": "DevOps Engineer",
+      "category": "devops",
+      "subcategory": "DevOps",
+      "icon": "GitBranch",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Инженер по автоматизации, CI/CD, облачной инфраструктуре",
+      "requiredCategories": [
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_devops", "sub_cloud", "sub_vcs", "sub_messaging"] },
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_scala", "sub_python"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_security"] },
+        { "categoryId": "cat_meta",      "subcategoryIds": ["sub_meta_ecosystems"] }
+      ]
+    },
+    {
+      "id": "pos_qa_manual",
+      "name": "QA Engineer (Manual)",
+      "category": "qa",
+      "subcategory": "QA Manual",
+      "icon": "CheckSquare",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Тестировщик ПО (ручное тестирование)",
+      "requiredCategories": [
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_testing", "sub_project_mgmt"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards"] }
+      ]
+    },
+    {
+      "id": "pos_qa_auto",
+      "name": "QA Automation Engineer",
+      "category": "qa",
+      "subcategory": "QA Automation",
+      "icon": "Bot",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Инженер по автоматизированному тестированию",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_python", "sub_java", "sub_javascript"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_testing", "sub_vcs"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards", "sub_code_standards"] }
+      ]
+    },
+    {
+      "id": "pos_analyst_sys",
+      "name": "Systems Analyst",
+      "category": "analyst",
+      "subcategory": "Systems Analysis",
+      "icon": "FileSearch",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Системный аналитик, проектирование требований и архитектуры решений",
+      "requiredCategories": [
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_project_mgmt", "sub_db_sql", "sub_design_tools"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_api_standards", "sub_db_standards"] }
+      ]
+    },
+    {
+      "id": "pos_analyst_data",
+      "name": "Data Analyst",
+      "category": "data",
+      "subcategory": "Data Analysis",
+      "icon": "BarChart2",
+      "grades": ["junior", "middle", "senior"],
+      "description": "Аналитик данных, визуализация и интерпретация данных",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_python", "sub_scala"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_db_sql", "sub_db_nosql", "sub_bigdata"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_db_standards"] }
+      ]
+    },
+    {
+      "id": "pos_data_engineer",
+      "name": "Data Engineer",
+      "category": "data",
+      "subcategory": "Data Engineering",
+      "icon": "Database",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Инженер данных, ETL/ELT пайплайны, хранилища данных",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_python", "sub_scala", "sub_java"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_db_sql", "sub_db_nosql", "sub_bigdata", "sub_messaging", "sub_cloud"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_db_standards"] }
+      ]
+    },
+    {
+      "id": "pos_ml_engineer",
+      "name": "ML Engineer",
+      "category": "data",
+      "subcategory": "Machine Learning",
+      "icon": "Cpu",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Инженер по машинному обучению, обучение и деплой моделей",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_python"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_ml", "sub_bigdata", "sub_cloud", "sub_devops"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_code_standards"] }
+      ]
+    },
+    {
+      "id": "pos_designer",
+      "name": "Product Designer",
+      "category": "designer",
+      "subcategory": "Product Design",
+      "icon": "Palette",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Дизайнер продукта, UX/UI проектирование",
+      "requiredCategories": [
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_design_tools"] },
+        { "categoryId": "cat_skills",    "subcategoryIds": ["sub_arch"] }
+      ]
+    },
+    {
+      "id": "pos_pm",
+      "name": "Product Manager",
+      "category": "manager",
+      "subcategory": "Product Management",
+      "icon": "Target",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Менеджер продукта, управление роадмапом и бэклогом",
+      "requiredCategories": [
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_project_mgmt"] },
+        { "categoryId": "cat_exp_company","subcategoryIds": ["sub_company_type", "sub_team_scale"] }
+      ]
+    },
+    {
+      "id": "pos_1c_dev",
+      "name": "1С Разработчик",
+      "category": "developer",
+      "subcategory": "1С",
+      "icon": "Box",
+      "grades": ["junior", "middle", "senior", "lead"],
+      "description": "Разработчик и внедренец решений на платформе 1С",
+      "requiredCategories": [
+        { "categoryId": "cat_languages", "subcategoryIds": ["sub_1c"] },
+        { "categoryId": "cat_tools",     "subcategoryIds": ["sub_db_sql"] },
+        { "categoryId": "cat_standards", "subcategoryIds": ["sub_db_standards"] }
+      ]
+    }
+  ]
+}
