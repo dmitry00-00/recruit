@@ -1,0 +1,101 @@
+.page {
+  padding: 16px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.counters {
+  display: flex;
+  gap: 16px;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.counterValue {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.counterLabel {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.viewToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.viewBtn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  border: none;
+  cursor: pointer;
+}
+
+.viewBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.viewBtnActive {
+  background: var(--amber);
+  color: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th {
+  padding: 8px 10px;
+  font-weight: 700;
+  text-align: left;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-secondary);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.table tr:hover td {
+  background: var(--bg-secondary);
+}
+
+.clickableRow {
+  cursor: pointer;
+}

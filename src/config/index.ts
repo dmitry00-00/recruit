@@ -1,11 +1,10 @@
-import type { Grade, PositionCategory } from '../entities';
+import type { Grade, PositionCategory } from '@/entities';
 
 // ── Matching thresholds ──────────────────────────────────────
 
 export const MATCH_THRESHOLDS = {
-  HIGH:   80,   // ≥80% — зелёный
-  MEDIUM: 50,   // 50–79% — янтарный
-  // <50% — красный
+  HIGH:   80,
+  MEDIUM: 50,
 } as const;
 
 // ── Salary ────────────────────────────────────────────────────
@@ -19,7 +18,7 @@ export const CURRENCY_SYMBOLS: Record<string, string> = {
 
 export const DEFAULT_CURRENCY = 'RUB';
 
-// ── Grade colors (CSS var names) ──────────────────────────────
+// ── Grade colors ─────────────────────────────────────────────
 
 export const GRADE_COLORS: Record<Grade, { bg: string; text: string; border: string; accent: string }> = {
   intern:    { bg: 'var(--bg-intern, #f1f5f9)', text: 'var(--tx-intern, #475569)', border: '#e2e8f0', accent: '#94a3b8' },
@@ -45,27 +44,27 @@ export const POSITION_CATEGORY_ICONS: Record<PositionCategory, string> = {
 
 // ── Navigation ────────────────────────────────────────────────
 
-export const NAV_HEIGHT = 52;  // px
-export const SIDEBAR_WIDTH = 220;  // px
-export const SCROLL_HIDE_THRESHOLD = 80;  // px — через сколько прятать nav
+export const NAV_HEIGHT = 52;
+export const SIDEBAR_WIDTH = 220;
+export const SCROLL_HIDE_THRESHOLD = 80;
 
 // ── TreePicker ────────────────────────────────────────────────
 
-export const TREE_PICKER_MAX_VISIBLE_TOOLS = 50;  // до поиска
+export const TREE_PICKER_MAX_VISIBLE_TOOLS = 50;
 
 // ── Cards ────────────────────────────────────────────────────
 
-export const CARD_MAX_TOOLS_SHOWN = 8;   // иконки на карточке; остальные → "+N"
+export const CARD_MAX_TOOLS_SHOWN = 8;
 
 // ── Salary chart ──────────────────────────────────────────────
 
-export const SALARY_CHART_MIN_POINTS = 3;  // не рисовать линию если меньше 3 точек
+export const SALARY_CHART_MIN_POINTS = 3;
 
 // ── Pipeline ─────────────────────────────────────────────────
 
 export const PIPELINE_TERMINAL_STAGES = ['Принят', 'Отказ'] as const;
 
-// ── Vacancy status labels ─────────────────────────────────────
+// ── Labels ───────────────────────────────────────────────────
 
 export const VACANCY_STATUS_LABELS = {
   open:       'Открыта',
@@ -74,16 +73,12 @@ export const VACANCY_STATUS_LABELS = {
   hired:      'Принят',
 } as const;
 
-// ── Work format labels ────────────────────────────────────────
-
 export const WORK_FORMAT_LABELS = {
   office:  'Офис',
   remote:  'Удалённо',
   hybrid:  'Гибрид',
   any:     'Любой',
 } as const;
-
-// ── Employment type labels ────────────────────────────────────
 
 export const EMPLOYMENT_TYPE_LABELS = {
   full:      'Полная занятость',
@@ -93,7 +88,6 @@ export const EMPLOYMENT_TYPE_LABELS = {
 } as const;
 
 // ── Subcategory → Positions mapping ──────────────────────────
-// Используется в TopNav для фильтрации подкатегорий
 
 export const SUBCATEGORY_BY_CATEGORY: Record<PositionCategory, string[]> = {
   developer: ['Frontend', 'Backend', 'Fullstack', 'iOS', 'Android', 'Mobile Cross-Platform', '1С', 'GameDev'],

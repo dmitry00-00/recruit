@@ -7,7 +7,7 @@
 export interface ToolCategory {
   id: string;
   name: string;
-  icon?: string;  // Lucide icon name
+  icon?: string;
   subcategories: ToolSubcategory[];
 }
 
@@ -101,40 +101,27 @@ export interface Position {
 export interface VacancyRequirement {
   toolId: string;
   minYears?: number;
-  isLocked?: boolean;  // true = скопировано из MIN, нельзя снять в MAX
+  isLocked?: boolean;
 }
 
 export interface Vacancy {
   id: string;
   positionId: string;
-
-  // Компания
   companyName: string;
   companyLogoUrl?: string;
-
-  // Параметры
   grade: Grade;
   salaryFrom?: number;
   salaryTo?: number;
   currency: Currency;
-
-  // Период
   publishedAt: Date;
   closedAt?: Date;
   status: VacancyStatus;
-
-  // Источник
   sourceUrl?: string;
-
-  // Требования
   minRequirements: VacancyRequirement[];
-  maxRequirements: VacancyRequirement[];  // содержит все из min + доп.
-
-  // Условия
+  maxRequirements: VacancyRequirement[];
   location?: string;
   workFormat: WorkFormat;
   employmentType: EmploymentType;
-
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -144,67 +131,53 @@ export interface Vacancy {
 
 export interface WorkEntryTool {
   toolId: string;
-  years: number;  // автовычисляется из периода, можно скорректировать вручную
+  years: number;
 }
 
 export interface WorkEntry {
   id: string;
   candidateId: string;
-
   companyName: string;
   companyLogoUrl?: string;
   positionId: string;
   grade: Grade;
-
   startDate: Date;
-  endDate?: Date;        // undefined = по настоящее время
+  endDate?: Date;
   isCurrent: boolean;
-
   tools: WorkEntryTool[];
-
   salary?: number;
   currency: Currency;
-
   responsibilities?: string;
 }
 
 export interface Candidate {
   id: string;
-
-  // Личные данные
   firstName: string;
   lastName: string;
   middleName?: string;
   photoUrl?: string;
-
-  // Контакты
   email?: string;
   phone?: string;
   telegramHandle?: string;
   linkedinUrl?: string;
-
-  // Демография
   city?: string;
   country?: string;
   citizenship?: string;
   workFormat: WorkFormat | 'any';
   relocate: boolean;
-
-  // Зарплатные ожидания
   salaryExpected?: number;
   currency: Currency;
-
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// ── Aggregated Candidate Profile (computed, не хранится в DB) ──
+// ── Aggregated Candidate Profile (computed) ──────────────────
 
 export interface ToolExperience {
   toolId: string;
   months: number;
-  years: number;  // rounded to 0.5
+  years: number;
 }
 
 export interface CandidateAggregation {
@@ -223,14 +196,14 @@ export interface CandidateAggregation {
 
 export interface MatchedTool {
   toolId: string;
-  required: number;  // years required
-  actual: number;    // years candidate has
+  required: number;
+  actual: number;
 }
 
 export interface GapTool {
   toolId: string;
   required: number;
-  actual: number;    // 0 = нет совсем, >0 = есть, но меньше нужного
+  actual: number;
 }
 
 export interface ExtraTool {
@@ -241,8 +214,8 @@ export interface ExtraTool {
 export interface MatchResult {
   vacancyId: string;
   candidateId: string;
-  scoreMin: number;   // 0–100, % совпадения с MIN требованиями
-  scoreMax: number;   // 0–100, % совпадения с MAX требованиями
+  scoreMin: number;
+  scoreMax: number;
   matched: MatchedTool[];
   gaps: GapTool[];
   extras: ExtraTool[];
@@ -305,7 +278,6 @@ export interface FilterState {
   recordType: RecordType;
   requirementLevel: RequirementLevel;
   showDiff: boolean;
-  // Дополнительные фильтры
   gradeFilter: Grade[];
   salaryMin?: number;
   salaryMax?: number;
@@ -315,11 +287,10 @@ export interface FilterState {
 // ── RoadMap ───────────────────────────────────────────────────
 
 export interface RoadMapCell {
-  toolIds: string[];  // инструменты, встречающиеся в этой ячейке
-  count: number;      // сколько вакансий упоминают эти инструменты
+  toolIds: string[];
+  count: number;
 }
 
-// roadmap[subcategoryId][grade] = RoadMapCell
 export type RoadMapMatrix = Record<string, Record<Grade, RoadMapCell>>;
 
 export interface RoadMapData {
