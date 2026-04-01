@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LayoutGrid, List } from 'lucide-react';
+import { LayoutGrid, List, Upload } from 'lucide-react';
 import { useFilterStore, useVacancyStore, useCandidateStore } from '@/stores';
 import { VacancyCard } from '@/components/VacancyCard';
 import { CandidateCard } from '@/components/CandidateCard';
@@ -56,6 +56,13 @@ export function Dashboard() {
           </div>
         </div>
         <div className={styles.viewToggle}>
+          <button
+            className={styles.viewBtn}
+            onClick={() => navigate('/vacancies/import')}
+            title="Импорт вакансий"
+          >
+            <Upload size={14} />
+          </button>
           <button
             className={`${styles.viewBtn} ${viewMode === 'gallery' ? styles.viewBtnActive : ''}`}
             onClick={() => setViewMode('gallery')}

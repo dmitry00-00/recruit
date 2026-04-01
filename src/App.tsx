@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TopNav } from '@/components/TopNav';
 import { Dashboard } from '@/pages/Dashboard';
 import { PositionList, PositionForm, PositionDetail } from '@/pages/Positions';
-import { VacancyForm, VacancyDetail } from '@/pages/Vacancies';
+import { VacancyForm, VacancyDetail, VacancyImport } from '@/pages/Vacancies';
 import { CandidateForm, CandidateDetail } from '@/pages/Candidates';
 import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
@@ -34,6 +34,7 @@ export function App() {
           <Route path="/positions/new" element={<PositionForm />} />
           <Route path="/positions/:id" element={<PositionDetail />} />
           <Route path="/vacancies/new" element={<VacancyForm />} />
+          <Route path="/vacancies/import" element={<VacancyImport />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
           <Route path="/candidates/new" element={<CandidateForm />} />
           <Route path="/candidates/:id" element={<CandidateDetail />} />
