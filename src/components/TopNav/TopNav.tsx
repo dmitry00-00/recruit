@@ -1,6 +1,6 @@
-import { Menu, Moon, Sun, PlusCircle } from 'lucide-react';
+import { Menu, Moon, Sun, PlusCircle, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useFilterStore, useUiStore } from '@/stores';
+import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
 import { POSITION_CATEGORY_LABELS } from '@/entities';
 import type { PositionCategory, AppSection, RecordType, RequirementLevel } from '@/entities';
@@ -17,6 +17,8 @@ export function TopNav() {
   const navigate = useNavigate();
   const scrollDir = useScrollDirection();
   const { theme, toggleTheme } = useUiStore();
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const logout = useAuthStore((s) => s.logout);
 
   const {
     positionCategory,
@@ -119,6 +121,27 @@ export function TopNav() {
       <button className={styles.iconBtn} onClick={toggleTheme} title="Тема">
         {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
       </button>
+
+      {currentUser && (
+        <>
+          <div className={styles.separator} />
+          <button
+            className={styles.userBtn}
+            onClick={() => navigate('/profile')}
+            title="Личный кабинет"
+          >
+            <User size={14} />
+            <span className={styles.userName}>{currentUser.firstName}</span>
+          </button>
+          <button
+            className={styles.iconBtn}
+            onClick={() => { logout(); navigate('/login'); }}
+            title="Выйти"
+          >
+            <LogOut size={16} />
+          </button>
+        </>
+      )}
     </nav>
   );
 }

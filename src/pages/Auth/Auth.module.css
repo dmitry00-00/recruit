@@ -1,0 +1,244 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  background: var(--bg-primary);
+  border: 1px solid var(--bd-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--tx-primary);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--tx-secondary);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fieldGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.fieldGroup > .field {
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--tx-secondary);
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid var(--bd-primary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--tx-primary);
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: var(--c-brand);
+}
+
+.select {
+  padding: 10px 12px;
+  border: 1px solid var(--bd-primary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--tx-primary);
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  outline: none;
+}
+
+.error {
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  font-size: 0.8rem;
+}
+
+.success {
+  padding: 10px 14px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--radius-md);
+  color: #22c55e;
+  font-size: 0.8rem;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--tx-secondary);
+}
+
+.link {
+  color: var(--c-brand);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  text-decoration: underline;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+/* ── Profile page ── */
+.profilePage {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 80px 24px 40px;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--c-brand);
+  color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profileName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tx-primary);
+}
+
+.profileRole {
+  font-size: 0.85rem;
+  color: var(--tx-secondary);
+  margin-top: 2px;
+}
+
+.profileEmail {
+  font-size: 0.8rem;
+  color: var(--tx-muted);
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--tx-primary);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--bd-primary);
+}
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.dangerZone {
+  padding: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.dangerTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: 8px;
+}
+
+/* ── Admin users table ── */
+.usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.usersTable th,
+.usersTable td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--bd-primary);
+}
+
+.usersTable th {
+  font-weight: 600;
+  color: var(--tx-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.usersTable td {
+  color: var(--tx-primary);
+}
+
+.roleSelect {
+  padding: 4px 8px;
+  border: 1px solid var(--bd-primary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--tx-primary);
+  font-size: 0.8rem;
+}

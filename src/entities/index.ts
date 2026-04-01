@@ -309,3 +309,28 @@ export interface SalaryDataPoint {
   source: 'vacancy' | 'candidate';
   label?: string;
 }
+
+// ── User & Auth ──────────────────────────────────────────────
+
+export type UserRole = 'admin' | 'recruiter' | 'hiring_manager' | 'viewer';
+
+export const USER_ROLE_LABELS: Record<UserRole, string> = {
+  admin:          'Администратор',
+  recruiter:      'Рекрутер',
+  hiring_manager: 'Нанимающий менеджер',
+  viewer:         'Наблюдатель',
+};
+
+export interface User {
+  id: string;
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  avatarUrl?: string;
+  phone?: string;
+  department?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

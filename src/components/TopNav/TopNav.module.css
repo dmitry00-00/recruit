@@ -151,3 +151,30 @@
   background: var(--nav-item-active);
   color: var(--nav-bg);
 }
+
+/* ── User button ────────────────────────── */
+.userBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  color: var(--nav-text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.userBtn:hover {
+  background: var(--nav-item-hover);
+}
+
+.userName {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

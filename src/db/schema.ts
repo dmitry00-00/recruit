@@ -7,6 +7,7 @@ import type {
   Pipeline,
   PipelineStage,
   PipelineCard,
+  User,
 } from '@/entities';
 
 export class RecruitingDB extends Dexie {
@@ -17,6 +18,7 @@ export class RecruitingDB extends Dexie {
   pipelines!:      Table<Pipeline>;
   pipelineStages!: Table<PipelineStage>;
   pipelineCards!:  Table<PipelineCard>;
+  users!:          Table<User>;
 
   constructor() {
     super('RecruitingDB');
@@ -29,6 +31,17 @@ export class RecruitingDB extends Dexie {
       pipelines:      '++id, vacancyId, createdAt',
       pipelineStages: '++id, pipelineId, order',
       pipelineCards:  '++id, pipelineId, stageId, candidateId, addedAt',
+    });
+
+    this.version(2).stores({
+      positions:      '++id, category, subcategory, createdAt',
+      vacancies:      '++id, positionId, status, grade, publishedAt, companyName',
+      candidates:     '++id, lastName, createdAt',
+      workEntries:    '++id, candidateId, positionId, startDate, isCurrent',
+      pipelines:      '++id, vacancyId, createdAt',
+      pipelineStages: '++id, pipelineId, order',
+      pipelineCards:  '++id, pipelineId, stageId, candidateId, addedAt',
+      users:          '++id, &email, role, createdAt',
     });
   }
 }
