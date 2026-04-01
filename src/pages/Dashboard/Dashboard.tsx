@@ -58,8 +58,8 @@ export function Dashboard() {
         <div className={styles.viewToggle}>
           <button
             className={styles.viewBtn}
-            onClick={() => navigate('/vacancies/import')}
-            title="Импорт вакансий"
+            onClick={() => navigate(recordType === 'vacancies' ? '/vacancies/import' : '/candidates/import')}
+            title={recordType === 'vacancies' ? 'Импорт вакансий' : 'Импорт резюме'}
           >
             <Upload size={14} />
           </button>

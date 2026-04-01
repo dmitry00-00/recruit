@@ -4,7 +4,7 @@ import { TopNav } from '@/components/TopNav';
 import { Dashboard } from '@/pages/Dashboard';
 import { PositionList, PositionForm, PositionDetail } from '@/pages/Positions';
 import { VacancyForm, VacancyDetail, VacancyImport } from '@/pages/Vacancies';
-import { CandidateForm, CandidateDetail } from '@/pages/Candidates';
+import { CandidateForm, CandidateDetail, CandidateImport } from '@/pages/Candidates';
 import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
 import { seedIfEmpty } from '@/db';
@@ -37,6 +37,7 @@ export function App() {
           <Route path="/vacancies/import" element={<VacancyImport />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
           <Route path="/candidates/new" element={<CandidateForm />} />
+          <Route path="/candidates/import" element={<CandidateImport />} />
           <Route path="/candidates/:id" element={<CandidateDetail />} />
           <Route path="/compare/:vacancyId/:candidateId" element={<ComparePage />} />
           <Route path="/pipeline/:vacancyId" element={<PipelinePage />} />
