@@ -1,13 +1,24 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, X } from 'lucide-react';
-import { useCandidateStore, usePositionStore } from '@/stores';
+import { ArrowLeft, Plus, X, Briefcase, Check } from 'lucide-react';
+import { useCandidateStore, usePositionStore, useVacancyStore, usePipelineStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
-import { aggregateCandidate } from '@/utils';
+import { aggregateCandidate, computeMatchScore } from '@/utils';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
+import { CURRENCY_SYMBOLS } from '@/config';
+import { db, getOrCreatePipeline } from '@/db';
 import type { WorkEntry, Grade, Currency, CandidateAggregation } from '@/entities';
 import styles from './CandidateDetail.module.css';
+
+interface MatchRow {
+  vacancyId: string;
+  companyName: string;
+  companyLogoUrl?: string;
+  grade: Grade;
+  scoreMin: number;
+  scoreMax: number;
+}
 
 function formatDateRange(entry: WorkEntry): string {
   const start = new Date(entry.startDate).toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' });
@@ -22,8 +33,10 @@ export function CandidateDetail() {
   const navigate = useNavigate();
   const { candidates, load, getWorkEntries, addWorkEntry, updateWorkEntry } = useCandidateStore();
   const { positions, load: loadPositions } = usePositionStore();
+  const { vacancies, load: loadVacancies } = useVacancyStore();
+  const { addCard } = usePipelineStore();
 
-  useEffect(() => { load(); loadPositions(); }, [load, loadPositions]);
+  useEffect(() => { load(); loadPositions(); loadVacancies(); }, [load, loadPositions, loadVacancies]);
 
   const candidate = candidates.find((c) => c.id === id);
 
@@ -152,12 +165,60 @@ export function CandidateDetail() {
     return pos.requiredCategories.flatMap((rc) => rc.subcategoryIds);
   }, [activeEntry, workEntries, positions]);
 
+  // ── Auto-matching vacancies ───────────────────────────────
+  const [matchOpen,    setMatchOpen]    = useState(false);
+  const [matchRows,    setMatchRows]    = useState<MatchRow[]>([]);
+  const [matchLoading, setMatchLoading] = useState(false);
+  const [addedSet,     setAddedSet]     = useState<Set<string>>(new Set());
+
+  const computeMatches = useCallback(() => {
+    if (!aggregation || !candidate) return;
+    setMatchLoading(true);
+    const rows: MatchRow[] = [];
+    for (const v of vacancies) {
+      const match = computeMatchScore(v, aggregation);
+      rows.push({
+        vacancyId: v.id,
+        companyName: v.companyName,
+        companyLogoUrl: v.companyLogoUrl,
+        grade: v.grade,
+        scoreMin: match.scoreMin,
+        scoreMax: match.scoreMax,
+      });
+    }
+    rows.sort((a, b) => b.scoreMin - a.scoreMin);
+    setMatchRows(rows);
+    setMatchLoading(false);
+  }, [vacancies, aggregation, candidate]);
+
+  useEffect(() => {
+    if (matchOpen) computeMatches();
+  }, [matchOpen, computeMatches]);
+
+  const addToPipeline = async (vacancyId: string, scoreMin: number) => {
+    if (!candidate) return;
+    const pipeline = await getOrCreatePipeline(vacancyId);
+    const pipelineStages = await db.pipelineStages
+      .where('pipelineId').equals(pipeline.id).sortBy('order');
+    if (pipelineStages.length > 0) {
+      await addCard({
+        pipelineId: pipeline.id,
+        stageId: pipelineStages[0].id,
+        candidateId: candidate.id,
+        matchScore: scoreMin,
+      });
+      setAddedSet((s) => new Set([...s, vacancyId]));
+    }
+  };
+
+  const scoreColor = (s: number) =>
+    s >= 80 ? '#22c55e' : s >= 50 ? '#f0a030' : '#ef4444';
+
   if (!candidate) return <div style={{ padding: 24 }}>Кандидат не найден</div>;
 
   // ── Work entries sidebar panel ────────────────────────────
   const workPanel = (
     <div className={styles.workPanel}>
-      {/* Tab numbers + add button */}
       <div className={styles.entryTabs}>
         {workEntries.map((_, i) => (
           <button
@@ -178,7 +239,6 @@ export function CandidateDetail() {
         </button>
       </div>
 
-      {/* Active entry card or first entry in summary mode */}
       {(activeEntry ?? workEntries[0]) && (
         <div className={styles.entryCard}>
           <button
@@ -207,7 +267,6 @@ export function CandidateDetail() {
             </div>
           </button>
 
-          {/* × deselect button — only visible when an entry is selected */}
           {selectedIdx !== null && (
             <button
               className={styles.entryDeselectBtn}
@@ -246,6 +305,14 @@ export function CandidateDetail() {
 
         <Button
           size="sm"
+          variant={matchOpen ? 'primary' : 'secondary'}
+          onClick={() => setMatchOpen((v) => !v)}
+        >
+          <Briefcase size={13} /> Подобрать
+        </Button>
+
+        <Button
+          size="sm"
           variant="secondary"
           onClick={() => navigate(`/candidates/${candidate.id}/edit`)}
         >
@@ -253,25 +320,83 @@ export function CandidateDetail() {
         </Button>
       </div>
 
-      {/* ── TreePicker ────────────────────────────────────── */}
-      <div className={styles.pickerContainer}>
-        <TreePicker
-          mode={activeEntry ? 'candidate' : 'candidate-agg'}
-          fullHeight
-          filteredSubIds={filteredSubIds}
-          selected={candidateToolIds}
-          yearsMap={candidateYearsMap}
-          onChange={activeEntry
-            ? (ids) => {
-                const cur = new Set(candidateToolIds);
-                const nxt = new Set(ids);
-                for (const tid of nxt) { if (!cur.has(tid)) { handleToggle(tid); return; } }
-                for (const tid of cur) { if (!nxt.has(tid)) { handleToggle(tid); return; } }
-              }
-            : undefined}
-          onYearsChange={activeEntry ? handleYearsChange : undefined}
-          sidebarFooter={workPanel}
-        />
+      {/* ── Body: TreePicker + Match Panel ──────────────── */}
+      <div className={styles.body}>
+        <div className={styles.pickerContainer}>
+          <TreePicker
+            mode={activeEntry ? 'candidate' : 'candidate-agg'}
+            fullHeight
+            filteredSubIds={filteredSubIds}
+            selected={candidateToolIds}
+            yearsMap={candidateYearsMap}
+            onChange={activeEntry
+              ? (ids) => {
+                  const cur = new Set(candidateToolIds);
+                  const nxt = new Set(ids);
+                  for (const tid of nxt) { if (!cur.has(tid)) { handleToggle(tid); return; } }
+                  for (const tid of cur) { if (!nxt.has(tid)) { handleToggle(tid); return; } }
+                }
+              : undefined}
+            onYearsChange={activeEntry ? handleYearsChange : undefined}
+            sidebarFooter={workPanel}
+          />
+        </div>
+
+        {/* ── Match panel ── */}
+        {matchOpen && (
+          <div className={styles.matchPanel}>
+            <div className={styles.matchPanelHeader}>
+              <span className={styles.matchPanelTitle}>Автоподбор вакансий</span>
+              <button className={styles.matchPanelClose} onClick={() => setMatchOpen(false)}>
+                <X size={14} />
+              </button>
+            </div>
+
+            {matchLoading ? (
+              <div className={styles.matchLoading}>Вычисляем...</div>
+            ) : matchRows.length === 0 ? (
+              <div className={styles.matchLoading}>Нет вакансий</div>
+            ) : (
+              <div className={styles.matchList}>
+                {matchRows.map((row) => (
+                  <div key={row.vacancyId} className={styles.matchRow}>
+                    <div className={styles.matchAvatar}>
+                      {row.companyLogoUrl
+                        ? <img src={row.companyLogoUrl} alt="" className={styles.matchAvatarImg} />
+                        : <span className={styles.matchAvatarInitials}>{row.companyName.slice(0, 1)}</span>
+                      }
+                    </div>
+                    <div className={styles.matchInfo}>
+                      <button
+                        className={styles.matchName}
+                        onClick={() => navigate(`/vacancies/${row.vacancyId}`)}
+                      >
+                        {row.companyName}
+                      </button>
+                      <div className={styles.matchScores}>
+                        <GradeBadge grade={row.grade} size="sm" />
+                        <span
+                          className={styles.matchScore}
+                          style={{ color: scoreColor(row.scoreMin) }}
+                        >
+                          {row.scoreMin}%
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      className={`${styles.matchAddBtn} ${addedSet.has(row.vacancyId) ? styles.matchAddBtnDone : ''}`}
+                      onClick={() => addToPipeline(row.vacancyId, row.scoreMin)}
+                      disabled={addedSet.has(row.vacancyId)}
+                      title="Добавить в воронку"
+                    >
+                      {addedSet.has(row.vacancyId) ? <Check size={12} /> : '+'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Work Entry Meta Modal ────────────────────────── */}
