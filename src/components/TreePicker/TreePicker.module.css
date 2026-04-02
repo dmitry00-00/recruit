@@ -73,6 +73,19 @@
   color: #fff;
 }
 
+/* Non-clickable category header for flat mode */
+.catHeader {
+  padding: 8px 12px 4px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-tertiary);
+  background: var(--bg-secondary);
+}
+
 .subItem {
   display: flex;
   align-items: center;

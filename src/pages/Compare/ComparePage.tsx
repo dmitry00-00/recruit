@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { useVacancyStore, useCandidateStore, useFilterStore } from '@/stores';
+import { useVacancyStore, useCandidateStore, useFilterStore, usePositionStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { MatchBadge } from '@/components/MatchBadge';
 import { GradeBadge, Button } from '@/components/ui';
@@ -14,12 +14,13 @@ export function ComparePage() {
   const navigate  = useNavigate();
   const { vacancies, load: loadVacancies }   = useVacancyStore();
   const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
+  const { positions, load: loadPositions } = usePositionStore();
   const { requirementLevel } = useFilterStore();
 
   const [matchResult,  setMatchResult]  = useState<MatchResult | null>(null);
   const [aggregation,  setAggregation]  = useState<CandidateAggregation | null>(null);
 
-  useEffect(() => { loadVacancies(); loadCandidates(); }, [loadVacancies, loadCandidates]);
+  useEffect(() => { loadVacancies(); loadCandidates(); loadPositions(); }, [loadVacancies, loadCandidates, loadPositions]);
 
   const vacancy   = useMemo(() => vacancies.find((v) => v.id === vacancyId),   [vacancies,   vacancyId]);
   const candidate = useMemo(() => candidates.find((c) => c.id === candidateId), [candidates, candidateId]);
@@ -44,6 +45,13 @@ export function ComparePage() {
     if (!aggregation) return {};
     return Object.fromEntries(aggregation.toolsExperience.map((t) => [t.toolId, t.years]));
   }, [aggregation]);
+
+  const filteredSubIds = useMemo(() => {
+    if (!vacancy) return [];
+    const pos = positions.find((p) => p.id === vacancy.positionId);
+    if (!pos?.requiredCategories?.length) return [];
+    return pos.requiredCategories.flatMap((rc) => rc.subcategoryIds);
+  }, [vacancy, positions]);
 
   if (!vacancy || !candidate) {
     return <div style={{ padding: 24 }}>Загрузка...</div>;
@@ -102,6 +110,7 @@ export function ComparePage() {
         {matchResult ? (
           <TreePicker
             mode="compare"
+            filteredSubIds={filteredSubIds}
             fullHeight
             matchResult={matchResult}
             requirementsYearsMap={requirementsYearsMap}

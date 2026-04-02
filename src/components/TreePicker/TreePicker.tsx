@@ -1,4 +1,4 @@
-import { useState, useMemo, type ReactNode } from 'react';
+import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import { getToolTree, searchTools } from '@/utils';
 import type { ToolCategory, ToolSubcategory, Tool, MatchResult } from '@/entities';
 import styles from './TreePicker.module.css';
@@ -41,6 +41,13 @@ interface TreePickerProps {
   // ── Layout ──
   sidebarFooter?: ReactNode;
   fullHeight?: boolean;
+
+  /**
+   * When set, sidebar shows a flat vertical list of only these subcategories
+   * (grouped under category headers). Category expand/collapse is disabled.
+   * If empty array → show all subcategories flat.
+   */
+  filteredSubIds?: string[];
 }
 
 export function TreePicker({
@@ -66,13 +73,40 @@ export function TreePicker({
   // layout
   sidebarFooter,
   fullHeight = false,
+  filteredSubIds,
 }: TreePickerProps) {
   const tree = useMemo(() => getToolTree(), []);
+  const useFlat = filteredSubIds !== undefined;
+
+  // Build flat subcategory list when filtered
+  const flatSubs = useMemo(() => {
+    if (!useFlat) return [];
+    const filterSet = filteredSubIds!.length > 0 ? new Set(filteredSubIds) : null;
+    const result: { catName: string; sub: ToolSubcategory }[] = [];
+    for (const cat of tree) {
+      for (const sub of cat.subcategories) {
+        if (!filterSet || filterSet.has(sub.id)) {
+          result.push({ catName: cat.name, sub });
+        }
+      }
+    }
+    return result;
+  }, [tree, filteredSubIds, useFlat]);
+
+  const defaultSubId = useFlat
+    ? (flatSubs[0]?.sub.id ?? null)
+    : (tree[0]?.subcategories[0]?.id ?? null);
+
   const [expandedCat, setExpandedCat] = useState<string | null>(tree[0]?.id ?? null);
-  const [activeSub, setActiveSub] = useState<string | null>(
-    tree[0]?.subcategories[0]?.id ?? null,
-  );
+  const [activeSub, setActiveSub] = useState<string | null>(defaultSubId);
   const [search, setSearch] = useState('');
+
+  // Auto-select first sub when filteredSubIds changes
+  useEffect(() => {
+    if (useFlat && flatSubs.length > 0 && !flatSubs.some((f) => f.sub.id === activeSub)) {
+      setActiveSub(flatSubs[0].sub.id);
+    }
+  }, [flatSubs, useFlat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const lockedSet  = useMemo(() => new Set(locked), [locked]);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
@@ -135,39 +169,66 @@ export function TreePicker({
       {/* ── Left: category sidebar ───────────────────────── */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarScroll}>
-          {tree.map((cat) => {
-            const count = countCat(cat);
-            const isExpanded = expandedCat === cat.id;
-            return (
-              <div key={cat.id}>
-                <button
-                  className={`${styles.catItem} ${isExpanded ? styles.catItemActive : ''}`}
-                  onClick={() => setExpandedCat(isExpanded ? null : cat.id)}
-                >
-                  {cat.name}
-                  {count > 0 && (
-                    <span className={`${styles.catCount} ${isExpanded ? styles.catCountActive : ''}`}>
-                      {count}
-                    </span>
-                  )}
-                </button>
-                {isExpanded &&
-                  cat.subcategories.map((sub) => {
-                    const sc = countSub(sub);
-                    return (
-                      <button
-                        key={sub.id}
-                        className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
-                        onClick={() => setActiveSub(sub.id)}
-                      >
-                        {sub.name}
-                        {sc > 0 && <span className={styles.catCount}>{sc}</span>}
-                      </button>
-                    );
-                  })}
-              </div>
-            );
-          })}
+          {useFlat ? (
+            /* ── Flat subcategory list (grouped by category headers) ── */
+            (() => {
+              let lastCat = '';
+              return flatSubs.map(({ catName, sub }) => {
+                const showHeader = catName !== lastCat;
+                lastCat = catName;
+                const sc = countSub(sub);
+                return (
+                  <div key={sub.id}>
+                    {showHeader && (
+                      <div className={styles.catHeader}>{catName}</div>
+                    )}
+                    <button
+                      className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
+                      onClick={() => setActiveSub(sub.id)}
+                    >
+                      {sub.name}
+                      {sc > 0 && <span className={styles.catCount}>{sc}</span>}
+                    </button>
+                  </div>
+                );
+              });
+            })()
+          ) : (
+            /* ── Classic expand/collapse sidebar ── */
+            tree.map((cat) => {
+              const count = countCat(cat);
+              const isExpanded = expandedCat === cat.id;
+              return (
+                <div key={cat.id}>
+                  <button
+                    className={`${styles.catItem} ${isExpanded ? styles.catItemActive : ''}`}
+                    onClick={() => setExpandedCat(isExpanded ? null : cat.id)}
+                  >
+                    {cat.name}
+                    {count > 0 && (
+                      <span className={`${styles.catCount} ${isExpanded ? styles.catCountActive : ''}`}>
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                  {isExpanded &&
+                    cat.subcategories.map((sub) => {
+                      const sc = countSub(sub);
+                      return (
+                        <button
+                          key={sub.id}
+                          className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
+                          onClick={() => setActiveSub(sub.id)}
+                        >
+                          {sub.name}
+                          {sc > 0 && <span className={styles.catCount}>{sc}</span>}
+                        </button>
+                      );
+                    })}
+                </div>
+              );
+            })
+          )}
         </div>
 
         {sidebarFooter && (

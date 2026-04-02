@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useCandidateStore, usePositionStore } from '@/stores';
@@ -143,6 +143,15 @@ export function CandidateDetail() {
     setEntryModalOpen(false);
   };
 
+  // ── Compute filtered sub IDs from active entry's position ─
+  const filteredSubIds = useMemo(() => {
+    const posId = activeEntry?.positionId ?? workEntries[0]?.positionId;
+    if (!posId) return [];
+    const pos = positions.find((p) => p.id === posId);
+    if (!pos?.requiredCategories?.length) return [];
+    return pos.requiredCategories.flatMap((rc) => rc.subcategoryIds);
+  }, [activeEntry, workEntries, positions]);
+
   if (!candidate) return <div style={{ padding: 24 }}>Кандидат не найден</div>;
 
   // ── Work entries sidebar panel ────────────────────────────
@@ -249,6 +258,7 @@ export function CandidateDetail() {
         <TreePicker
           mode={activeEntry ? 'candidate' : 'candidate-agg'}
           fullHeight
+          filteredSubIds={filteredSubIds}
           selected={candidateToolIds}
           yearsMap={candidateYearsMap}
           onChange={activeEntry

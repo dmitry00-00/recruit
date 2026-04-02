@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { useVacancyStore } from '@/stores';
+import { useVacancyStore, usePositionStore } from '@/stores';
 import { TreePicker, type VacancyToolState } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
 import {
@@ -25,8 +25,9 @@ export function VacancyDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { vacancies, load, update } = useVacancyStore();
+  const { positions, load: loadPositions } = usePositionStore();
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); loadPositions(); }, [load, loadPositions]);
 
   const vacancy = vacancies.find((v) => v.id === id);
 
@@ -153,6 +154,14 @@ export function VacancyDetail() {
     }
   };
 
+  // ── Compute filtered subcategory IDs from position ────
+  const filteredSubIds = useMemo(() => {
+    if (!vacancy) return [];
+    const position = positions.find((p) => p.id === vacancy.positionId);
+    if (!position?.requiredCategories?.length) return []; // empty = show all
+    return position.requiredCategories.flatMap((rc) => rc.subcategoryIds);
+  }, [vacancy, positions]);
+
   if (!vacancy) return <div style={{ padding: 24 }}>Вакансия не найдена</div>;
 
   const symbol = CURRENCY_SYMBOLS[vacancy.currency] ?? '₽';
@@ -208,6 +217,7 @@ export function VacancyDetail() {
         <TreePicker
           mode="vacancy"
           fullHeight
+          filteredSubIds={filteredSubIds}
           minIds={minIds}
           maxIds={maxIds}
           minYearsMap={minYearsMap}
