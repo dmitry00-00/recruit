@@ -1,0 +1,275 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--nav-height));
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+  flex-shrink: 0;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.backBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.candidateName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.totalExp {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.headerSep {
+  width: 1px;
+  height: 20px;
+  background: var(--border-secondary);
+}
+
+.headerSpacer {
+  flex: 1;
+}
+
+/* ── TreePicker container ────────────────────── */
+.pickerContainer {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Work entries panel (sidebarFooter) ─────── */
+.workPanel {
+  padding: 0;
+}
+
+/* Tabs row */
+.entryTabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px 4px;
+  flex-wrap: wrap;
+}
+
+.entryTab {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entryTab:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.entryTabActive {
+  background: var(--cand-color, #22c55e);
+  border-color: var(--cand-color, #22c55e);
+  color: #fff;
+}
+
+.entryTabAdd {
+  background: transparent;
+  border: 1px dashed var(--border-secondary);
+  color: var(--text-tertiary);
+}
+
+.entryTabAdd:hover {
+  border-color: var(--cand-color, #22c55e);
+  color: var(--cand-color, #22c55e);
+}
+
+/* Selected entry card */
+.entryCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 8px;
+}
+
+.entryCardBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+}
+
+.entryCardBtn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-secondary);
+}
+
+.entryLogoPlaceholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--cand-dim, rgba(34,197,94,0.12));
+  color: var(--cand-color, #22c55e);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.entryLogoImg {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.entryCompanyName {
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entryDateRange {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.entryDeselectBtn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.entryDeselectBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ── Modal form ──────────────────────────────── */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--amber);
+}
+
+.select {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row > * {
+  flex: 1;
+}
+
+.textarea {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 64px;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: var(--amber);
+}

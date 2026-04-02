@@ -1,0 +1,106 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--nav-height));
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.backBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.headerSep {
+  width: 1px;
+  height: 20px;
+  background: var(--border-secondary);
+  flex-shrink: 0;
+}
+
+.headerCard {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.cardName {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vsLabel {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.headerSpacer {
+  flex: 1;
+}
+
+/* ── Legend strip ────────────────────────────── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-tertiary);
+  font-size: 11px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.legendNote {
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+
+/* ── TreePicker container ────────────────────── */
+.pickerContainer {
+  flex: 1;
+  overflow: hidden;
+}

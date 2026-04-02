@@ -1,0 +1,186 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--nav-height));
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+  flex-shrink: 0;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.backBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.companyBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  transition: background 0.15s;
+}
+
+.companyBtn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-secondary);
+}
+
+.companyLogo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.companyLogoPlaceholder {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerSep {
+  width: 1px;
+  height: 20px;
+  background: var(--border-secondary);
+}
+
+.headerSpacer {
+  flex: 1;
+}
+
+.statusBadge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.sourceLink {
+  display: flex;
+  align-items: center;
+  color: var(--amber);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.sourceLink:hover {
+  background: var(--amber-bg);
+}
+
+/* ── TreePicker container ────────────────────── */
+.pickerContainer {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Modal form fields ───────────────────────── */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--amber);
+}
+
+.select {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row > * {
+  flex: 1;
+}
+
+.textarea {
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 64px;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: var(--amber);
+}

@@ -1,26 +1,27 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { useVacancyStore, useCandidateStore, useFilterStore } from '@/stores';
-import { CompareSheet } from '@/components/CompareSheet';
+import { TreePicker } from '@/components/TreePicker';
 import { MatchBadge } from '@/components/MatchBadge';
 import { GradeBadge, Button } from '@/components/ui';
 import { computeMatchScore, aggregateCandidate } from '@/utils';
 import type { MatchResult, CandidateAggregation } from '@/entities';
-import styles from '../Vacancies/VacancyForm.module.css';
+import styles from './ComparePage.module.css';
 
 export function ComparePage() {
   const { vacancyId, candidateId } = useParams<{ vacancyId: string; candidateId: string }>();
-  const navigate = useNavigate();
-  const { vacancies, load: loadVacancies } = useVacancyStore();
+  const navigate  = useNavigate();
+  const { vacancies, load: loadVacancies }   = useVacancyStore();
   const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
-  const { showDiff, requirementLevel } = useFilterStore();
+  const { requirementLevel } = useFilterStore();
 
-  const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
-  const [aggregation, setAggregation] = useState<CandidateAggregation | null>(null);
+  const [matchResult,  setMatchResult]  = useState<MatchResult | null>(null);
+  const [aggregation,  setAggregation]  = useState<CandidateAggregation | null>(null);
 
   useEffect(() => { loadVacancies(); loadCandidates(); }, [loadVacancies, loadCandidates]);
 
-  const vacancy = useMemo(() => vacancies.find((v) => v.id === vacancyId), [vacancies, vacancyId]);
+  const vacancy   = useMemo(() => vacancies.find((v) => v.id === vacancyId),   [vacancies,   vacancyId]);
   const candidate = useMemo(() => candidates.find((c) => c.id === candidateId), [candidates, candidateId]);
 
   useEffect(() => {
@@ -32,48 +33,83 @@ export function ComparePage() {
     });
   }, [vacancy, candidate, getWorkEntries]);
 
+  // Build years maps for compare mode
+  const requirementsYearsMap = useMemo<Record<string, number>>(() => {
+    if (!vacancy) return {};
+    const reqs = requirementLevel === 'min' ? vacancy.minRequirements : vacancy.maxRequirements;
+    return Object.fromEntries(reqs.filter((r) => r.minYears).map((r) => [r.toolId, r.minYears!]));
+  }, [vacancy, requirementLevel]);
+
+  const candidateYearsMap = useMemo<Record<string, number>>(() => {
+    if (!aggregation) return {};
+    return Object.fromEntries(aggregation.toolsExperience.map((t) => [t.toolId, t.years]));
+  }, [aggregation]);
+
   if (!vacancy || !candidate) {
-    return <div className={styles.page}>Загрузка...</div>;
+    return <div style={{ padding: 24 }}>Загрузка...</div>;
   }
 
   return (
-    <div className={styles.page} style={{ maxWidth: 960 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h1 className={styles.title} style={{ margin: 0, fontSize: 16 }}>Сравнение</h1>
+    <div className={styles.page}>
+      {/* ── Header ───────────────────────────────────────── */}
+      <div className={styles.header}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={14} /> Назад
+        </button>
+
+        <div className={styles.headerSep} />
+
+        {/* Vacancy side */}
+        <div className={styles.headerCard} style={{ borderColor: 'var(--vac-color)' }}>
+          <span className={styles.cardName} style={{ color: 'var(--vac-color)' }}>
+            {vacancy.companyName}
+          </span>
+          <GradeBadge grade={vacancy.grade} size="sm" />
+        </div>
+
+        <span className={styles.vsLabel}>vs</span>
+
+        {/* Candidate side */}
+        <div className={styles.headerCard} style={{ borderColor: 'var(--cand-color)' }}>
+          <span className={styles.cardName} style={{ color: 'var(--cand-color)' }}>
+            {candidate.lastName} {candidate.firstName}
+          </span>
+          {aggregation?.topGrade && <GradeBadge grade={aggregation.topGrade} size="sm" />}
+        </div>
+
+        <div className={styles.headerSpacer} />
+
         {matchResult && (
-          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-            <MatchBadge score={requirementLevel === 'min' ? matchResult.scoreMin : matchResult.scoreMax} size="lg" />
-          </div>
+          <MatchBadge
+            score={requirementLevel === 'min' ? matchResult.scoreMin : matchResult.scoreMax}
+            size="lg"
+          />
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-        {/* Vacancy mini card */}
-        <div style={{ flex: 1, padding: 12, background: 'var(--vac-dim)', borderRadius: 'var(--radius-md)' }}>
-          <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--vac-color)' }}>{vacancy.companyName}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>{vacancy.positionId}</div>
-          <div style={{ marginTop: 6 }}><GradeBadge grade={vacancy.grade} size="sm" /></div>
-        </div>
-        {/* Candidate mini card */}
-        <div style={{ flex: 1, padding: 12, background: 'var(--cand-dim)', borderRadius: 'var(--radius-md)' }}>
-          <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--cand-color)' }}>
-            {candidate.lastName} {candidate.firstName}
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
-            {aggregation ? `${aggregation.totalYears} лет опыта` : ''}
-          </div>
-          {aggregation?.topGrade && (
-            <div style={{ marginTop: 6 }}><GradeBadge grade={aggregation.topGrade} size="sm" /></div>
-          )}
-        </div>
+      {/* ── Legend ────────────────────────────────────────── */}
+      <div className={styles.legend}>
+        <span className={styles.legendItem} style={{ color: '#22c55e' }}>✓ Соответствует</span>
+        <span className={styles.legendItem} style={{ color: '#ef4444' }}>✗ Недостаёт</span>
+        <span className={styles.legendItem} style={{ color: '#6366f1' }}>~ Дополнительно</span>
+        <span className={styles.legendNote}>
+          Левее «/» — требование вакансии,  правее «/» — опыт кандидата
+        </span>
       </div>
 
-      {matchResult && (
-        <CompareSheet matchResult={matchResult} showDiff={showDiff} />
-      )}
-
-      <div style={{ marginTop: 16 }}>
-        <Button variant="secondary" onClick={() => navigate(-1)}>Назад</Button>
+      {/* ── TreePicker in compare mode ───────────────────── */}
+      <div className={styles.pickerContainer}>
+        {matchResult ? (
+          <TreePicker
+            mode="compare"
+            fullHeight
+            matchResult={matchResult}
+            requirementsYearsMap={requirementsYearsMap}
+            candidateYearsMap={candidateYearsMap}
+          />
+        ) : (
+          <div style={{ padding: 24, color: 'var(--text-tertiary)' }}>Вычисление результата...</div>
+        )}
       </div>
     </div>
   );

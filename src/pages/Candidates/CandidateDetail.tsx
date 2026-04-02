@@ -1,146 +1,357 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useCandidateStore, useVacancyStore } from '@/stores';
-import { Tabs, GradeBadge, Button } from '@/components/ui';
-import { SalaryChart } from '@/components/SalaryChart';
-import { aggregateCandidate, getToolName } from '@/utils';
-import { WORK_FORMAT_LABELS, CURRENCY_SYMBOLS } from '@/config';
-import type { WorkEntry, CandidateAggregation } from '@/entities';
-import styles from '../Vacancies/VacancyForm.module.css';
+import { ArrowLeft, Plus, X } from 'lucide-react';
+import { useCandidateStore, usePositionStore } from '@/stores';
+import { TreePicker } from '@/components/TreePicker';
+import { GradeBadge, Modal, Button } from '@/components/ui';
+import { aggregateCandidate } from '@/utils';
+import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
+import type { WorkEntry, Grade, Currency, CandidateAggregation } from '@/entities';
+import styles from './CandidateDetail.module.css';
+
+function formatDateRange(entry: WorkEntry): string {
+  const start = new Date(entry.startDate).toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' });
+  const end = entry.isCurrent ? 'н.в.' : entry.endDate
+    ? new Date(entry.endDate).toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' })
+    : '—';
+  return `${start} — ${end}`;
+}
 
 export function CandidateDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { candidates, load, getWorkEntries } = useCandidateStore();
-  const { vacancies, load: loadVacancies } = useVacancyStore();
-  const [workEntries, setWorkEntries] = useState<WorkEntry[]>([]);
-  const [aggregation, setAggregation] = useState<CandidateAggregation | null>(null);
+  const { candidates, load, getWorkEntries, addWorkEntry, updateWorkEntry } = useCandidateStore();
+  const { positions, load: loadPositions } = usePositionStore();
 
-  useEffect(() => { load(); loadVacancies(); }, [load, loadVacancies]);
+  useEffect(() => { load(); loadPositions(); }, [load, loadPositions]);
 
   const candidate = candidates.find((c) => c.id === id);
 
-  useEffect(() => {
+  const [workEntries, setWorkEntries]     = useState<WorkEntry[]>([]);
+  const [aggregation, setAggregation]     = useState<CandidateAggregation | null>(null);
+  const [selectedIdx, setSelectedIdx]     = useState<number | null>(null);
+
+  const refreshEntries = useCallback(async () => {
     if (!candidate) return;
-    getWorkEntries(candidate.id).then((entries) => {
-      setWorkEntries(entries);
-      setAggregation(aggregateCandidate(candidate, entries));
-    });
+    const entries = await getWorkEntries(candidate.id);
+    setWorkEntries(entries);
+    setAggregation(aggregateCandidate(candidate, entries));
   }, [candidate, getWorkEntries]);
 
-  if (!candidate) return <div className={styles.page}>Кандидат не найден</div>;
+  useEffect(() => { refreshEntries(); }, [refreshEntries]);
 
-  const symbol = CURRENCY_SYMBOLS[candidate.currency] ?? '₽';
+  // ── Active entry (for TreePicker edit mode) ───────────────
+  const activeEntry = selectedIdx !== null ? workEntries[selectedIdx] : null;
+
+  // Build TreePicker props
+  const candidateToolIds = activeEntry
+    ? activeEntry.tools.map((t) => t.toolId)
+    : [];
+
+  const candidateYearsMap: Record<string, number> = activeEntry
+    ? Object.fromEntries(activeEntry.tools.map((t) => [t.toolId, t.years]))
+    : (aggregation
+        ? Object.fromEntries(aggregation.toolsExperience.map((t) => [t.toolId, t.years]))
+        : {});
+
+  // ── Tool toggle (auto-save for active entry) ──────────────
+  const handleToggle = async (toolId: string) => {
+    if (!activeEntry) return;
+    const exists = activeEntry.tools.some((t) => t.toolId === toolId);
+    const newTools = exists
+      ? activeEntry.tools.filter((t) => t.toolId !== toolId)
+      : [...activeEntry.tools, { toolId, years: 0 }];
+    await updateWorkEntry(activeEntry.id, { tools: newTools });
+    await refreshEntries();
+  };
+
+  const handleYearsChange = async (toolId: string, years: number) => {
+    if (!activeEntry) return;
+    const newTools = activeEntry.tools.map((t) =>
+      t.toolId === toolId ? { ...t, years } : t,
+    );
+    await updateWorkEntry(activeEntry.id, { tools: newTools });
+    await refreshEntries();
+  };
+
+  // ── Add new work entry ────────────────────────────────────
+  const handleAddEntry = async () => {
+    if (!candidate) return;
+    const newId = await addWorkEntry({
+      candidateId: candidate.id,
+      companyName: 'Новое место работы',
+      positionId: 'custom',
+      grade: 'middle',
+      startDate: new Date(),
+      isCurrent: true,
+      tools: [],
+      currency: 'RUB',
+    });
+    await refreshEntries();
+    const updated = await getWorkEntries(candidate.id);
+    const newIdx = updated.findIndex((e) => e.id === newId);
+    if (newIdx >= 0) {
+      setSelectedIdx(newIdx);
+      openEntryModal(updated[newIdx]);
+    }
+  };
+
+  // ── Work entry meta modal ─────────────────────────────────
+  const [entryModalOpen,  setEntryModalOpen]  = useState(false);
+  const [editingEntry,    setEditingEntry]    = useState<WorkEntry | null>(null);
+  const [eCompanyName,    setECompanyName]    = useState('');
+  const [eCompanyLogo,    setECompanyLogo]    = useState('');
+  const [ePositionId,     setEPositionId]     = useState('');
+  const [eGrade,          setEGrade]          = useState<Grade>('middle');
+  const [eStartDate,      setEStartDate]      = useState('');
+  const [eEndDate,        setEEndDate]        = useState('');
+  const [eIsCurrent,      setEIsCurrent]      = useState(false);
+  const [eSalary,         setESalary]         = useState('');
+  const [eCurrency,       setECurrency]       = useState<Currency>('RUB');
+  const [eResponsib,      setEResponsib]      = useState('');
+
+  const openEntryModal = (entry: WorkEntry) => {
+    setEditingEntry(entry);
+    setECompanyName(entry.companyName);
+    setECompanyLogo(entry.companyLogoUrl ?? '');
+    setEPositionId(entry.positionId);
+    setEGrade(entry.grade);
+    setEStartDate(entry.startDate ? new Date(entry.startDate).toISOString().slice(0, 10) : '');
+    setEEndDate(entry.endDate ? new Date(entry.endDate).toISOString().slice(0, 10) : '');
+    setEIsCurrent(entry.isCurrent);
+    setESalary(entry.salary ? String(entry.salary) : '');
+    setECurrency(entry.currency);
+    setEResponsib(entry.responsibilities ?? '');
+    setEntryModalOpen(true);
+  };
+
+  const saveEntryMeta = async () => {
+    if (!editingEntry) return;
+    await updateWorkEntry(editingEntry.id, {
+      companyName: eCompanyName,
+      companyLogoUrl: eCompanyLogo || undefined,
+      positionId: ePositionId || 'custom',
+      grade: eGrade,
+      startDate: eStartDate ? new Date(eStartDate) : editingEntry.startDate,
+      endDate: !eIsCurrent && eEndDate ? new Date(eEndDate) : undefined,
+      isCurrent: eIsCurrent,
+      salary: eSalary ? parseInt(eSalary) : undefined,
+      currency: eCurrency,
+      responsibilities: eResponsib || undefined,
+    });
+    await refreshEntries();
+    setEntryModalOpen(false);
+  };
+
+  if (!candidate) return <div style={{ padding: 24 }}>Кандидат не найден</div>;
+
+  // ── Work entries sidebar panel ────────────────────────────
+  const workPanel = (
+    <div className={styles.workPanel}>
+      {/* Tab numbers + add button */}
+      <div className={styles.entryTabs}>
+        {workEntries.map((_, i) => (
+          <button
+            key={i}
+            className={`${styles.entryTab} ${selectedIdx === i ? styles.entryTabActive : ''}`}
+            onClick={() => setSelectedIdx(selectedIdx === i ? null : i)}
+            title={`Место работы ${i + 1}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          className={`${styles.entryTab} ${styles.entryTabAdd}`}
+          onClick={handleAddEntry}
+          title="Добавить место работы"
+        >
+          <Plus size={12} />
+        </button>
+      </div>
+
+      {/* Active entry card or first entry in summary mode */}
+      {(activeEntry ?? workEntries[0]) && (
+        <div className={styles.entryCard}>
+          <button
+            className={styles.entryCardBtn}
+            onClick={() => openEntryModal(activeEntry ?? workEntries[0])}
+            title="Редактировать информацию о месте работы"
+          >
+            {(activeEntry ?? workEntries[0]).companyLogoUrl ? (
+              <img
+                src={(activeEntry ?? workEntries[0]).companyLogoUrl}
+                alt=""
+                className={styles.entryLogoImg}
+              />
+            ) : (
+              <span className={styles.entryLogoPlaceholder}>
+                {(activeEntry ?? workEntries[0]).companyName.slice(0, 2).toUpperCase()}
+              </span>
+            )}
+            <div>
+              <div className={styles.entryCompanyName}>
+                {(activeEntry ?? workEntries[0]).companyName}
+              </div>
+              <div className={styles.entryDateRange}>
+                {formatDateRange(activeEntry ?? workEntries[0])}
+              </div>
+            </div>
+          </button>
+
+          {/* × deselect button — only visible when an entry is selected */}
+          {selectedIdx !== null && (
+            <button
+              className={styles.entryDeselectBtn}
+              onClick={() => setSelectedIdx(null)}
+              title="Показать суммарный опыт"
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className={styles.page}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        <h1 className={styles.title} style={{ margin: 0 }}>
+      {/* ── Header ───────────────────────────────────────── */}
+      <div className={styles.header}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={14} /> Назад
+        </button>
+
+        <div className={styles.headerSep} />
+
+        <span className={styles.candidateName}>
           {candidate.lastName} {candidate.firstName}
-        </h1>
+        </span>
+
         {aggregation?.topGrade && <GradeBadge grade={aggregation.topGrade} />}
+
         {aggregation && (
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-secondary)' }}>
-            {aggregation.totalYears} лет
-          </span>
+          <span className={styles.totalExp}>{aggregation.totalYears} лет</span>
         )}
+
+        <div className={styles.headerSpacer} />
+
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => navigate(`/candidates/${candidate.id}/edit`)}
+        >
+          Профиль
+        </Button>
       </div>
 
-      <Tabs tabs={[
-        {
-          id: 'profile',
-          label: 'Профиль',
-          content: (
-            <div className={styles.formSection}>
-              {candidate.email && <p><strong>Email:</strong> {candidate.email}</p>}
-              {candidate.phone && <p><strong>Телефон:</strong> {candidate.phone}</p>}
-              {candidate.telegramHandle && <p><strong>Telegram:</strong> {candidate.telegramHandle}</p>}
-              {candidate.city && <p><strong>Город:</strong> {candidate.city}</p>}
-              <p><strong>Формат:</strong> {WORK_FORMAT_LABELS[candidate.workFormat]}</p>
-              <p><strong>Релокация:</strong> {candidate.relocate ? 'Да' : 'Нет'}</p>
-              {candidate.salaryExpected && (
-                <p>
-                  <strong>Ожидание:</strong>{' '}
-                  <span style={{ fontFamily: 'var(--font-mono)' }}>
-                    {(candidate.salaryExpected / 1000).toFixed(0)}k {symbol}
-                  </span>
-                </p>
-              )}
-            </div>
-          ),
-        },
-        {
-          id: 'experience',
-          label: `Опыт (${workEntries.length})`,
-          content: (
-            <div className={styles.formSection}>
-              {workEntries.length === 0 && <p style={{ color: 'var(--text-tertiary)' }}>Нет мест работы</p>}
-              {workEntries.map((e) => (
-                <div key={e.id} style={{ padding: 12, background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', marginBottom: 8 }}>
-                  <div style={{ fontWeight: 700, fontSize: 13 }}>{e.companyName}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
-                    {new Date(e.startDate).toLocaleDateString('ru-RU')} – {e.isCurrent ? 'н.в.' : e.endDate ? new Date(e.endDate).toLocaleDateString('ru-RU') : '—'}
-                  </div>
-                  <div style={{ marginTop: 6, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                    {e.tools.map((t) => (
-                      <span key={t.toolId} style={{ fontSize: 11, padding: '2px 6px', background: 'var(--chip-bg)', borderRadius: 4 }}>
-                        {getToolName(t.toolId)} {t.years > 0 ? `(${t.years}г)` : ''}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ),
-        },
-        {
-          id: 'stack',
-          label: 'Стек',
-          content: (
-            <div className={styles.formSection}>
-              {aggregation?.toolsExperience.map((t) => (
-                <div key={t.toolId} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <span style={{ width: 120, fontSize: 12, fontWeight: 600 }}>{getToolName(t.toolId)}</span>
-                  <div style={{ flex: 1, height: 6, background: 'var(--bg-tertiary)', borderRadius: 3 }}>
-                    <div style={{ width: `${Math.min(100, (t.years / 10) * 100)}%`, height: '100%', background: 'var(--cand-color)', borderRadius: 3 }} />
-                  </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, width: 40, textAlign: 'right' }}>{t.years}г</span>
-                </div>
-              ))}
-            </div>
-          ),
-        },
-        {
-          id: 'vacancies',
-          label: 'Вакансии',
-          content: (
-            <div className={styles.formSection}>
-              {vacancies.length === 0
-                ? <p style={{ color: 'var(--text-tertiary)' }}>Нет вакансий</p>
-                : vacancies.map((v) => (
-                    <div
-                      key={v.id}
-                      style={{ display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer', fontSize: 13 }}
-                      onClick={() => navigate(`/compare/${v.id}/${candidate.id}`)}
-                    >
-                      <span style={{ fontWeight: 600 }}>{v.companyName}</span>
-                      <span style={{ color: 'var(--text-tertiary)' }}>→ сравнить</span>
-                    </div>
-                  ))
+      {/* ── TreePicker ────────────────────────────────────── */}
+      <div className={styles.pickerContainer}>
+        <TreePicker
+          mode={activeEntry ? 'candidate' : 'candidate-agg'}
+          fullHeight
+          selected={candidateToolIds}
+          yearsMap={candidateYearsMap}
+          onChange={activeEntry
+            ? (ids) => {
+                const cur = new Set(candidateToolIds);
+                const nxt = new Set(ids);
+                for (const tid of nxt) { if (!cur.has(tid)) { handleToggle(tid); return; } }
+                for (const tid of cur) { if (!nxt.has(tid)) { handleToggle(tid); return; } }
               }
-            </div>
-          ),
-        },
-        {
-          id: 'salary',
-          label: 'Зарплата',
-          content: <SalaryChart workHistory={workEntries} currentSalary={candidate.salaryExpected} currency={candidate.currency} />,
-        },
-      ]} />
-
-      <div style={{ marginTop: 16 }}>
-        <Button variant="secondary" onClick={() => navigate(-1)}>Назад</Button>
+            : undefined}
+          onYearsChange={activeEntry ? handleYearsChange : undefined}
+          sidebarFooter={workPanel}
+        />
       </div>
+
+      {/* ── Work Entry Meta Modal ────────────────────────── */}
+      <Modal
+        open={entryModalOpen}
+        onClose={() => setEntryModalOpen(false)}
+        title="Место работы"
+        size="md"
+        footer={
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <Button variant="secondary" onClick={() => setEntryModalOpen(false)}>Отмена</Button>
+            <Button onClick={saveEntryMeta}>Сохранить</Button>
+          </div>
+        }
+      >
+        <div className={styles.modalForm}>
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label}>Компания</label>
+              <input className={styles.input} value={eCompanyName} onChange={(e) => setECompanyName(e.target.value)} />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label}>Логотип (URL)</label>
+              <input className={styles.input} value={eCompanyLogo} onChange={(e) => setECompanyLogo(e.target.value)} placeholder="https://..." />
+            </div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label}>Должность</label>
+              <select className={styles.select} value={ePositionId} onChange={(e) => setEPositionId(e.target.value)}>
+                <option value="">—</option>
+                {positions.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label}>Грейд</label>
+              <select className={styles.select} value={eGrade} onChange={(e) => setEGrade(e.target.value as Grade)}>
+                {GRADE_ORDER.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label}>Начало</label>
+              <input className={styles.input} type="date" value={eStartDate} onChange={(e) => setEStartDate(e.target.value)} />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label}>Окончание</label>
+              <input className={styles.input} type="date" value={eEndDate} onChange={(e) => setEEndDate(e.target.value)} disabled={eIsCurrent} />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+              <input
+                type="checkbox"
+                checked={eIsCurrent}
+                onChange={(e) => {
+                  setEIsCurrent(e.target.checked);
+                  if (e.target.checked) setEEndDate('');
+                }}
+              />
+              По настоящее время
+            </label>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label}>Оклад</label>
+              <input className={styles.input} type="number" value={eSalary} onChange={(e) => setESalary(e.target.value)} />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label}>Валюта</label>
+              <select className={styles.select} value={eCurrency} onChange={(e) => setECurrency(e.target.value as Currency)}>
+                <option value="RUB">RUB</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="KZT">KZT</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Обязанности</label>
+            <textarea className={styles.textarea} value={eResponsib} onChange={(e) => setEResponsib(e.target.value)} rows={3} />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
