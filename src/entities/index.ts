@@ -312,13 +312,14 @@ export interface SalaryDataPoint {
 
 // ── User & Auth ──────────────────────────────────────────────
 
-export type UserRole = 'admin' | 'recruiter' | 'hiring_manager' | 'viewer';
+export type UserRole = 'admin' | 'recruiter' | 'hiring_manager' | 'viewer' | 'candidate';
 
 export const USER_ROLE_LABELS: Record<UserRole, string> = {
   admin:          'Администратор',
   recruiter:      'Рекрутер',
   hiring_manager: 'Нанимающий менеджер',
   viewer:         'Наблюдатель',
+  candidate:      'Кандидат',
 };
 
 export interface User {

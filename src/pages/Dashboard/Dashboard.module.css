@@ -79,12 +79,13 @@
 }
 
 .table th {
-  padding: 8px 10px;
+  padding: 4px 10px 4px;
   font-weight: 700;
   text-align: left;
   background: var(--bg-secondary);
   border-bottom: 2px solid var(--border-secondary);
   white-space: nowrap;
+  vertical-align: top;
 }
 
 .table td {
@@ -98,4 +99,213 @@
 
 .clickableRow {
   cursor: pointer;
+}
+
+/* ── Sort & Filter in table headers ─────────── */
+.sortBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.sortBtn:hover {
+  color: var(--amber);
+}
+
+.filterInput {
+  display: block;
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-family: var(--font-sans);
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  outline: none;
+  margin-bottom: 2px;
+}
+
+.filterInput:focus {
+  border-color: var(--amber);
+}
+
+/* ── Analytics Section ──────────────────────── */
+.analyticsSection {
+  padding: 8px 0;
+}
+
+.analyticsTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.analyticsDesc {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin: 0 0 16px;
+}
+
+.analyticsSub {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 16px 0 12px;
+}
+
+/* ── Grade cards (general roadmap) ──────────── */
+.gradeCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.gradeCard {
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--bg-primary);
+}
+
+.gradeCardHeader {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+
+.gradeCardSalary {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.gradeCardMeta {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+/* ── Grade selector (detailed mode) ─────────── */
+.gradeSelector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* ── Detailed grid ──────────────────────────── */
+.detailedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.detailedCard {
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--bg-primary);
+}
+
+.detailedCardTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-tertiary);
+  padding-bottom: 6px;
+}
+
+.detailedToolList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailedToolItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  padding: 3px 0;
+}
+
+.detailedToolLogo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* ── Salary bar (detailed mode) ─────────────── */
+.salaryBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.salaryBarTrack {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  position: relative;
+  overflow: visible;
+}
+
+.salaryBarFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--amber), #3b82f6);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+.salaryBarMedian {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 16px;
+  background: var(--text-primary);
+  border-radius: 1px;
+  transform: translateX(-50%);
+}
+
+.salaryMedianLabel {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.salaryValue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
 }

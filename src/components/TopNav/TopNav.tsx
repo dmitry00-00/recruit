@@ -19,6 +19,7 @@ export function TopNav() {
   const { theme, toggleTheme } = useUiStore();
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
+  const isCandidateRole = currentUser?.role === 'candidate';
 
   const {
     positionCategory,
@@ -72,7 +73,7 @@ export function TopNav() {
         onChange={(v) => setSection(v as AppSection)}
       />
 
-      {section === 'list' && (
+      {section === 'list' && !isCandidateRole && (
         <>
           <div className={styles.separator} />
           <NavToggleGroup
@@ -86,37 +87,43 @@ export function TopNav() {
         </>
       )}
 
-      <div className={styles.separator} />
+      {!isCandidateRole && (
+        <>
+          <div className={styles.separator} />
 
-      <NavToggleGroup
-        options={[
-          { value: 'min', label: 'MIN' },
-          { value: 'max', label: 'MAX' },
-        ]}
-        value={requirementLevel}
-        onChange={(v) => setRequirementLevel(v as RequirementLevel)}
-      />
+          <NavToggleGroup
+            options={[
+              { value: 'min', label: 'MIN' },
+              { value: 'max', label: 'MAX' },
+            ]}
+            value={requirementLevel}
+            onChange={(v) => setRequirementLevel(v as RequirementLevel)}
+          />
 
-      <button
-        className={`${styles.iconBtn} ${showDiff ? styles.iconBtnActive : ''}`}
-        onClick={toggleShowDiff}
-        title="Показать расхождения"
-      >
-        ±
-      </button>
+          <button
+            className={`${styles.iconBtn} ${showDiff ? styles.iconBtnActive : ''}`}
+            onClick={toggleShowDiff}
+            title="Показать расхождения"
+          >
+            ±
+          </button>
+        </>
+      )}
 
       <div className={styles.spacer} />
 
-      <button
-        className={styles.iconBtn}
-        onClick={() => {
-          const path = recordType === 'vacancies' ? '/vacancies/new' : '/candidates/new';
-          navigate(path);
-        }}
-        title="Добавить"
-      >
-        <PlusCircle size={18} />
-      </button>
+      {!isCandidateRole && (
+        <button
+          className={styles.iconBtn}
+          onClick={() => {
+            const path = recordType === 'vacancies' ? '/vacancies/new' : '/candidates/new';
+            navigate(path);
+          }}
+          title="Добавить"
+        >
+          <PlusCircle size={18} />
+        </button>
+      )}
 
       <button className={styles.iconBtn} onClick={toggleTheme} title="Тема">
         {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
