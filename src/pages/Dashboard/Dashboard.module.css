@@ -309,3 +309,94 @@
   color: var(--text-secondary);
   white-space: nowrap;
 }
+
+/* ── Typed filter controls ─────────────────── */
+.filterSelect {
+  display: block;
+  width: 100%;
+  padding: 2px 4px;
+  font-size: 10px;
+  font-family: var(--font-sans);
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  outline: none;
+  margin-bottom: 2px;
+}
+
+.filterSelect:focus {
+  border-color: var(--amber);
+}
+
+.filterRange {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rangeSlider {
+  width: 80px;
+  height: 4px;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+
+.rangeLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* ── Detailed TreePicker wrapper ──────────── */
+.detailedPickerWrap {
+  height: 420px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ── Mobile ────────────────────────────────── */
+@media (max-width: 768px) {
+  .page {
+    padding: 10px 8px;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .counters {
+    gap: 10px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .gradeSelector {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .detailedPickerWrap {
+    height: 360px;
+  }
+
+  .salaryBar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}

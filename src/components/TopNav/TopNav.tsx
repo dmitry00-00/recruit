@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
 import { POSITION_CATEGORY_LABELS } from '@/entities';
-import type { PositionCategory, AppSection, RecordType, RequirementLevel } from '@/entities';
+import type { PositionCategory, AppSection, RecordType } from '@/entities';
 import { SUBCATEGORY_BY_CATEGORY } from '@/config';
 import { NavDropdown } from './NavDropdown';
 import { NavToggleGroup } from './NavToggleGroup';
@@ -26,14 +26,10 @@ export function TopNav() {
     positionSubcategory,
     section,
     recordType,
-    requirementLevel,
-    showDiff,
     setPositionCategory,
     setPositionSubcategory,
     setSection,
     setRecordType,
-    setRequirementLevel,
-    toggleShowDiff,
   } = useFilterStore();
 
   const subcategoryOptions = positionCategory
@@ -84,29 +80,6 @@ export function TopNav() {
             value={recordType}
             onChange={(v) => setRecordType(v as RecordType)}
           />
-        </>
-      )}
-
-      {!isCandidateRole && (
-        <>
-          <div className={styles.separator} />
-
-          <NavToggleGroup
-            options={[
-              { value: 'min', label: 'MIN' },
-              { value: 'max', label: 'MAX' },
-            ]}
-            value={requirementLevel}
-            onChange={(v) => setRequirementLevel(v as RequirementLevel)}
-          />
-
-          <button
-            className={`${styles.iconBtn} ${showDiff ? styles.iconBtnActive : ''}`}
-            onClick={toggleShowDiff}
-            title="Показать расхождения"
-          >
-            ±
-          </button>
         </>
       )}
 

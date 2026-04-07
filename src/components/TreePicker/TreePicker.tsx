@@ -163,6 +163,8 @@ export function TreePicker({
   );
 
   const isReadonly = mode === 'candidate-agg' || mode === 'compare';
+  const isIconOnly = mode === 'candidate-agg';
+  const useInlineRows = !isIconOnly;
 
   return (
     <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''}`}>
@@ -253,7 +255,7 @@ export function TreePicker({
           />
         </div>
 
-        <div className={styles.toolsList}>
+        <div className={useInlineRows ? styles.toolsListRows : styles.toolsList}>
           {displayTools.length === 0 ? (
             <div className={styles.emptyTools}>
               {search ? 'Ничего не найдено' : 'Выберите подкатегорию'}
@@ -269,7 +271,7 @@ export function TreePicker({
               const isExtra   = extraSet.has(tool.id);
 
               // Row class
-              let rowClass = styles.toolRow;
+              let rowClass = useInlineRows ? styles.toolRowInline : styles.toolRow;
               if (mode === 'vacancy') {
                 if (vacState === 'min') rowClass += ` ${styles.toolRowMin}`;
                 else if (vacState === 'max') rowClass += ` ${styles.toolRowMax}`;
@@ -341,13 +343,28 @@ export function TreePicker({
                     </span>
                   )}
 
-                  {/* Logo */}
-                  {tool.logoUrl && (
-                    <img src={tool.logoUrl} alt="" className={styles.toolLogo} loading="lazy" />
+                  {/* Logo or abbreviation */}
+                  {tool.logoUrl ? (
+                    <img
+                      src={tool.logoUrl}
+                      alt={tool.name}
+                      title={tool.name}
+                      className={useInlineRows ? styles.toolLogoSmall : styles.toolLogo}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      className={useInlineRows ? styles.toolNoLogoSmall : styles.toolNoLogo}
+                      title={tool.name}
+                    >
+                      {tool.name.slice(0, 3)}
+                    </span>
                   )}
 
-                  {/* Name */}
-                  <span className={styles.toolName}>{tool.name}</span>
+                  {/* Name — visible in inline modes, hidden in icon-only */}
+                  <span className={useInlineRows ? styles.toolNameVisible : styles.toolName}>
+                    {tool.name}
+                  </span>
 
                   {/* Locked badge (legacy) */}
                   {(mode === 'vacancy-min' || mode === 'vacancy-max') && isLocked && (

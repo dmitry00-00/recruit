@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { usePositionStore, useCandidateStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
@@ -37,12 +37,15 @@ const emptyEntry = (): WorkEntryDraft => ({
 const TOTAL_STEPS = 3;
 
 export function CandidateForm() {
+  const { id: editId } = useParams<{ id: string }>();
+  const isEditMode = !!editId;
   const navigate = useNavigate();
   const { positions, load: loadPositions } = usePositionStore();
-  const addCandidate = useCandidateStore((s) => s.add);
+  const { candidates, load: loadCandidates, add: addCandidate, update: updateCandidate, getWorkEntries } = useCandidateStore();
   const [step, setStep] = useState(1);
+  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => { loadPositions(); }, [loadPositions]);
+  useEffect(() => { loadPositions(); loadCandidates(); }, [loadPositions, loadCandidates]);
 
   // Step 1: Personal
   const [firstName, setFirstName] = useState('');
@@ -59,6 +62,42 @@ export function CandidateForm() {
   // Step 2: Work history
   const [entries, setEntries] = useState<WorkEntryDraft[]>([emptyEntry()]);
   const [activeEntry, setActiveEntry] = useState(0);
+
+  // Load existing candidate data for edit mode
+  useEffect(() => {
+    if (!isEditMode || loaded) return;
+    const candidate = candidates.find((c) => c.id === editId);
+    if (!candidate) return;
+
+    setFirstName(candidate.firstName);
+    setLastName(candidate.lastName);
+    setEmail(candidate.email ?? '');
+    setPhone(candidate.phone ?? '');
+    setTelegramHandle(candidate.telegramHandle ?? '');
+    setCity(candidate.city ?? '');
+    setWorkFormat(candidate.workFormat);
+    setRelocate(candidate.relocate);
+    setSalaryExpected(candidate.salaryExpected ? String(candidate.salaryExpected) : '');
+    setCurrency(candidate.currency);
+
+    getWorkEntries(candidate.id).then((workEntries) => {
+      if (workEntries.length > 0) {
+        setEntries(workEntries.map((e) => ({
+          companyName: e.companyName,
+          positionId: e.positionId,
+          grade: e.grade,
+          startDate: e.startDate ? new Date(e.startDate).toISOString().slice(0, 10) : '',
+          endDate: e.endDate ? new Date(e.endDate).toISOString().slice(0, 10) : '',
+          isCurrent: e.isCurrent,
+          salary: e.salary ? String(e.salary) : '',
+          currency: e.currency,
+          tools: e.tools.map((t) => t.toolId),
+          yearsMap: Object.fromEntries(e.tools.map((t) => [t.toolId, t.years])),
+        })));
+      }
+      setLoaded(true);
+    });
+  }, [isEditMode, editId, candidates, loaded, getWorkEntries]);
 
   const updateEntry = (idx: number, data: Partial<WorkEntryDraft>) => {
     setEntries((prev) => prev.map((e, i) => (i === idx ? { ...e, ...data } : e)));
@@ -79,8 +118,8 @@ export function CandidateForm() {
         currency: e.currency,
       }));
 
-    const id = await addCandidate(
-      {
+    if (isEditMode) {
+      await updateCandidate(editId!, {
         firstName,
         lastName,
         email: email || undefined,
@@ -91,17 +130,33 @@ export function CandidateForm() {
         relocate,
         salaryExpected: salaryExpected ? parseInt(salaryExpected) : undefined,
         currency,
-      },
-      workEntries,
-    );
-    navigate(`/candidates/${id}`);
+      });
+      navigate(`/candidates/${editId}`);
+    } else {
+      const id = await addCandidate(
+        {
+          firstName,
+          lastName,
+          email: email || undefined,
+          phone: phone || undefined,
+          telegramHandle: telegramHandle || undefined,
+          city: city || undefined,
+          workFormat,
+          relocate,
+          salaryExpected: salaryExpected ? parseInt(salaryExpected) : undefined,
+          currency,
+        },
+        workEntries,
+      );
+      navigate(`/candidates/${id}`);
+    }
   };
 
   const current = entries[activeEntry];
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Новый кандидат</h1>
+      <h1 className={styles.title}>{isEditMode ? 'Редактирование кандидата' : 'Новый кандидат'}</h1>
 
       <div className={styles.steps}>
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
@@ -284,7 +339,7 @@ export function CandidateForm() {
             Далее
           </Button>
         ) : (
-          <Button onClick={handleSubmit}>Создать кандидата</Button>
+          <Button onClick={handleSubmit}>{isEditMode ? 'Сохранить' : 'Создать кандидата'}</Button>
         )}
       </div>
     </div>

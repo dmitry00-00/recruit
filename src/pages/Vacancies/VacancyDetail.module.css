@@ -355,3 +355,33 @@
 .textarea:focus {
   border-color: var(--amber);
 }
+
+/* ── Mobile ────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .headerSep {
+    display: none;
+  }
+
+  .body {
+    flex-direction: column;
+  }
+
+  .matchPanel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border-secondary);
+    max-height: 40vh;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

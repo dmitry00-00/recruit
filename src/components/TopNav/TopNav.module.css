@@ -178,3 +178,42 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ── Mobile ────────────────────────────────── */
+@media (max-width: 768px) {
+  .nav {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: var(--nav-height);
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .spacer {
+    width: 100%;
+    flex: none;
+    height: 0;
+  }
+
+  .dropdownTrigger {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .toggleBtn {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .userName {
+    display: none;
+  }
+
+  .userBtn {
+    padding: 4px 6px;
+  }
+}
