@@ -3,13 +3,57 @@ import { persist } from 'zustand/middleware';
 import { db } from '@/db';
 import type { User, UserRole } from '@/entities';
 
-async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hashBuffer))
+const PBKDF2_ITERATIONS = 100_000;
+const SALT_BYTES = 16;
+
+function toHex(buf: ArrayBuffer): string {
+  return Array.from(new Uint8Array(buf))
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
+}
+
+function fromHex(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+async function hashPassword(password: string, salt?: Uint8Array): Promise<string> {
+  const enc = new TextEncoder();
+  const s = salt ?? crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits'],
+  );
+
+  const derived = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: s, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
+    keyMaterial,
+    256,
+  );
+
+  return `${toHex(s.buffer)}:${toHex(derived)}`;
+}
+
+async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  // Support legacy unsalted SHA-256 hashes (no colon separator)
+  if (!stored.includes(':')) {
+    const enc = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', enc.encode(password));
+    const legacyHash = toHex(hashBuffer);
+    return legacyHash === stored;
+  }
+
+  const [saltHex] = stored.split(':');
+  const salt = fromHex(saltHex);
+  const rehashed = await hashPassword(password, salt);
+  return rehashed === stored;
 }
 
 interface AuthState {
@@ -95,10 +139,16 @@ export const useAuthStore = create<AuthState>()(
             return false;
           }
 
-          const hash = await hashPassword(password);
-          if (hash !== user.passwordHash) {
+          const valid = await verifyPassword(password, user.passwordHash);
+          if (!valid) {
             set({ loading: false, error: 'Неверный email или пароль' });
             return false;
+          }
+
+          // Migrate legacy SHA-256 hash to PBKDF2 on successful login
+          if (!user.passwordHash.includes(':')) {
+            const upgraded = await hashPassword(password);
+            await db.users.update(user.id, { passwordHash: upgraded });
           }
 
           const { passwordHash: _, ...safeUser } = user;
@@ -136,8 +186,8 @@ export const useAuthStore = create<AuthState>()(
           const user = await db.users.get(currentUser.id);
           if (!user) return false;
 
-          const oldHash = await hashPassword(oldPassword);
-          if (oldHash !== user.passwordHash) {
+          const valid = await verifyPassword(oldPassword, user.passwordHash);
+          if (!valid) {
             set({ error: 'Неверный текущий пароль' });
             return false;
           }
