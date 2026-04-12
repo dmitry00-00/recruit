@@ -62,6 +62,9 @@ export const useCandidateStore = create<CandidateState>((set, get) => ({
 
   remove: async (id) => {
     await db.workEntries.where('candidateId').equals(id).delete();
+    await db.pipelineCards.where('candidateId').equals(id).delete();
+    await db.responseEvents.where('candidateId').equals(id).delete();
+    await db.recruitmentTasks.where('candidateId').equals(id).delete();
     await db.candidates.delete(id);
     set((s) => ({ candidates: s.candidates.filter((c) => c.id !== id) }));
   },

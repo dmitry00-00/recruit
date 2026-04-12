@@ -48,6 +48,21 @@ export const usePositionStore = create<PositionState>((set, get) => ({
   },
 
   remove: async (id) => {
+    // Cascade: delete all vacancies for this position (with their cascades)
+    const vacancies = await db.vacancies.where('positionId').equals(id).toArray();
+    for (const v of vacancies) {
+      const pipeline = await db.pipelines.where('vacancyId').equals(v.id).first();
+      if (pipeline) {
+        await db.pipelineCards.where('pipelineId').equals(pipeline.id).delete();
+        await db.pipelineStages.where('pipelineId').equals(pipeline.id).delete();
+        await db.pipelines.delete(pipeline.id);
+      }
+      await db.responseEvents.where('vacancyId').equals(v.id).delete();
+      await db.recruitmentTasks.where('vacancyId').equals(v.id).delete();
+    }
+    await db.vacancies.where('positionId').equals(id).delete();
+    // Cascade: delete workEntries referencing this position
+    await db.workEntries.where('positionId').equals(id).delete();
     await db.positions.delete(id);
     set((s) => ({ positions: s.positions.filter((p) => p.id !== id) }));
   },

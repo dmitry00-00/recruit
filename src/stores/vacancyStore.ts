@@ -48,6 +48,16 @@ export const useVacancyStore = create<VacancyState>((set, get) => ({
   },
 
   remove: async (id) => {
+    // Cascade: pipeline → stages + cards
+    const pipeline = await db.pipelines.where('vacancyId').equals(id).first();
+    if (pipeline) {
+      await db.pipelineCards.where('pipelineId').equals(pipeline.id).delete();
+      await db.pipelineStages.where('pipelineId').equals(pipeline.id).delete();
+      await db.pipelines.delete(pipeline.id);
+    }
+    // Cascade: responseEvents, recruitmentTasks
+    await db.responseEvents.where('vacancyId').equals(id).delete();
+    await db.recruitmentTasks.where('vacancyId').equals(id).delete();
     await db.vacancies.delete(id);
     set((s) => ({ vacancies: s.vacancies.filter((v) => v.id !== id) }));
   },
