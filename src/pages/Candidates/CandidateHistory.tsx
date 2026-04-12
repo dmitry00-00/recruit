@@ -4,14 +4,13 @@ import { ArrowLeft } from 'lucide-react';
 import { useCandidateStore, useVacancyStore, useResponseStore } from '@/stores';
 import { GradeBadge } from '@/components/ui';
 import { ResponseTimeline } from '@/components/ResponseTimeline';
-import { aggregateCandidate } from '@/utils';
 import type { ResponseEvent } from '@/entities';
 import styles from './CandidateHistory.module.css';
 
 export function CandidateHistory() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
+  const { candidates, load: loadCandidates } = useCandidateStore();
   const { vacancies, load: loadVacancies } = useVacancyStore();
   const { events, loading, loadForCandidate } = useResponseStore();
 

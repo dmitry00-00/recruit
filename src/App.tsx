@@ -10,6 +10,7 @@ import { CandidateForm, CandidateDetail, CandidateImport, CandidateHistory } fro
 import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
 import { LoginPage, RegisterPage, ProfilePage } from '@/pages/Auth';
+import { ErrorBoundary } from '@/components/ui';
 import { seedIfEmpty } from '@/db';
 import { usePositionStore, useAuthStore } from '@/stores';
 
@@ -33,6 +34,7 @@ export function App() {
     <BrowserRouter>
       {currentUser && <TopNav />}
       <main>
+        <ErrorBoundary>
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -58,6 +60,7 @@ export function App() {
           <Route path="/recruiter" element={<ProtectedRoute roles={['admin', 'recruiter', 'hiring_manager']}><RecruiterDashboard /></ProtectedRoute>} />
           <Route path="/roadmap/:positionId" element={<ProtectedRoute><PositionDetail /></ProtectedRoute>} />
         </Routes>
+        </ErrorBoundary>
       </main>
     </BrowserRouter>
   );

@@ -33,12 +33,12 @@ async function hashPassword(password: string, salt?: Uint8Array): Promise<string
   );
 
   const derived = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', salt: s, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: s as BufferSource, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
     keyMaterial,
     256,
   );
 
-  return `${toHex(s.buffer)}:${toHex(derived)}`;
+  return `${toHex(s.buffer as ArrayBuffer)}:${toHex(derived)}`;
 }
 
 async function verifyPassword(password: string, stored: string): Promise<boolean> {

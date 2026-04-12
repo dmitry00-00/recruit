@@ -15,7 +15,6 @@ import {
 } from '@/utils';
 import type { CareerRecommendation } from '@/utils';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
-import { CURRENCY_SYMBOLS } from '@/config';
 import { db, getOrCreatePipeline } from '@/db';
 import type { WorkEntry, Grade, Currency, CandidateAggregation } from '@/entities';
 import styles from './CandidateDetail.module.css';
