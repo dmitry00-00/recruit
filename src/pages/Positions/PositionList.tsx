@@ -1,16 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { usePositionStore } from '@/stores';
-import { GradeBadge, Button, EmptyState } from '@/components/ui';
+import { GradeBadge, Button, EmptyState, Pagination } from '@/components/ui';
 import { POSITION_CATEGORY_LABELS } from '@/entities';
 import styles from '../Vacancies/VacancyForm.module.css';
+
+const PAGE_SIZE = 20;
 
 export function PositionList() {
   const navigate = useNavigate();
   const { positions, loading, load } = usePositionStore();
+  const [page, setPage] = useState(1);
 
   useEffect(() => { load(); }, [load]);
+
+  const paged = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return positions.slice(start, start + PAGE_SIZE);
+  }, [positions, page]);
 
   return (
     <div className={styles.page}>
@@ -31,7 +39,7 @@ export function PositionList() {
         />
       )}
 
-      {positions.map((p) => (
+      {paged.map((p) => (
         <div
           key={p.id}
           onClick={() => navigate(`/positions/${p.id}`)}
@@ -58,6 +66,8 @@ export function PositionList() {
           </div>
         </div>
       ))}
+
+      <Pagination totalItems={positions.length} pageSize={PAGE_SIZE} currentPage={page} onPageChange={setPage} />
     </div>
   );
 }

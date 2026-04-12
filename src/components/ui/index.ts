@@ -6,3 +6,4 @@ export { Tabs } from './Tabs';
 export { EmptyState } from './EmptyState';
 export { Spinner } from './Spinner';
 export { ErrorBoundary } from './ErrorBoundary';
+export { Pagination } from './Pagination';

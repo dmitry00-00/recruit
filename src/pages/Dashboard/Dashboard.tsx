@@ -6,10 +6,10 @@ import { VacancyCard } from '@/components/VacancyCard';
 import { CandidateCard } from '@/components/CandidateCard';
 import { RoadMap } from '@/components/RoadMap';
 import { TreePicker } from '@/components/TreePicker';
-import { EmptyState, Button } from '@/components/ui';
+import { EmptyState, Button, Pagination } from '@/components/ui';
 import { VACANCY_STATUS_LABELS, CURRENCY_SYMBOLS, WORK_FORMAT_LABELS } from '@/config';
 import { GRADE_LABELS, GRADE_ORDER } from '@/entities';
-import { computeRoadmap, getToolSubcategoryMap, getSubcategoryById, getToolById } from '@/utils';
+import { computeRoadmap, getToolSubcategoryMap } from '@/utils';
 import type { ViewMode, Grade } from '@/entities';
 import styles from './Dashboard.module.css';
 
@@ -38,6 +38,11 @@ export function Dashboard() {
   // Table filter state
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 1000]);
+
+  // Pagination state
+  const PAGE_SIZE = 20;
+  const [vacancyPage, setVacancyPage] = useState(1);
+  const [candidatePage, setCandidatePage] = useState(1);
 
   useEffect(() => {
     loadVacancies();
@@ -68,6 +73,9 @@ export function Dashboard() {
     setSalaryRange([salaryBounds.min, salaryBounds.max]);
   }, [salaryBounds.min, salaryBounds.max]);
 
+  // Reset pages when position filters change
+  useEffect(() => { setVacancyPage(1); }, [positionCategory, positionSubcategory]);
+
   // ── Filter vacancies by position category + subcategory ───
   const filteredVacancies = useMemo(() => {
     let list = vacancies;
@@ -96,10 +104,14 @@ export function Dashboard() {
       setSortCol(col);
       setSortDir('asc');
     }
+    setVacancyPage(1);
+    setCandidatePage(1);
   };
 
   const setFilter = (col: string, val: string) => {
     setFilters((prev) => ({ ...prev, [col]: val }));
+    setVacancyPage(1);
+    setCandidatePage(1);
   };
 
   // ── Sorted + filtered vacancies for table ──────────────────
@@ -198,6 +210,22 @@ export function Dashboard() {
     }
     return list;
   }, [filteredCandidates, filters, sortCol, sortDir]);
+
+  // ── Paginated slices ────────────────────────────────────────
+  const pagedVacancies = useMemo(() => {
+    const source = viewMode === 'table' ? tableVacancies : filteredVacancies;
+    const start = (vacancyPage - 1) * PAGE_SIZE;
+    return source.slice(start, start + PAGE_SIZE);
+  }, [viewMode, tableVacancies, filteredVacancies, vacancyPage]);
+
+  const pagedCandidates = useMemo(() => {
+    const source = viewMode === 'table' ? tableCandidates : filteredCandidates;
+    const start = (candidatePage - 1) * PAGE_SIZE;
+    return source.slice(start, start + PAGE_SIZE);
+  }, [viewMode, tableCandidates, filteredCandidates, candidatePage]);
+
+  const vacancyTotal = viewMode === 'table' ? tableVacancies.length : filteredVacancies.length;
+  const candidateTotal = viewMode === 'table' ? tableCandidates.length : filteredCandidates.length;
 
   const handleNavigateVacancy = useCallback((id: string) => navigate(`/vacancies/${id}`), [navigate]);
   const handleNavigateCandidate = useCallback((id: string) => navigate(`/candidates/${id}`), [navigate]);
@@ -463,44 +491,50 @@ export function Dashboard() {
 
       {!loading && effectiveRecordType === 'vacancies' && filteredVacancies.length > 0 && (
         viewMode === 'gallery' ? (
-          <div className={styles.grid}>
-            {filteredVacancies.map((v) => (
-              <VacancyCard key={v.id} vacancy={v} onClick={() => handleNavigateVacancy(v.id)} />
-            ))}
-          </div>
+          <>
+            <div className={styles.grid}>
+              {pagedVacancies.map((v) => (
+                <VacancyCard key={v.id} vacancy={v} onClick={() => handleNavigateVacancy(v.id)} />
+              ))}
+            </div>
+            <Pagination totalItems={vacancyTotal} pageSize={PAGE_SIZE} currentPage={vacancyPage} onPageChange={setVacancyPage} />
+          </>
         ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <ThText col="company" label="Компания" />
-                  <ThText col="position" label="Должность" />
-                  <ThSelect col="grade" label="Грейд" options={gradeOptions} />
-                  <ThSalary col="salary" label="Зарплата" />
-                  <ThText col="city" label="Город" />
-                  <ThSelect col="format" label="Формат" options={formatOptions} />
-                  <ThSelect col="status" label="Статус" options={statusOptions} />
-                </tr>
-              </thead>
-              <tbody>
-                {tableVacancies.map((v) => (
-                  <tr key={v.id} className={styles.clickableRow} onClick={() => handleNavigateVacancy(v.id)}>
-                    <td>{v.companyName}</td>
-                    <td>{posMap.get(v.positionId)?.name ?? v.positionId}</td>
-                    <td>{GRADE_LABELS[v.grade]}</td>
-                    <td style={{ fontFamily: 'var(--font-mono)' }}>
-                      {v.salaryFrom ? `${(v.salaryFrom / 1000).toFixed(0)}k` : '—'}
-                      {v.salaryTo ? `–${(v.salaryTo / 1000).toFixed(0)}k` : ''}
-                      {' '}{CURRENCY_SYMBOLS[v.currency] ?? ''}
-                    </td>
-                    <td>{v.location ?? '—'}</td>
-                    <td>{WORK_FORMAT_LABELS[v.workFormat as keyof typeof WORK_FORMAT_LABELS] ?? v.workFormat}</td>
-                    <td>{VACANCY_STATUS_LABELS[v.status]}</td>
+          <>
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <ThText col="company" label="Компания" />
+                    <ThText col="position" label="Должность" />
+                    <ThSelect col="grade" label="Грейд" options={gradeOptions} />
+                    <ThSalary col="salary" label="Зарплата" />
+                    <ThText col="city" label="Город" />
+                    <ThSelect col="format" label="Формат" options={formatOptions} />
+                    <ThSelect col="status" label="Статус" options={statusOptions} />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {pagedVacancies.map((v) => (
+                    <tr key={v.id} className={styles.clickableRow} onClick={() => handleNavigateVacancy(v.id)}>
+                      <td>{v.companyName}</td>
+                      <td>{posMap.get(v.positionId)?.name ?? v.positionId}</td>
+                      <td>{GRADE_LABELS[v.grade]}</td>
+                      <td style={{ fontFamily: 'var(--font-mono)' }}>
+                        {v.salaryFrom ? `${(v.salaryFrom / 1000).toFixed(0)}k` : '—'}
+                        {v.salaryTo ? `–${(v.salaryTo / 1000).toFixed(0)}k` : ''}
+                        {' '}{CURRENCY_SYMBOLS[v.currency] ?? ''}
+                      </td>
+                      <td>{v.location ?? '—'}</td>
+                      <td>{WORK_FORMAT_LABELS[v.workFormat as keyof typeof WORK_FORMAT_LABELS] ?? v.workFormat}</td>
+                      <td>{VACANCY_STATUS_LABELS[v.status]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination totalItems={vacancyTotal} pageSize={PAGE_SIZE} currentPage={vacancyPage} onPageChange={setVacancyPage} />
+          </>
         )
       )}
 
@@ -515,38 +549,44 @@ export function Dashboard() {
 
       {!loading && effectiveRecordType === 'candidates' && !isCandidateRole && candidates.length > 0 && (
         viewMode === 'gallery' ? (
-          <div className={styles.grid}>
-            {candidates.map((c) => (
-              <CandidateCard key={c.id} candidate={c} onClick={() => handleNavigateCandidate(c.id)} />
-            ))}
-          </div>
+          <>
+            <div className={styles.grid}>
+              {pagedCandidates.map((c) => (
+                <CandidateCard key={c.id} candidate={c} onClick={() => handleNavigateCandidate(c.id)} />
+              ))}
+            </div>
+            <Pagination totalItems={candidateTotal} pageSize={PAGE_SIZE} currentPage={candidatePage} onPageChange={setCandidatePage} />
+          </>
         ) : (
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <ThText col="name" label="Имя" />
-                  <ThText col="city" label="Город" />
-                  <ThSelect col="cformat" label="Формат" options={[...formatOptions, { value: 'any', label: 'Любой' }]} />
-                  <ThSelect col="crelocate" label="Релокация" options={relocateOptions} />
-                  <ThText col="salary" label="Ожидание" />
-                </tr>
-              </thead>
-              <tbody>
-                {tableCandidates.map((c) => (
-                  <tr key={c.id} className={styles.clickableRow} onClick={() => handleNavigateCandidate(c.id)}>
-                    <td>{c.lastName} {c.firstName}</td>
-                    <td>{c.city ?? '—'}</td>
-                    <td>{WORK_FORMAT_LABELS[c.workFormat as keyof typeof WORK_FORMAT_LABELS] ?? c.workFormat}</td>
-                    <td>{c.relocate ? 'Да' : 'Нет'}</td>
-                    <td style={{ fontFamily: 'var(--font-mono)' }}>
-                      {c.salaryExpected ? `${(c.salaryExpected / 1000).toFixed(0)}k ${CURRENCY_SYMBOLS[c.currency] ?? ''}` : '—'}
-                    </td>
+          <>
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <ThText col="name" label="Имя" />
+                    <ThText col="city" label="Город" />
+                    <ThSelect col="cformat" label="Формат" options={[...formatOptions, { value: 'any', label: 'Любой' }]} />
+                    <ThSelect col="crelocate" label="Релокация" options={relocateOptions} />
+                    <ThText col="salary" label="Ожидание" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {pagedCandidates.map((c) => (
+                    <tr key={c.id} className={styles.clickableRow} onClick={() => handleNavigateCandidate(c.id)}>
+                      <td>{c.lastName} {c.firstName}</td>
+                      <td>{c.city ?? '—'}</td>
+                      <td>{WORK_FORMAT_LABELS[c.workFormat as keyof typeof WORK_FORMAT_LABELS] ?? c.workFormat}</td>
+                      <td>{c.relocate ? 'Да' : 'Нет'}</td>
+                      <td style={{ fontFamily: 'var(--font-mono)' }}>
+                        {c.salaryExpected ? `${(c.salaryExpected / 1000).toFixed(0)}k ${CURRENCY_SYMBOLS[c.currency] ?? ''}` : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination totalItems={candidateTotal} pageSize={PAGE_SIZE} currentPage={candidatePage} onPageChange={setCandidatePage} />
+          </>
         )
       )}
     </div>

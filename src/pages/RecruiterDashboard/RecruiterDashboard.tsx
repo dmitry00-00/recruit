@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Plus, X, Check } from 'lucide-react';
 import { useVacancyStore, useCandidateStore, useTaskStore, useAuthStore } from '@/stores';
 import { MatchBadge } from '@/components/MatchBadge';
-import { GradeBadge, Button } from '@/components/ui';
+import { Pagination } from '@/components/ui';
 import { aggregateCandidate, computeMatchScore } from '@/utils';
 import { db, getOrCreatePipeline } from '@/db';
-import { MATCH_THRESHOLDS, VACANCY_STATUS_LABELS } from '@/config';
-import type { MatchResult, CandidateAggregation, RecruitmentTask } from '@/entities';
+import { MATCH_THRESHOLDS } from '@/config';
+import type { MatchResult, RecruitmentTask } from '@/entities';
 import styles from './RecruiterDashboard.module.css';
 
 interface MatchPair {
@@ -36,11 +36,6 @@ function isToday(d: Date) {
   return isSameDay(d, new Date());
 }
 
-function formatShortDate(d: Date) {
-  const dt = d instanceof Date ? d : new Date(d);
-  return dt.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' });
-}
-
 export function RecruiterDashboard() {
   const navigate = useNavigate();
   const currentUser = useAuthStore((s) => s.currentUser);
@@ -48,8 +43,10 @@ export function RecruiterDashboard() {
   const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
   const { tasks, loadAll: loadTasks, addTask, setStatus, removeTask } = useTaskStore();
 
+  const MATCH_PAGE_SIZE = 20;
   const [matches, setMatches] = useState<MatchPair[]>([]);
   const [matchesLoading, setMatchesLoading] = useState(true);
+  const [matchPage, setMatchPage] = useState(1);
   const [addedSet, setAddedSet] = useState<Set<string>>(new Set());
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
@@ -86,7 +83,8 @@ export function RecruiterDashboard() {
       }
 
       pairs.sort((a, b) => b.score - a.score);
-      setMatches(pairs.slice(0, 50));
+      setMatches(pairs);
+      setMatchPage(1);
       setMatchesLoading(false);
     })();
   }, [vacancies, candidates, getWorkEntries]);
@@ -188,6 +186,11 @@ export function RecruiterDashboard() {
     return map;
   }, [tasks]);
 
+  const pagedMatches = useMemo(() => {
+    const start = (matchPage - 1) * MATCH_PAGE_SIZE;
+    return matches.slice(start, start + MATCH_PAGE_SIZE);
+  }, [matches, matchPage]);
+
   const openVacancies = vacancies.filter((v) => v.status === 'open').length;
   const pendingTasks = tasks.filter((t) => t.status === 'pending' || t.status === 'in_progress').length;
 
@@ -230,40 +233,43 @@ export function RecruiterDashboard() {
             ) : matches.length === 0 ? (
               <div className={styles.emptyState}>Нет совпадений с порогом ≥{MATCH_THRESHOLDS.MEDIUM}%</div>
             ) : (
-              <div className={styles.matchesList}>
-                {matches.map((m) => {
-                  const pairKey = `${m.vacancyId}:${m.candidateId}`;
-                  const isAdded = addedSet.has(pairKey);
-                  return (
-                    <div key={pairKey} className={styles.matchRow}>
-                      <div className={styles.matchVacancy}>
-                        <div className={styles.matchVacancyName}>{m.companyName}</div>
-                        <div className={styles.matchVacancyMeta}>{m.vacancyGrade}</div>
+              <>
+                <div className={styles.matchesList}>
+                  {pagedMatches.map((m) => {
+                    const pairKey = `${m.vacancyId}:${m.candidateId}`;
+                    const isAdded = addedSet.has(pairKey);
+                    return (
+                      <div key={pairKey} className={styles.matchRow}>
+                        <div className={styles.matchVacancy}>
+                          <div className={styles.matchVacancyName}>{m.companyName}</div>
+                          <div className={styles.matchVacancyMeta}>{m.vacancyGrade}</div>
+                        </div>
+                        <MatchBadge score={m.score} size="sm" />
+                        <div className={styles.matchCandidate}>
+                          <div className={styles.matchCandidateName}>{m.candidateName}</div>
+                        </div>
+                        <div className={styles.matchActions}>
+                          <button
+                            className={styles.compareBtn}
+                            onClick={() => navigate(`/compare/${m.vacancyId}/${m.candidateId}`)}
+                          >
+                            Сравнение
+                          </button>
+                          <button
+                            className={`${styles.addPipelineBtn} ${isAdded ? styles.addPipelineBtnDone : ''}`}
+                            onClick={() => !isAdded && handleAddToPipeline(m.vacancyId, m.candidateId, m.score)}
+                            disabled={isAdded}
+                            title={isAdded ? 'В воронке' : 'Добавить в воронку'}
+                          >
+                            {isAdded ? <Check size={12} /> : <Plus size={12} />}
+                          </button>
+                        </div>
                       </div>
-                      <MatchBadge score={m.score} size="sm" />
-                      <div className={styles.matchCandidate}>
-                        <div className={styles.matchCandidateName}>{m.candidateName}</div>
-                      </div>
-                      <div className={styles.matchActions}>
-                        <button
-                          className={styles.compareBtn}
-                          onClick={() => navigate(`/compare/${m.vacancyId}/${m.candidateId}`)}
-                        >
-                          Сравнение
-                        </button>
-                        <button
-                          className={`${styles.addPipelineBtn} ${isAdded ? styles.addPipelineBtnDone : ''}`}
-                          onClick={() => !isAdded && handleAddToPipeline(m.vacancyId, m.candidateId, m.score)}
-                          disabled={isAdded}
-                          title={isAdded ? 'В воронке' : 'Добавить в воронку'}
-                        >
-                          {isAdded ? <Check size={12} /> : <Plus size={12} />}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+                <Pagination totalItems={matches.length} pageSize={MATCH_PAGE_SIZE} currentPage={matchPage} onPageChange={setMatchPage} />
+              </>
             )}
           </div>
         </div>
