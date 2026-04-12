@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Users, X, Check, GitCompare } from 'lucide-react';
-import { useVacancyStore, usePositionStore, useCandidateStore, usePipelineStore } from '@/stores';
+import { ArrowLeft, ExternalLink, Users, X, Check, GitCompare, TrendingUp, Minus } from 'lucide-react';
+import { useVacancyStore, usePositionStore, useCandidateStore, usePipelineStore, useFilterStore } from '@/stores';
 import { TreePicker, type VacancyToolState } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
 import {
@@ -11,7 +11,13 @@ import {
   CURRENCY_SYMBOLS,
 } from '@/config';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
-import { aggregateCandidate, computeMatchScore } from '@/utils';
+import {
+  aggregateCandidate,
+  computeMatchScore,
+  computeVacancyOptimization,
+  getToolById,
+} from '@/utils';
+import type { VacancyOptimization } from '@/utils';
 import { db, getOrCreatePipeline } from '@/db';
 import type {
   Grade,
@@ -21,6 +27,7 @@ import type {
   VacancyStatus,
   VacancyRequirement,
   Candidate,
+  CandidateAggregation,
 } from '@/entities';
 import styles from './VacancyDetail.module.css';
 
@@ -225,6 +232,27 @@ export function VacancyDetail() {
   const scoreColor = (s: number) =>
     s >= 80 ? '#22c55e' : s >= 50 ? '#f0a030' : '#ef4444';
 
+  // ── Analytics: vacancy optimization ───────────────────────
+  const { section } = useFilterStore();
+  const [vacancyOpt, setVacancyOpt] = useState<VacancyOptimization | null>(null);
+
+  useEffect(() => {
+    if (section !== 'analytics' || !vacancy || candidates.length === 0) {
+      setVacancyOpt(null);
+      return;
+    }
+    const compute = async () => {
+      const aggs: CandidateAggregation[] = [];
+      for (const c of candidates) {
+        const entries = await getWorkEntries(c.id);
+        aggs.push(aggregateCandidate(c, entries));
+      }
+      const opt = computeVacancyOptimization(vacancy, aggs);
+      setVacancyOpt(opt);
+    };
+    compute();
+  }, [section, vacancy, candidates, getWorkEntries]);
+
   if (!vacancy) return <div style={{ padding: 24 }}>Вакансия не найдена</div>;
 
   const symbol = CURRENCY_SYMBOLS[vacancy.currency] ?? '₽';
@@ -286,90 +314,215 @@ export function VacancyDetail() {
         </Button>
       </div>
 
-      {/* ── Body: TreePicker + Match Panel ──────────────── */}
-      <div className={styles.body}>
-        <div className={styles.pickerContainer}>
-          <TreePicker
-            mode="vacancy"
-            fullHeight
-            filteredSubIds={filteredSubIds}
-            minIds={minIds}
-            maxIds={maxIds}
-            minYearsMap={minYearsMap}
-            maxYearsMap={maxYearsMap}
-            onVacancyClick={handleVacancyClick}
-            onVacancyYears={handleVacancyYears}
-          />
-        </div>
+      {/* ── Body ──────────────────────────────────────── */}
+      {section === 'analytics' ? (
+        /* ── Analytics: vacancy optimization ── */
+        <div className={styles.analyticsBody}>
+          <div className={styles.analyticsContent}>
+            <h2 className={styles.analyticsTitle}>Оптимизация вакансии</h2>
+            <p className={styles.analyticsDesc}>
+              Анализ влияния ослабления требований и повышения оклада на пул кандидатов
+            </p>
 
-        {/* ── Match panel ── */}
-        {matchOpen && (
-          <div className={styles.matchPanel}>
-            <div className={styles.matchPanelHeader}>
-              <span className={styles.matchPanelTitle}>Автоподбор кандидатов</span>
-              <button className={styles.matchPanelClose} onClick={() => setMatchOpen(false)}>
-                <X size={14} />
-              </button>
-            </div>
-
-            {matchLoading ? (
-              <div className={styles.matchLoading}>Вычисляем...</div>
-            ) : matchRows.length === 0 ? (
-              <div className={styles.matchLoading}>Нет кандидатов</div>
+            {!vacancyOpt ? (
+              <div className={styles.analyticsEmpty}>Загрузка аналитики...</div>
             ) : (
-              <div className={styles.matchList}>
-                {matchRows.map((row) => (
-                  <div key={row.candidateId} className={styles.matchRow}>
-                    <div className={styles.matchAvatar}>
-                      {row.photoUrl
-                        ? <img src={row.photoUrl} alt="" className={styles.matchAvatarImg} />
-                        : <span className={styles.matchAvatarInitials}>{row.name.slice(0, 1)}</span>
-                      }
-                    </div>
-                    <div className={styles.matchInfo}>
-                      <button
-                        className={styles.matchName}
-                        onClick={() => navigate(`/candidates/${row.candidateId}`)}
-                      >
-                        {row.name}
-                      </button>
-                      <div className={styles.matchScores}>
-                        <span
-                          className={styles.matchScore}
-                          style={{ color: scoreColor(row.scoreMin) }}
-                        >
-                          MIN {row.scoreMin}%
-                        </span>
-                        <span
-                          className={styles.matchScore}
-                          style={{ color: scoreColor(row.scoreMax) }}
-                        >
-                          MAX {row.scoreMax}%
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      className={styles.matchCompareBtn}
-                      onClick={() => navigate(`/compare/${vacancy!.id}/${row.candidateId}`)}
-                      title="Сравнение"
-                    >
-                      <GitCompare size={12} />
-                    </button>
-                    <button
-                      className={`${styles.matchAddBtn} ${addedSet.has(row.candidateId) ? styles.matchAddBtnDone : ''}`}
-                      onClick={() => addToPipeline(row.candidateId, row.scoreMin)}
-                      disabled={addedSet.has(row.candidateId)}
-                      title="Добавить в воронку"
-                    >
-                      {addedSet.has(row.candidateId) ? <Check size={12} /> : '+'}
-                    </button>
+              <>
+                {/* Stats */}
+                <div className={styles.optStats}>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>{vacancyOpt.totalCandidates}</span>
+                    <span className={styles.optStatLabel}>Всего кандидатов</span>
                   </div>
-                ))}
-              </div>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>{vacancyOpt.currentMatchCount}</span>
+                    <span className={styles.optStatLabel}>Подходящих ({'\u2265'}{vacancyOpt.threshold}%)</span>
+                  </div>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>
+                      {vacancyOpt.totalCandidates > 0
+                        ? Math.round((vacancyOpt.currentMatchCount / vacancyOpt.totalCandidates) * 100)
+                        : 0}%
+                    </span>
+                    <span className={styles.optStatLabel}>Конверсия</span>
+                  </div>
+                </div>
+
+                {/* Requirement impact */}
+                {vacancyOpt.requirementImpacts.length > 0 && (
+                  <div className={styles.recCard}>
+                    <h3 className={styles.recSectionTitle}>Влияние ослабления требований</h3>
+                    <p className={styles.optHint}>
+                      Убрав каждое из следующих требований, можно расширить пул кандидатов:
+                    </p>
+                    <div className={styles.recSkillsList}>
+                      {vacancyOpt.requirementImpacts.map((impact) => {
+                        const tool = getToolById(impact.toolId);
+                        return (
+                          <div key={impact.toolId} className={styles.recSkillRow}>
+                            <div className={styles.recSkillIcon}>
+                              {tool?.logoUrl ? (
+                                <img src={tool.logoUrl} alt="" className={styles.recSkillLogo} />
+                              ) : (
+                                <div className={styles.recSkillDot} />
+                              )}
+                            </div>
+                            <div className={styles.recSkillInfo}>
+                              <span className={styles.recSkillName}>{tool?.name ?? impact.toolId}</span>
+                              <span className={styles.recSkillMeta}>
+                                Сейчас: {impact.currentMatches} → После: {impact.afterMatches}
+                              </span>
+                            </div>
+                            <span className={styles.optDeltaBadge}>
+                              +{impact.delta} кандидат{impact.delta === 1 ? '' : impact.delta < 5 ? 'а' : 'ов'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {vacancyOpt.requirementImpacts.length === 0 && (
+                  <div className={styles.analyticsEmpty}>
+                    <Minus size={16} />
+                    <span>Ослабление отдельных требований не увеличит пул кандидатов</span>
+                  </div>
+                )}
+
+                {/* Grade relaxation */}
+                {vacancyOpt.gradeImpact && (
+                  <div className={styles.recCard}>
+                    <h3 className={styles.recSectionTitle}>Снижение грейда</h3>
+                    <div className={styles.gradeRelaxation}>
+                      <span>
+                        Снизив грейд с <strong>{GRADE_LABELS[vacancyOpt.gradeImpact.originalGrade]}</strong> до{' '}
+                        <strong>{GRADE_LABELS[vacancyOpt.gradeImpact.relaxedGrade]}</strong>:
+                      </span>
+                      <span className={styles.optDeltaBadge}>
+                        +{vacancyOpt.gradeImpact.delta} кандидат{vacancyOpt.gradeImpact.delta === 1 ? '' : vacancyOpt.gradeImpact.delta < 5 ? 'а' : 'ов'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Salary impact */}
+                {vacancyOpt.salaryImpacts.length > 0 && (
+                  <div className={styles.recCard}>
+                    <h3 className={styles.recSectionTitle}>
+                      <TrendingUp size={14} /> Влияние повышения оклада
+                    </h3>
+                    <div className={styles.salaryImpactGrid}>
+                      {vacancyOpt.salaryImpacts.map((si) => {
+                        const baseSalary = vacancy.salaryTo ?? vacancy.salaryFrom ?? 0;
+                        return (
+                          <div key={si.salaryIncrease} className={styles.salaryImpactCard}>
+                            <span className={styles.salaryImpactPct}>+{si.salaryIncrease}%</span>
+                            <span className={styles.salaryImpactAmount}>
+                              {baseSalary > 0
+                                ? `${(Math.round(baseSalary * (1 + si.salaryIncrease / 100)) / 1000).toFixed(0)}k ${symbol}`
+                                : '—'}
+                            </span>
+                            <span className={styles.salaryImpactCandidates}>
+                              {si.candidatesInRange} из {si.totalCandidates}
+                            </span>
+                            <span className={styles.salaryImpactLabel}>в зарплатном диапазоне</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        /* ── Normal: TreePicker + Match Panel ── */
+        <div className={styles.body}>
+          <div className={styles.pickerContainer}>
+            <TreePicker
+              mode="vacancy"
+              fullHeight
+              filteredSubIds={filteredSubIds}
+              minIds={minIds}
+              maxIds={maxIds}
+              minYearsMap={minYearsMap}
+              maxYearsMap={maxYearsMap}
+              onVacancyClick={handleVacancyClick}
+              onVacancyYears={handleVacancyYears}
+            />
+          </div>
+
+          {/* ── Match panel ── */}
+          {matchOpen && (
+            <div className={styles.matchPanel}>
+              <div className={styles.matchPanelHeader}>
+                <span className={styles.matchPanelTitle}>Автоподбор кандидатов</span>
+                <button className={styles.matchPanelClose} onClick={() => setMatchOpen(false)}>
+                  <X size={14} />
+                </button>
+              </div>
+
+              {matchLoading ? (
+                <div className={styles.matchLoading}>Вычисляем...</div>
+              ) : matchRows.length === 0 ? (
+                <div className={styles.matchLoading}>Нет кандидатов</div>
+              ) : (
+                <div className={styles.matchList}>
+                  {matchRows.map((row) => (
+                    <div key={row.candidateId} className={styles.matchRow}>
+                      <div className={styles.matchAvatar}>
+                        {row.photoUrl
+                          ? <img src={row.photoUrl} alt="" className={styles.matchAvatarImg} />
+                          : <span className={styles.matchAvatarInitials}>{row.name.slice(0, 1)}</span>
+                        }
+                      </div>
+                      <div className={styles.matchInfo}>
+                        <button
+                          className={styles.matchName}
+                          onClick={() => navigate(`/candidates/${row.candidateId}`)}
+                        >
+                          {row.name}
+                        </button>
+                        <div className={styles.matchScores}>
+                          <span
+                            className={styles.matchScore}
+                            style={{ color: scoreColor(row.scoreMin) }}
+                          >
+                            MIN {row.scoreMin}%
+                          </span>
+                          <span
+                            className={styles.matchScore}
+                            style={{ color: scoreColor(row.scoreMax) }}
+                          >
+                            MAX {row.scoreMax}%
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        className={styles.matchCompareBtn}
+                        onClick={() => navigate(`/compare/${vacancy!.id}/${row.candidateId}`)}
+                        title="Сравнение"
+                      >
+                        <GitCompare size={12} />
+                      </button>
+                      <button
+                        className={`${styles.matchAddBtn} ${addedSet.has(row.candidateId) ? styles.matchAddBtnDone : ''}`}
+                        onClick={() => addToPipeline(row.candidateId, row.scoreMin)}
+                        disabled={addedSet.has(row.candidateId)}
+                        title="Добавить в воронку"
+                      >
+                        {addedSet.has(row.candidateId) ? <Check size={12} /> : '+'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Vacancy Info Modal ──────────────────────────── */}
       <Modal

@@ -1,10 +1,19 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, X, Briefcase, Check, GitCompare } from 'lucide-react';
-import { useCandidateStore, usePositionStore, useVacancyStore, usePipelineStore } from '@/stores';
+import { ArrowLeft, Plus, X, Briefcase, Check, GitCompare, TrendingUp, ArrowUpRight, AlertTriangle } from 'lucide-react';
+import { useCandidateStore, usePositionStore, useVacancyStore, usePipelineStore, useFilterStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
-import { aggregateCandidate, computeMatchScore } from '@/utils';
+import {
+  aggregateCandidate,
+  computeMatchScore,
+  computeRoadmap,
+  getToolSubcategoryMap,
+  computeCareerRecommendations,
+  getToolById,
+  getSubcategoryById,
+} from '@/utils';
+import type { CareerRecommendation } from '@/utils';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import { CURRENCY_SYMBOLS } from '@/config';
 import { db, getOrCreatePipeline } from '@/db';
@@ -215,6 +224,28 @@ export function CandidateDetail() {
   const scoreColor = (s: number) =>
     s >= 80 ? '#22c55e' : s >= 50 ? '#f0a030' : '#ef4444';
 
+  // ── Analytics: career recommendations ─────────────────────
+  const { section } = useFilterStore();
+
+  const careerRec = useMemo<CareerRecommendation | null>(() => {
+    if (section !== 'analytics' || !aggregation || !candidate) return null;
+    // Find position from work entries to determine category
+    const posId = workEntries[0]?.positionId;
+    const pos = posId ? positions.find((p) => p.id === posId) : positions[0];
+    if (!pos) return null;
+
+    // Build roadmap from vacancies matching this position's category
+    const posIds = positions
+      .filter((p) => p.category === pos.category)
+      .map((p) => p.id);
+    const posVacancies = vacancies.filter((v) => posIds.includes(v.positionId));
+    if (posVacancies.length === 0) return null;
+
+    const subMap = getToolSubcategoryMap();
+    const roadmapData = computeRoadmap(pos.id, posVacancies, subMap);
+    return computeCareerRecommendations(aggregation, roadmapData);
+  }, [section, aggregation, candidate, workEntries, positions, vacancies]);
+
   if (!candidate) return <div style={{ padding: 24 }}>Кандидат не найден</div>;
 
   // ── Work entries sidebar panel ────────────────────────────
@@ -325,91 +356,226 @@ export function CandidateDetail() {
         </Button>
       </div>
 
-      {/* ── Body: TreePicker + Match Panel ──────────────── */}
-      <div className={styles.body}>
-        <div className={styles.pickerContainer}>
-          <TreePicker
-            mode={activeEntry ? 'candidate' : 'candidate-agg'}
-            fullHeight
-            filteredSubIds={filteredSubIds}
-            selected={candidateToolIds}
-            yearsMap={candidateYearsMap}
-            onChange={activeEntry
-              ? (ids) => {
-                  const cur = new Set(candidateToolIds);
-                  const nxt = new Set(ids);
-                  for (const tid of nxt) { if (!cur.has(tid)) { handleToggle(tid); return; } }
-                  for (const tid of cur) { if (!nxt.has(tid)) { handleToggle(tid); return; } }
-                }
-              : undefined}
-            onYearsChange={activeEntry ? handleYearsChange : undefined}
-            sidebarFooter={workPanel}
-          />
-        </div>
-
-        {/* ── Match panel ── */}
-        {matchOpen && (
-          <div className={styles.matchPanel}>
-            <div className={styles.matchPanelHeader}>
-              <span className={styles.matchPanelTitle}>Автоподбор вакансий</span>
-              <button className={styles.matchPanelClose} onClick={() => setMatchOpen(false)}>
-                <X size={14} />
-              </button>
+      {/* ── Body ──────────────────────────────────────── */}
+      {section === 'analytics' ? (
+        /* ── Analytics: career growth recommendations ── */
+        <div className={styles.analyticsBody}>
+          {!aggregation && (
+            <div className={styles.analyticsEmpty}>
+              <AlertTriangle size={20} />
+              <span>Нет данных об опыте кандидата</span>
             </div>
+          )}
 
-            {matchLoading ? (
-              <div className={styles.matchLoading}>Вычисляем...</div>
-            ) : matchRows.length === 0 ? (
-              <div className={styles.matchLoading}>Нет вакансий</div>
-            ) : (
-              <div className={styles.matchList}>
-                {matchRows.map((row) => (
-                  <div key={row.vacancyId} className={styles.matchRow}>
-                    <div className={styles.matchAvatar}>
-                      {row.companyLogoUrl
-                        ? <img src={row.companyLogoUrl} alt="" className={styles.matchAvatarImg} />
-                        : <span className={styles.matchAvatarInitials}>{row.companyName.slice(0, 1)}</span>
-                      }
-                    </div>
-                    <div className={styles.matchInfo}>
-                      <button
-                        className={styles.matchName}
-                        onClick={() => navigate(`/vacancies/${row.vacancyId}`)}
-                      >
-                        {row.companyName}
-                      </button>
-                      <div className={styles.matchScores}>
-                        <GradeBadge grade={row.grade} size="sm" />
-                        <span
-                          className={styles.matchScore}
-                          style={{ color: scoreColor(row.scoreMin) }}
-                        >
-                          {row.scoreMin}%
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      className={styles.matchCompareBtn}
-                      onClick={() => navigate(`/compare/${row.vacancyId}/${candidate!.id}`)}
-                      title="Сравнение"
-                    >
-                      <GitCompare size={12} />
-                    </button>
-                    <button
-                      className={`${styles.matchAddBtn} ${addedSet.has(row.vacancyId) ? styles.matchAddBtnDone : ''}`}
-                      onClick={() => addToPipeline(row.vacancyId, row.scoreMin)}
-                      disabled={addedSet.has(row.vacancyId)}
-                      title="Добавить в воронку"
-                    >
-                      {addedSet.has(row.vacancyId) ? <Check size={12} /> : '+'}
-                    </button>
-                  </div>
-                ))}
+          {aggregation && !careerRec && (
+            <div className={styles.analyticsEmpty}>
+              <AlertTriangle size={20} />
+              <span>Нет данных для рекомендаций. Возможно, кандидат уже на максимальном грейде или нет вакансий для следующего уровня.</span>
+            </div>
+          )}
+
+          {careerRec && aggregation && (
+            <div className={styles.analyticsContent}>
+              <h2 className={styles.analyticsTitle}>Рекомендации по карьерному росту</h2>
+              <p className={styles.analyticsDesc}>
+                GAP-анализ между текущими навыками и требованиями следующего грейда
+              </p>
+
+              {/* Grade transition */}
+              <div className={styles.gradeTransition}>
+                <div className={styles.gradeBox}>
+                  <span className={styles.gradeBoxLabel}>Текущий грейд</span>
+                  <span className={styles.gradeBoxValue}>{careerRec.currentGradeLabel}</span>
+                </div>
+                <ArrowUpRight size={24} className={styles.gradeArrow} />
+                <div className={`${styles.gradeBox} ${styles.gradeBoxTarget}`}>
+                  <span className={styles.gradeBoxLabel}>Целевой грейд</span>
+                  <span className={styles.gradeBoxValue}>{careerRec.targetGradeLabel}</span>
+                </div>
               </div>
-            )}
+
+              {/* Progress */}
+              <div className={styles.recCard}>
+                <div className={styles.recProgressHeader}>
+                  <span>Готовность к переходу</span>
+                  <span className={styles.recProgressPct}>
+                    {careerRec.totalSkillsNeeded > 0
+                      ? Math.round((careerRec.alreadyHas / careerRec.totalSkillsNeeded) * 100)
+                      : 0}%
+                  </span>
+                </div>
+                <div className={styles.recProgressTrack}>
+                  <div
+                    className={styles.recProgressFill}
+                    style={{ width: `${careerRec.totalSkillsNeeded > 0 ? (careerRec.alreadyHas / careerRec.totalSkillsNeeded) * 100 : 0}%` }}
+                  />
+                </div>
+                <div className={styles.recProgressMeta}>
+                  <span>{careerRec.alreadyHas} из {careerRec.totalSkillsNeeded} навыков</span>
+                  <span>{careerRec.skills.length} к развитию</span>
+                </div>
+              </div>
+
+              {/* Salary perspective */}
+              {(careerRec.salaryNow.count > 0 || careerRec.salaryTarget.count > 0) && (
+                <div className={styles.recCard}>
+                  <h3 className={styles.recSectionTitle}>
+                    <TrendingUp size={14} /> Зарплатная перспектива
+                  </h3>
+                  <div className={styles.salaryComparison}>
+                    <div className={styles.salaryCompItem}>
+                      <span className={styles.salaryCompLabel}>{careerRec.currentGradeLabel}</span>
+                      <span className={styles.salaryCompValue}>
+                        {careerRec.salaryNow.count > 0 ? `${(careerRec.salaryNow.median / 1000).toFixed(0)}k ₽` : '—'}
+                      </span>
+                    </div>
+                    <ArrowUpRight size={16} style={{ color: 'var(--text-tertiary)' }} />
+                    <div className={styles.salaryCompItem}>
+                      <span className={styles.salaryCompLabel}>{careerRec.targetGradeLabel}</span>
+                      <span className={`${styles.salaryCompValue} ${styles.salaryCompTarget}`}>
+                        {careerRec.salaryTarget.count > 0 ? `${(careerRec.salaryTarget.median / 1000).toFixed(0)}k ₽` : '—'}
+                      </span>
+                    </div>
+                    {careerRec.salaryIncrease > 0 && (
+                      <div className={styles.salaryDelta}>
+                        +{(careerRec.salaryIncrease / 1000).toFixed(0)}k ₽ ({careerRec.salaryIncreasePercent}%)
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Skills to develop */}
+              {careerRec.skills.length > 0 && (
+                <div className={styles.recCard}>
+                  <h3 className={styles.recSectionTitle}>Навыки к развитию</h3>
+                  <div className={styles.recSkillsList}>
+                    {careerRec.skills.map((skill) => {
+                      const tool = getToolById(skill.toolId);
+                      const sub = getSubcategoryById(skill.subcategoryId);
+                      return (
+                        <div key={skill.toolId} className={styles.recSkillRow}>
+                          <div className={styles.recSkillIcon}>
+                            {tool?.logoUrl ? (
+                              <img src={tool.logoUrl} alt="" className={styles.recSkillLogo} />
+                            ) : (
+                              <div className={styles.recSkillDot} />
+                            )}
+                          </div>
+                          <div className={styles.recSkillInfo}>
+                            <span className={styles.recSkillName}>{tool?.name ?? skill.toolId}</span>
+                            <span className={styles.recSkillMeta}>
+                              {sub?.name ?? ''} · Востребованность: {skill.demandCount}
+                            </span>
+                          </div>
+                          <span className={`${styles.recBadge} ${skill.type === 'missing' ? styles.recBadgeMissing : styles.recBadgeDeepen}`}>
+                            {skill.type === 'missing' ? 'Изучить' : 'Углубить'}
+                          </span>
+                          {skill.currentYears > 0 && (
+                            <span className={styles.recSkillYears}>{skill.currentYears} г.</span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {careerRec.skills.length === 0 && (
+                <div className={styles.analyticsEmpty}>
+                  <span>Все необходимые навыки освоены! Кандидат готов к переходу на {careerRec.targetGradeLabel}.</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* ── Normal: TreePicker + Match Panel ── */
+        <div className={styles.body}>
+          <div className={styles.pickerContainer}>
+            <TreePicker
+              mode={activeEntry ? 'candidate' : 'candidate-agg'}
+              fullHeight
+              filteredSubIds={filteredSubIds}
+              selected={candidateToolIds}
+              yearsMap={candidateYearsMap}
+              onChange={activeEntry
+                ? (ids) => {
+                    const cur = new Set(candidateToolIds);
+                    const nxt = new Set(ids);
+                    for (const tid of nxt) { if (!cur.has(tid)) { handleToggle(tid); return; } }
+                    for (const tid of cur) { if (!nxt.has(tid)) { handleToggle(tid); return; } }
+                  }
+                : undefined}
+              onYearsChange={activeEntry ? handleYearsChange : undefined}
+              sidebarFooter={workPanel}
+            />
           </div>
-        )}
-      </div>
+
+          {/* ── Match panel ── */}
+          {matchOpen && (
+            <div className={styles.matchPanel}>
+              <div className={styles.matchPanelHeader}>
+                <span className={styles.matchPanelTitle}>Автоподбор вакансий</span>
+                <button className={styles.matchPanelClose} onClick={() => setMatchOpen(false)}>
+                  <X size={14} />
+                </button>
+              </div>
+
+              {matchLoading ? (
+                <div className={styles.matchLoading}>Вычисляем...</div>
+              ) : matchRows.length === 0 ? (
+                <div className={styles.matchLoading}>Нет вакансий</div>
+              ) : (
+                <div className={styles.matchList}>
+                  {matchRows.map((row) => (
+                    <div key={row.vacancyId} className={styles.matchRow}>
+                      <div className={styles.matchAvatar}>
+                        {row.companyLogoUrl
+                          ? <img src={row.companyLogoUrl} alt="" className={styles.matchAvatarImg} />
+                          : <span className={styles.matchAvatarInitials}>{row.companyName.slice(0, 1)}</span>
+                        }
+                      </div>
+                      <div className={styles.matchInfo}>
+                        <button
+                          className={styles.matchName}
+                          onClick={() => navigate(`/vacancies/${row.vacancyId}`)}
+                        >
+                          {row.companyName}
+                        </button>
+                        <div className={styles.matchScores}>
+                          <GradeBadge grade={row.grade} size="sm" />
+                          <span
+                            className={styles.matchScore}
+                            style={{ color: scoreColor(row.scoreMin) }}
+                          >
+                            {row.scoreMin}%
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        className={styles.matchCompareBtn}
+                        onClick={() => navigate(`/compare/${row.vacancyId}/${candidate!.id}`)}
+                        title="Сравнение"
+                      >
+                        <GitCompare size={12} />
+                      </button>
+                      <button
+                        className={`${styles.matchAddBtn} ${addedSet.has(row.vacancyId) ? styles.matchAddBtnDone : ''}`}
+                        onClick={() => addToPipeline(row.vacancyId, row.scoreMin)}
+                        disabled={addedSet.has(row.vacancyId)}
+                        title="Добавить в воронку"
+                      >
+                        {addedSet.has(row.vacancyId) ? <Check size={12} /> : '+'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Work Entry Meta Modal ────────────────────────── */}
       <Modal
