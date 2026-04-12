@@ -6,6 +6,27 @@ import type {
   GapTool,
   ExtraTool,
 } from '@/entities';
+import { GRADE_ORDER } from '@/entities';
+
+/**
+ * Grade compatibility multiplier.
+ * Penalizes large grade mismatches so a senior doesn't rank #1 for a junior vacancy.
+ *
+ * Distance 0  → 1.00 (exact match)
+ * Distance 1  → 0.90 (adjacent grade, still good)
+ * Distance 2  → 0.70 (moderate mismatch)
+ * Distance 3+ → 0.40 (major overqualification/underqualification)
+ */
+function gradeMultiplier(vacancyGrade: string, candidateTopGrade: string): number {
+  const vi = GRADE_ORDER.indexOf(vacancyGrade as typeof GRADE_ORDER[number]);
+  const ci = GRADE_ORDER.indexOf(candidateTopGrade as typeof GRADE_ORDER[number]);
+  if (vi === -1 || ci === -1) return 1;
+  const dist = Math.abs(vi - ci);
+  if (dist === 0) return 1.0;
+  if (dist === 1) return 0.9;
+  if (dist === 2) return 0.7;
+  return 0.4;
+}
 
 export function computeMatchScore(
   vacancy: Vacancy,
@@ -30,16 +51,19 @@ export function computeMatchScore(
       }
     }
 
-    const score =
+    const rawScore =
       requirements.length === 0
         ? 100
         : Math.round((matched.length / requirements.length) * 100);
 
-    return { matched, gaps, score };
+    return { matched, gaps, score: rawScore };
   }
 
   const minAnalysis = analyzeRequirements(vacancy.minRequirements);
   const maxAnalysis = analyzeRequirements(vacancy.maxRequirements);
+
+  // Apply grade compatibility penalty
+  const gm = gradeMultiplier(vacancy.grade, aggregation.topGrade);
 
   const allVacancyToolIds = new Set(
     vacancy.maxRequirements.map((r) => r.toolId)
@@ -51,8 +75,8 @@ export function computeMatchScore(
   return {
     vacancyId:  vacancy.id,
     candidateId: aggregation.candidateId,
-    scoreMin:   minAnalysis.score,
-    scoreMax:   maxAnalysis.score,
+    scoreMin:   Math.round(minAnalysis.score * gm),
+    scoreMax:   Math.round(maxAnalysis.score * gm),
     matched:    minAnalysis.matched,
     gaps:       minAnalysis.gaps,
     extras,

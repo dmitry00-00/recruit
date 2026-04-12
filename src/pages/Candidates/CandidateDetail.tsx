@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, X, Briefcase, Check } from 'lucide-react';
+import { ArrowLeft, Plus, X, Briefcase, Check, GitCompare } from 'lucide-react';
 import { useCandidateStore, usePositionStore, useVacancyStore, usePipelineStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
@@ -177,6 +177,7 @@ export function CandidateDetail() {
     const rows: MatchRow[] = [];
     for (const v of vacancies) {
       const match = computeMatchScore(v, aggregation);
+      if (match.scoreMin <= 0) continue;
       rows.push({
         vacancyId: v.id,
         companyName: v.companyName,
@@ -387,6 +388,13 @@ export function CandidateDetail() {
                         </span>
                       </div>
                     </div>
+                    <button
+                      className={styles.matchCompareBtn}
+                      onClick={() => navigate(`/compare/${row.vacancyId}/${candidate!.id}`)}
+                      title="Сравнение"
+                    >
+                      <GitCompare size={12} />
+                    </button>
                     <button
                       className={`${styles.matchAddBtn} ${addedSet.has(row.vacancyId) ? styles.matchAddBtnDone : ''}`}
                       onClick={() => addToPipeline(row.vacancyId, row.scoreMin)}

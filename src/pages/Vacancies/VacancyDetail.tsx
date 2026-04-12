@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Users, X, Check } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Users, X, Check, GitCompare } from 'lucide-react';
 import { useVacancyStore, usePositionStore, useCandidateStore, usePipelineStore } from '@/stores';
 import { TreePicker, type VacancyToolState } from '@/components/TreePicker';
 import { GradeBadge, Modal, Button } from '@/components/ui';
@@ -186,13 +186,15 @@ export function VacancyDetail() {
       const entries = await getWorkEntries(c.id);
       const agg = aggregateCandidate(c, entries);
       const match = computeMatchScore(vacancy, agg);
-      rows.push({
-        candidateId: c.id,
-        name: `${c.lastName} ${c.firstName}`,
-        scoreMin: match.scoreMin,
-        scoreMax: match.scoreMax,
-        photoUrl: (c as Candidate & { photoUrl?: string }).photoUrl,
-      });
+      if (match.scoreMin > 0) {
+        rows.push({
+          candidateId: c.id,
+          name: `${c.lastName} ${c.firstName}`,
+          scoreMin: match.scoreMin,
+          scoreMax: match.scoreMax,
+          photoUrl: (c as Candidate & { photoUrl?: string }).photoUrl,
+        });
+      }
     }
     rows.sort((a, b) => b.scoreMin - a.scoreMin);
     setMatchRows(rows);
@@ -346,6 +348,13 @@ export function VacancyDetail() {
                         </span>
                       </div>
                     </div>
+                    <button
+                      className={styles.matchCompareBtn}
+                      onClick={() => navigate(`/compare/${vacancy!.id}/${row.candidateId}`)}
+                      title="Сравнение"
+                    >
+                      <GitCompare size={12} />
+                    </button>
                     <button
                       className={`${styles.matchAddBtn} ${addedSet.has(row.candidateId) ? styles.matchAddBtnDone : ''}`}
                       onClick={() => addToPipeline(row.candidateId, row.scoreMin)}

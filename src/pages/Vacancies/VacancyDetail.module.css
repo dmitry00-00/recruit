@@ -270,6 +270,26 @@
   transition: background 0.1s;
 }
 
+.matchCompareBtn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.matchCompareBtn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
 .matchAddBtn:hover:not(:disabled) {
   background: var(--amber-bg);
   border-color: var(--amber);
