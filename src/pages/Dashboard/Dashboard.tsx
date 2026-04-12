@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LayoutGrid, List, Upload, ChevronUp, ChevronDown } from 'lucide-react';
+import { LayoutGrid, List, Upload, ChevronUp, ChevronDown, TrendingUp, AlertTriangle, ArrowUpRight, Minus } from 'lucide-react';
 import { useFilterStore, useVacancyStore, useCandidateStore, usePositionStore, useAuthStore } from '@/stores';
+import { db } from '@/db';
 import { VacancyCard } from '@/components/VacancyCard';
 import { CandidateCard } from '@/components/CandidateCard';
 import { RoadMap } from '@/components/RoadMap';
@@ -9,8 +10,19 @@ import { TreePicker } from '@/components/TreePicker';
 import { EmptyState, Button } from '@/components/ui';
 import { VACANCY_STATUS_LABELS, CURRENCY_SYMBOLS, WORK_FORMAT_LABELS } from '@/config';
 import { GRADE_LABELS, GRADE_ORDER } from '@/entities';
-import { computeRoadmap, getToolSubcategoryMap, getSubcategoryById, getToolById } from '@/utils';
-import type { ViewMode, Grade } from '@/entities';
+import {
+  computeRoadmap,
+  getToolSubcategoryMap,
+  getSubcategoryById,
+  getToolById,
+  aggregateCandidate,
+  computeCareerRecommendations,
+  computeVacancyOptimization,
+  computeMatchScore,
+} from '@/utils';
+import type { CareerRecommendation } from '@/utils';
+import type { VacancyOptimization } from '@/utils';
+import type { ViewMode, Grade, Candidate, WorkEntry, CandidateAggregation } from '@/entities';
 import styles from './Dashboard.module.css';
 
 type SortDir = 'asc' | 'desc';
@@ -206,8 +218,18 @@ export function Dashboard() {
   const effectiveRecordType = isCandidateRole ? 'vacancies' : recordType;
 
   // ── Roadmap data for analytics ─────────────────────────────
-  const [roadmapMode, setRoadmapMode] = useState<'general' | 'detailed'>('general');
+  const [roadmapMode, setRoadmapMode] = useState<'general' | 'detailed' | 'career' | 'vacancy-opt'>('general');
   const [roadmapGrade, setRoadmapGrade] = useState<Grade>('middle');
+
+  // Career recommendations state
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string>('');
+  const [candidateAgg, setCandidateAgg] = useState<CandidateAggregation | null>(null);
+  const [careerRec, setCareerRec] = useState<CareerRecommendation | null>(null);
+
+  // Vacancy optimization state
+  const [selectedVacancyId, setSelectedVacancyId] = useState<string>('');
+  const [vacancyOpt, setVacancyOpt] = useState<VacancyOptimization | null>(null);
+  const [allAggregations, setAllAggregations] = useState<CandidateAggregation[]>([]);
 
   const roadmapPositionId = useMemo(() => {
     if (positionCategory && positionSubcategory) {
@@ -234,6 +256,54 @@ export function Dashboard() {
   }, [roadmapPositionId, vacancies, positions, positionSubcategory]);
 
   const roadmapPosition = roadmapPositionId ? positions.find((p) => p.id === roadmapPositionId) : null;
+
+  // ── Career recommendation: load aggregation when candidate is selected ──
+  useEffect(() => {
+    if (!selectedCandidateId || !roadmapData) {
+      setCandidateAgg(null);
+      setCareerRec(null);
+      return;
+    }
+    const candidate = candidates.find((c) => c.id === selectedCandidateId);
+    if (!candidate) return;
+
+    db.workEntries
+      .where('candidateId')
+      .equals(selectedCandidateId)
+      .sortBy('startDate')
+      .then((entries: WorkEntry[]) => {
+        const agg = aggregateCandidate(candidate, entries);
+        setCandidateAgg(agg);
+        const rec = computeCareerRecommendations(agg, roadmapData);
+        setCareerRec(rec);
+      });
+  }, [selectedCandidateId, roadmapData, candidates]);
+
+  // ── Vacancy optimization: compute when vacancy is selected ──
+  useEffect(() => {
+    if (!selectedVacancyId) {
+      setVacancyOpt(null);
+      return;
+    }
+    const vacancy = vacancies.find((v) => v.id === selectedVacancyId);
+    if (!vacancy) return;
+
+    // Build aggregations for all candidates
+    const loadAggs = async () => {
+      const aggs: CandidateAggregation[] = [];
+      for (const c of candidates) {
+        const entries = await db.workEntries
+          .where('candidateId')
+          .equals(c.id)
+          .sortBy('startDate');
+        aggs.push(aggregateCandidate(c, entries));
+      }
+      setAllAggregations(aggs);
+      const opt = computeVacancyOptimization(vacancy, aggs);
+      setVacancyOpt(opt);
+    };
+    loadAggs();
+  }, [selectedVacancyId, vacancies, candidates]);
 
   // ── Detailed roadmap: build selected/yearsMap for TreePicker readonly ──
   const detailedToolIds = useMemo(() => {
@@ -342,6 +412,18 @@ export function Dashboard() {
             >
               Детальный
             </button>
+            <button
+              className={`${styles.viewBtn} ${roadmapMode === 'career' ? styles.viewBtnActive : ''}`}
+              onClick={() => setRoadmapMode('career')}
+            >
+              Карьера
+            </button>
+            <button
+              className={`${styles.viewBtn} ${roadmapMode === 'vacancy-opt' ? styles.viewBtnActive : ''}`}
+              onClick={() => setRoadmapMode('vacancy-opt')}
+            >
+              Оптимизация
+            </button>
           </div>
         </div>
 
@@ -357,7 +439,7 @@ export function Dashboard() {
             <p className={styles.analyticsDesc}>{roadmapPosition.description}</p>
             <RoadMap data={roadmapData} />
           </div>
-        ) : (
+        ) : roadmapMode === 'detailed' ? (
           /* ── Detailed roadmap: TreePicker format ── */
           <div className={styles.analyticsSection}>
             <div className={styles.gradeSelector}>
@@ -403,6 +485,311 @@ export function Dashboard() {
                 <div style={{ color: 'var(--text-tertiary)', fontSize: 13 }}>Нет данных о зарплатах</div>
               );
             })()}
+          </div>
+
+        ) : roadmapMode === 'career' ? (
+          /* ── Career growth recommendations ── */
+          <div className={styles.analyticsSection}>
+            <h2 className={styles.analyticsTitle}>Рекомендации по карьерному росту</h2>
+            <p className={styles.analyticsDesc}>
+              Анализ GAP-разрыва между текущими навыками кандидата и требованиями следующего грейда
+            </p>
+
+            <div className={styles.recSelector}>
+              <label className={styles.recLabel}>Кандидат:</label>
+              <select
+                className={styles.recSelect}
+                value={selectedCandidateId}
+                onChange={(e) => setSelectedCandidateId(e.target.value)}
+              >
+                <option value="">— Выберите кандидата —</option>
+                {candidates.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.lastName} {c.firstName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {!selectedCandidateId && (
+              <EmptyState
+                title="Выберите кандидата"
+                description="Выберите кандидата из списка для анализа карьерного роста"
+              />
+            )}
+
+            {selectedCandidateId && candidateAgg && !careerRec && (
+              <div className={styles.recEmpty}>
+                <AlertTriangle size={20} />
+                <span>Нет данных для рекомендаций. Возможно, кандидат уже на максимальном грейде или нет вакансий для следующего уровня.</span>
+              </div>
+            )}
+
+            {careerRec && candidateAgg && (
+              <div className={styles.recContent}>
+                {/* Grade transition header */}
+                <div className={styles.gradeTransition}>
+                  <div className={styles.gradeBox}>
+                    <span className={styles.gradeBoxLabel}>Текущий грейд</span>
+                    <span className={styles.gradeBoxValue}>{careerRec.currentGradeLabel}</span>
+                  </div>
+                  <ArrowUpRight size={24} className={styles.gradeArrow} />
+                  <div className={`${styles.gradeBox} ${styles.gradeBoxTarget}`}>
+                    <span className={styles.gradeBoxLabel}>Целевой грейд</span>
+                    <span className={styles.gradeBoxValue}>{careerRec.targetGradeLabel}</span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className={styles.recProgress}>
+                  <div className={styles.recProgressHeader}>
+                    <span>Готовность к переходу</span>
+                    <span className={styles.recProgressPct}>
+                      {careerRec.totalSkillsNeeded > 0
+                        ? Math.round((careerRec.alreadyHas / careerRec.totalSkillsNeeded) * 100)
+                        : 0}%
+                    </span>
+                  </div>
+                  <div className={styles.recProgressTrack}>
+                    <div
+                      className={styles.recProgressFill}
+                      style={{
+                        width: `${careerRec.totalSkillsNeeded > 0
+                          ? (careerRec.alreadyHas / careerRec.totalSkillsNeeded) * 100
+                          : 0}%`,
+                      }}
+                    />
+                  </div>
+                  <div className={styles.recProgressMeta}>
+                    <span>{careerRec.alreadyHas} из {careerRec.totalSkillsNeeded} навыков</span>
+                    <span>{careerRec.skills.length} к развитию</span>
+                  </div>
+                </div>
+
+                {/* Salary comparison */}
+                {(careerRec.salaryNow.count > 0 || careerRec.salaryTarget.count > 0) && (
+                  <div className={styles.recSalaryBlock}>
+                    <h3 className={styles.recSectionTitle}>
+                      <TrendingUp size={14} /> Зарплатная перспектива
+                    </h3>
+                    <div className={styles.salaryComparison}>
+                      <div className={styles.salaryCompItem}>
+                        <span className={styles.salaryCompLabel}>{careerRec.currentGradeLabel}</span>
+                        <span className={styles.salaryCompValue}>
+                          {careerRec.salaryNow.count > 0
+                            ? `${(careerRec.salaryNow.median / 1000).toFixed(0)}k ₽`
+                            : '—'}
+                        </span>
+                      </div>
+                      <ArrowUpRight size={16} className={styles.salaryArrow} />
+                      <div className={styles.salaryCompItem}>
+                        <span className={styles.salaryCompLabel}>{careerRec.targetGradeLabel}</span>
+                        <span className={`${styles.salaryCompValue} ${styles.salaryCompTarget}`}>
+                          {careerRec.salaryTarget.count > 0
+                            ? `${(careerRec.salaryTarget.median / 1000).toFixed(0)}k ₽`
+                            : '—'}
+                        </span>
+                      </div>
+                      {careerRec.salaryIncrease > 0 && (
+                        <div className={styles.salaryDelta}>
+                          +{(careerRec.salaryIncrease / 1000).toFixed(0)}k ₽ ({careerRec.salaryIncreasePercent}%)
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Skills to acquire */}
+                {careerRec.skills.length > 0 && (
+                  <div className={styles.recSkillsBlock}>
+                    <h3 className={styles.recSectionTitle}>Навыки к развитию</h3>
+                    <div className={styles.recSkillsList}>
+                      {careerRec.skills.map((skill) => {
+                        const tool = getToolById(skill.toolId);
+                        const sub = getSubcategoryById(skill.subcategoryId);
+                        return (
+                          <div key={skill.toolId} className={styles.recSkillRow}>
+                            <div className={styles.recSkillIcon}>
+                              {tool?.logoUrl ? (
+                                <img src={tool.logoUrl} alt="" className={styles.recSkillLogo} />
+                              ) : (
+                                <div className={styles.recSkillDot} />
+                              )}
+                            </div>
+                            <div className={styles.recSkillInfo}>
+                              <span className={styles.recSkillName}>{tool?.name ?? skill.toolId}</span>
+                              <span className={styles.recSkillMeta}>
+                                {sub?.name ?? ''} · Востребованность: {skill.demandCount}
+                              </span>
+                            </div>
+                            <span className={`${styles.recSkillBadge} ${skill.type === 'missing' ? styles.recBadgeMissing : styles.recBadgeDeepen}`}>
+                              {skill.type === 'missing' ? 'Изучить' : 'Углубить'}
+                            </span>
+                            {skill.currentYears > 0 && (
+                              <span className={styles.recSkillYears}>{skill.currentYears} г.</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {careerRec.skills.length === 0 && (
+                  <div className={styles.recEmpty}>
+                    <span>Все необходимые навыки освоены! Кандидат готов к переходу на {careerRec.targetGradeLabel}.</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+        ) : (
+          /* ── Vacancy optimization ── */
+          <div className={styles.analyticsSection}>
+            <h2 className={styles.analyticsTitle}>Оптимизация вакансии</h2>
+            <p className={styles.analyticsDesc}>
+              Анализ влияния ослабления требований и повышения оклада на пул кандидатов
+            </p>
+
+            <div className={styles.recSelector}>
+              <label className={styles.recLabel}>Вакансия:</label>
+              <select
+                className={styles.recSelect}
+                value={selectedVacancyId}
+                onChange={(e) => setSelectedVacancyId(e.target.value)}
+              >
+                <option value="">— Выберите вакансию —</option>
+                {filteredVacancies.map((v) => {
+                  const pos = posMap.get(v.positionId);
+                  return (
+                    <option key={v.id} value={v.id}>
+                      {v.companyName} — {pos?.name ?? v.positionId} ({GRADE_LABELS[v.grade]})
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {!selectedVacancyId && (
+              <EmptyState
+                title="Выберите вакансию"
+                description="Выберите вакансию из списка для анализа оптимизации"
+              />
+            )}
+
+            {vacancyOpt && (
+              <div className={styles.recContent}>
+                {/* Current stats */}
+                <div className={styles.optStats}>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>{vacancyOpt.totalCandidates}</span>
+                    <span className={styles.optStatLabel}>Всего кандидатов</span>
+                  </div>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>{vacancyOpt.currentMatchCount}</span>
+                    <span className={styles.optStatLabel}>Подходящих ({'\u2265'}{vacancyOpt.threshold}%)</span>
+                  </div>
+                  <div className={styles.optStat}>
+                    <span className={styles.optStatValue}>
+                      {vacancyOpt.totalCandidates > 0
+                        ? Math.round((vacancyOpt.currentMatchCount / vacancyOpt.totalCandidates) * 100)
+                        : 0}%
+                    </span>
+                    <span className={styles.optStatLabel}>Конверсия</span>
+                  </div>
+                </div>
+
+                {/* Requirement impact */}
+                {vacancyOpt.requirementImpacts.length > 0 && (
+                  <div className={styles.recSkillsBlock}>
+                    <h3 className={styles.recSectionTitle}>Влияние ослабления требований</h3>
+                    <p className={styles.optHint}>
+                      Убрав каждое из следующих требований, можно расширить пул кандидатов:
+                    </p>
+                    <div className={styles.recSkillsList}>
+                      {vacancyOpt.requirementImpacts.map((impact) => {
+                        const tool = getToolById(impact.toolId);
+                        return (
+                          <div key={impact.toolId} className={styles.recSkillRow}>
+                            <div className={styles.recSkillIcon}>
+                              {tool?.logoUrl ? (
+                                <img src={tool.logoUrl} alt="" className={styles.recSkillLogo} />
+                              ) : (
+                                <div className={styles.recSkillDot} />
+                              )}
+                            </div>
+                            <div className={styles.recSkillInfo}>
+                              <span className={styles.recSkillName}>{tool?.name ?? impact.toolId}</span>
+                              <span className={styles.recSkillMeta}>
+                                Сейчас: {impact.currentMatches} → После: {impact.afterMatches}
+                              </span>
+                            </div>
+                            <span className={styles.optDeltaBadge}>
+                              +{impact.delta} кандидат{impact.delta === 1 ? '' : impact.delta < 5 ? 'а' : 'ов'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {vacancyOpt.requirementImpacts.length === 0 && (
+                  <div className={styles.recEmpty}>
+                    <Minus size={16} />
+                    <span>Ослабление отдельных требований не увеличит пул кандидатов</span>
+                  </div>
+                )}
+
+                {/* Grade relaxation */}
+                {vacancyOpt.gradeImpact && (
+                  <div className={styles.recSalaryBlock}>
+                    <h3 className={styles.recSectionTitle}>Снижение грейда</h3>
+                    <div className={styles.gradeRelaxation}>
+                      <span>
+                        Снизив грейд с <strong>{GRADE_LABELS[vacancyOpt.gradeImpact.originalGrade]}</strong> до{' '}
+                        <strong>{GRADE_LABELS[vacancyOpt.gradeImpact.relaxedGrade]}</strong>:
+                      </span>
+                      <span className={styles.optDeltaBadge}>
+                        +{vacancyOpt.gradeImpact.delta} кандидат{vacancyOpt.gradeImpact.delta === 1 ? '' : vacancyOpt.gradeImpact.delta < 5 ? 'а' : 'ов'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Salary impact */}
+                {vacancyOpt.salaryImpacts.length > 0 && (
+                  <div className={styles.recSalaryBlock}>
+                    <h3 className={styles.recSectionTitle}>
+                      <TrendingUp size={14} /> Влияние повышения оклада
+                    </h3>
+                    {(() => {
+                      const vacancy = vacancies.find((v) => v.id === selectedVacancyId);
+                      const baseSalary = vacancy?.salaryTo ?? vacancy?.salaryFrom ?? 0;
+                      return (
+                        <div className={styles.salaryImpactGrid}>
+                          {vacancyOpt.salaryImpacts.map((si) => (
+                            <div key={si.salaryIncrease} className={styles.salaryImpactCard}>
+                              <span className={styles.salaryImpactPct}>+{si.salaryIncrease}%</span>
+                              <span className={styles.salaryImpactAmount}>
+                                {baseSalary > 0
+                                  ? `${(Math.round(baseSalary * (1 + si.salaryIncrease / 100)) / 1000).toFixed(0)}k ₽`
+                                  : '—'}
+                              </span>
+                              <span className={styles.salaryImpactCandidates}>
+                                {si.candidatesInRange} из {si.totalCandidates}
+                              </span>
+                              <span className={styles.salaryImpactLabel}>в зарплатном диапазоне</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
