@@ -1,11 +1,13 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { useVacancyStore, useCandidateStore, useFilterStore, usePositionStore } from '@/stores';
+import { ArrowLeft, Plus, Check, History } from 'lucide-react';
+import { useVacancyStore, useCandidateStore, useFilterStore, usePositionStore, usePipelineStore, useResponseStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { MatchBadge } from '@/components/MatchBadge';
+import { ResponseTimeline } from '@/components/ResponseTimeline';
 import { GradeBadge, Button } from '@/components/ui';
 import { computeMatchScore, aggregateCandidate } from '@/utils';
+import { db, getOrCreatePipeline } from '@/db';
 import type { MatchResult, CandidateAggregation } from '@/entities';
 import styles from './ComparePage.module.css';
 
@@ -16,9 +18,13 @@ export function ComparePage() {
   const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
   const { positions, load: loadPositions } = usePositionStore();
   const { requirementLevel } = useFilterStore();
+  const pipelineStore = usePipelineStore();
+  const { events, loadForPair } = useResponseStore();
 
   const [matchResult,  setMatchResult]  = useState<MatchResult | null>(null);
   const [aggregation,  setAggregation]  = useState<CandidateAggregation | null>(null);
+  const [addedToPipeline, setAddedToPipeline] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => { loadVacancies(); loadCandidates(); loadPositions(); }, [loadVacancies, loadCandidates, loadPositions]);
 
@@ -33,6 +39,42 @@ export function ComparePage() {
       setMatchResult(computeMatchScore(vacancy, agg));
     });
   }, [vacancy, candidate, getWorkEntries]);
+
+  // Load history + pipeline state
+  useEffect(() => {
+    if (vacancyId && candidateId) {
+      loadForPair(vacancyId, candidateId);
+    }
+  }, [vacancyId, candidateId, loadForPair]);
+
+  useEffect(() => {
+    if (vacancyId) {
+      pipelineStore.loadForVacancy(vacancyId);
+    }
+  }, [vacancyId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Check if already in pipeline
+  const isInPipeline = useMemo(() => {
+    if (!candidateId) return false;
+    return pipelineStore.cards.some((c) => c.candidateId === candidateId) || addedToPipeline;
+  }, [pipelineStore.cards, candidateId, addedToPipeline]);
+
+  const handleAddToPipeline = useCallback(async () => {
+    if (!vacancyId || !candidateId || isInPipeline) return;
+    const pipeline = await getOrCreatePipeline(vacancyId);
+    const stages = pipelineStore.stages.length > 0
+      ? pipelineStore.stages
+      : (await db.pipelineStages.where('pipelineId').equals(pipeline.id).sortBy('order'));
+    const firstStage = stages[0];
+    if (!firstStage) return;
+    await pipelineStore.addCard({
+      pipelineId: pipeline.id,
+      stageId: firstStage.id,
+      candidateId,
+      matchScore: matchResult?.scoreMin,
+    });
+    setAddedToPipeline(true);
+  }, [vacancyId, candidateId, isInPipeline, matchResult, pipelineStore]);
 
   // Build years maps for compare mode
   const requirementsYearsMap = useMemo<Record<string, number>>(() => {
@@ -93,6 +135,23 @@ export function ComparePage() {
             size="lg"
           />
         )}
+
+        <Button
+          size="sm"
+          variant={historyOpen ? 'primary' : 'secondary'}
+          onClick={() => setHistoryOpen((v) => !v)}
+        >
+          <History size={13} /> Хроника
+        </Button>
+
+        <Button
+          size="sm"
+          variant={isInPipeline ? 'secondary' : 'primary'}
+          onClick={handleAddToPipeline}
+          disabled={isInPipeline}
+        >
+          {isInPipeline ? <><Check size={13} /> В воронке</> : <><Plus size={13} /> В воронку</>}
+        </Button>
       </div>
 
       {/* ── Legend ────────────────────────────────────────── */}
@@ -105,19 +164,31 @@ export function ComparePage() {
         </span>
       </div>
 
-      {/* ── TreePicker in compare mode ───────────────────── */}
-      <div className={styles.pickerContainer}>
-        {matchResult ? (
-          <TreePicker
-            mode="compare"
-            filteredSubIds={filteredSubIds}
-            fullHeight
-            matchResult={matchResult}
-            requirementsYearsMap={requirementsYearsMap}
-            candidateYearsMap={candidateYearsMap}
-          />
-        ) : (
-          <div style={{ padding: 24, color: 'var(--text-tertiary)' }}>Вычисление результата...</div>
+      {/* ── Body: TreePicker + optional History panel ───── */}
+      <div className={styles.body}>
+        <div className={styles.pickerContainer}>
+          {matchResult ? (
+            <TreePicker
+              mode="compare"
+              filteredSubIds={filteredSubIds}
+              fullHeight
+              matchResult={matchResult}
+              requirementsYearsMap={requirementsYearsMap}
+              candidateYearsMap={candidateYearsMap}
+            />
+          ) : (
+            <div style={{ padding: 24, color: 'var(--text-tertiary)' }}>Вычисление результата...</div>
+          )}
+        </div>
+
+        {historyOpen && (
+          <div className={styles.historyPanel}>
+            <ResponseTimeline
+              vacancyId={vacancy.id}
+              candidateId={candidate.id}
+              events={events}
+            />
+          </div>
         )}
       </div>
     </div>

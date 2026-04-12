@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, PlusCircle, User, LogOut } from 'lucide-react';
+import { Menu, Moon, Sun, PlusCircle, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
@@ -84,6 +84,16 @@ export function TopNav() {
       )}
 
       <div className={styles.spacer} />
+
+      {!isCandidateRole && (
+        <button
+          className={styles.iconBtn}
+          onClick={() => navigate('/recruiter')}
+          title="Дашборд подбора"
+        >
+          <LayoutDashboard size={18} />
+        </button>
+      )}
 
       {!isCandidateRole && (
         <button

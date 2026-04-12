@@ -318,6 +318,10 @@ export function CandidateDetail() {
         >
           Профиль
         </Button>
+
+        <Button size="sm" variant="secondary" onClick={() => navigate(`/candidates/${candidate.id}/history`)}>
+          Хроника
+        </Button>
       </div>
 
       {/* ── Body: TreePicker + Match Panel ──────────────── */}

@@ -99,8 +99,57 @@
   margin-left: auto;
 }
 
+/* ── Body layout ────────────────────────────── */
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
 /* ── TreePicker container ────────────────────── */
 .pickerContainer {
   flex: 1;
   overflow: hidden;
+}
+
+/* ── History panel ──────────────────────────── */
+.historyPanel {
+  width: 320px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-secondary);
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .body {
+    flex-direction: column;
+  }
+
+  .historyPanel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border-secondary);
+    max-height: 40vh;
+  }
+
+  .headerCard {
+    max-width: 140px;
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .legendNote {
+    display: none;
+  }
 }

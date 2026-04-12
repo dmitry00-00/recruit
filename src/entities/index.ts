@@ -335,3 +335,90 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// ── Response History (хроника откликов) ──────────────────────
+
+export type ResponseEventType =
+  | 'candidate_applied'     // Кандидат откликнулся
+  | 'recruiter_contacted'   // Рекрутер связался
+  | 'screening_scheduled'   // Назначен скрининг
+  | 'screening_done'        // Скрининг проведён
+  | 'interview_scheduled'   // Назначено интервью
+  | 'interview_done'        // Интервью проведено
+  | 'test_task_sent'        // Тестовое задание отправлено
+  | 'test_task_received'    // Тестовое задание получено
+  | 'offer_sent'            // Оффер отправлен
+  | 'offer_accepted'        // Оффер принят
+  | 'offer_declined'        // Оффер отклонён
+  | 'candidate_rejected'    // Кандидат отклонён
+  | 'candidate_withdrawn'   // Кандидат снял кандидатуру
+  | 'note';                 // Заметка / комментарий
+
+export const RESPONSE_EVENT_LABELS: Record<ResponseEventType, string> = {
+  candidate_applied:    'Отклик кандидата',
+  recruiter_contacted:  'Рекрутер связался',
+  screening_scheduled:  'Назначен скрининг',
+  screening_done:       'Скрининг проведён',
+  interview_scheduled:  'Назначено интервью',
+  interview_done:       'Интервью проведено',
+  test_task_sent:       'Тестовое отправлено',
+  test_task_received:   'Тестовое получено',
+  offer_sent:           'Оффер отправлен',
+  offer_accepted:       'Оффер принят',
+  offer_declined:       'Оффер отклонён',
+  candidate_rejected:   'Кандидат отклонён',
+  candidate_withdrawn:  'Кандидат снял кандидатуру',
+  note:                 'Заметка',
+};
+
+export const RESPONSE_EVENT_ICONS: Record<ResponseEventType, string> = {
+  candidate_applied:    '📩',
+  recruiter_contacted:  '📞',
+  screening_scheduled:  '📅',
+  screening_done:       '✅',
+  interview_scheduled:  '🗓',
+  interview_done:       '✅',
+  test_task_sent:       '📝',
+  test_task_received:   '📥',
+  offer_sent:           '💼',
+  offer_accepted:       '🎉',
+  offer_declined:       '❌',
+  candidate_rejected:   '🚫',
+  candidate_withdrawn:  '🏳',
+  note:                 '📌',
+};
+
+export interface ResponseEvent {
+  id: string;
+  vacancyId: string;
+  candidateId: string;
+  type: ResponseEventType;
+  comment?: string;
+  authorId?: string;        // userId of who created the event
+  scheduledAt?: Date;       // for scheduled events (interviews, etc.)
+  createdAt: Date;
+}
+
+// ── Recruitment Tasks (задачи подбора) ──────────────────────
+
+export type TaskStatus = 'pending' | 'in_progress' | 'done' | 'cancelled';
+
+export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
+  pending:     'Ожидает',
+  in_progress: 'В работе',
+  done:        'Выполнена',
+  cancelled:   'Отменена',
+};
+
+export interface RecruitmentTask {
+  id: string;
+  title: string;
+  description?: string;
+  vacancyId?: string;
+  candidateId?: string;
+  assigneeId?: string;      // userId
+  status: TaskStatus;
+  dueDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}

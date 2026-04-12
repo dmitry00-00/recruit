@@ -278,6 +278,10 @@ export function VacancyDetail() {
         <Button size="sm" variant="secondary" onClick={() => navigate(`/pipeline/${vacancy.id}`)}>
           Воронка
         </Button>
+
+        <Button size="sm" variant="secondary" onClick={() => navigate(`/vacancies/${vacancy.id}/history`)}>
+          Хроника
+        </Button>
       </div>
 
       {/* ── Body: TreePicker + Match Panel ──────────────── */}
