@@ -49,9 +49,9 @@ interface TreePickerProps {
   fullHeight?: boolean;
 
   /**
-   * When set, sidebar shows a flat vertical list of only these subcategories
-   * (grouped under category headers). Domain grid is hidden in this mode.
-   * If empty array → show all subcategories flat.
+   * When set, subcategories within each domain are filtered to only
+   * those in this list. Domains with no matching subs are dimmed.
+   * If empty array → show all subcategories (no filter).
    */
   filteredSubIds?: string[];
 }
@@ -91,52 +91,55 @@ export function TreePicker({
   filteredSubIds,
 }: TreePickerProps) {
   const tree = useMemo(() => getToolTree(), []);
-  const useFlat = filteredSubIds !== undefined;
 
-  // ── Flat mode (analytics / roadmap) ───────────────────────
-  const flatSubs = useMemo(() => {
-    if (!useFlat) return [];
-    const filterSet = filteredSubIds!.length > 0 ? new Set(filteredSubIds) : null;
-    const result: { catName: string; sub: ToolSubcategory }[] = [];
-    for (const cat of tree) {
-      for (const sub of cat.subcategories) {
-        if (!filterSet || filterSet.has(sub.id)) {
-          result.push({ catName: cat.name, sub });
-        }
-      }
-    }
-    return result;
-  }, [tree, filteredSubIds, useFlat]);
+  // Filter set for subcategories (null = no filter, show all)
+  const filterSet = useMemo(() => {
+    if (filteredSubIds === undefined) return null;
+    if (filteredSubIds.length === 0) return null;
+    return new Set(filteredSubIds);
+  }, [filteredSubIds]);
 
   // ── Domain mode state ──────────────────────────────────────
   const [activeDomain, setActiveDomain] = useState<ToolDomain>('dev');
 
-  const domainSubs = useMemo(
-    () => getSubsByDomain(activeDomain),
-    [activeDomain],
-  );
+  // Get subcategories for active domain, filtered if needed
+  const domainSubs = useMemo(() => {
+    const all = getSubsByDomain(activeDomain);
+    if (!filterSet) return all;
+    return all.filter(({ sub }) => filterSet.has(sub.id));
+  }, [activeDomain, filterSet]);
 
-  // Default active sub
-  const defaultSubId = useFlat
-    ? (flatSubs[0]?.sub.id ?? null)
-    : (domainSubs[0]?.sub.id ?? null);
+  // Check which domains have any subcategories (after filtering)
+  const domainHasSubs = useMemo(() => {
+    const map: Partial<Record<ToolDomain, boolean>> = {};
+    const allDomains: ToolDomain[] = [...PRIMARY_DOMAINS, 'misc'];
+    for (const d of allDomains) {
+      const subs = getSubsByDomain(d);
+      if (!filterSet) {
+        map[d] = subs.length > 0;
+      } else {
+        map[d] = subs.some(({ sub }) => filterSet.has(sub.id));
+      }
+    }
+    return map;
+  }, [filterSet]);
 
-  const [activeSub, setActiveSub] = useState<string | null>(defaultSubId);
+  const [activeSub, setActiveSub] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
-  // Sync activeSub when domain changes
+  // Default to first domain that has subs
   useEffect(() => {
-    if (!useFlat) {
-      setActiveSub(domainSubs[0]?.sub.id ?? null);
+    if (!domainHasSubs[activeDomain]) {
+      const allDomains: ToolDomain[] = [...PRIMARY_DOMAINS, 'misc'];
+      const first = allDomains.find((d) => domainHasSubs[d]);
+      if (first) setActiveDomain(first);
     }
-  }, [activeDomain]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [domainHasSubs]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sync activeSub when filteredSubIds changes
+  // Sync activeSub when domain or filter changes
   useEffect(() => {
-    if (useFlat && flatSubs.length > 0 && !flatSubs.some((f) => f.sub.id === activeSub)) {
-      setActiveSub(flatSubs[0].sub.id);
-    }
-  }, [flatSubs, useFlat]); // eslint-disable-line react-hooks/exhaustive-deps
+    setActiveSub(domainSubs[0]?.sub.id ?? null);
+  }, [activeDomain, domainSubs.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const lockedSet   = useMemo(() => new Set(locked), [locked]);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
@@ -166,7 +169,8 @@ export function TreePicker({
 
   const countDomain = (domain: ToolDomain) => {
     const subs = getSubsByDomain(domain);
-    return subs.reduce((acc, { sub }) => acc + countSub(sub), 0);
+    const filtered = filterSet ? subs.filter(({ sub }) => filterSet.has(sub.id)) : subs;
+    return filtered.reduce((acc, { sub }) => acc + countSub(sub), 0);
   };
 
   // ── Display tools ──────────────────────────────────────────
@@ -190,27 +194,6 @@ export function TreePicker({
 
   // ── Subcategory list renderer ─────────────────────────────
   const renderSubcatList = () => {
-    if (useFlat) {
-      let lastCat = '';
-      return flatSubs.map(({ catName, sub }) => {
-        const showHeader = catName !== lastCat;
-        lastCat = catName;
-        const sc = countSub(sub);
-        return (
-          <div key={sub.id}>
-            {showHeader && <div className={styles.catHeader}>{catName}</div>}
-            <button
-              className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
-              onClick={() => setActiveSub(sub.id)}
-            >
-              {sub.name}
-              {sc > 0 && <span className={styles.catCount}>{sc}</span>}
-            </button>
-          </div>
-        );
-      });
-    }
-
     let lastCatId = '';
     return domainSubs.map(({ catName, catId, sub }) => {
       const showHeader = catId !== lastCatId;
@@ -411,45 +394,45 @@ export function TreePicker({
 
   // ── Render ─────────────────────────────────────────────────
   return (
-    <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''} ${!useFlat ? styles.wrapperDomain : ''}`}>
+    <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''}`}>
 
-      {/* ── Domain grid — full width at the top ──────────── */}
-      {!useFlat && (
-        <div className={styles.domainGrid}>
-          {PRIMARY_DOMAINS.map((domain) => {
-            const Icon = DOMAIN_ICON_MAP[domain];
-            const cnt = countDomain(domain);
-            return (
-              <button
-                key={domain}
-                className={`${styles.domainTile} ${activeDomain === domain ? styles.domainTileActive : ''}`}
-                onClick={() => setActiveDomain(domain)}
-                title={DOMAIN_LABELS[domain]}
-              >
-                <Icon size={16} />
-                <span className={styles.domainTileLabel}>{DOMAIN_LABELS[domain]}</span>
-                {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
-              </button>
-            );
-          })}
-          {/* Разное — spans all 3 columns */}
-          {(() => {
-            const Icon = DOMAIN_ICON_MAP['misc'];
-            const cnt = countDomain('misc');
-            return (
-              <button
-                className={`${styles.domainTile} ${styles.domainTileMisc} ${activeDomain === 'misc' ? styles.domainTileActive : ''}`}
-                onClick={() => setActiveDomain('misc')}
-                title={DOMAIN_LABELS['misc']}
-              >
-                <Icon size={14} />
-                <span className={styles.domainTileLabel}>{DOMAIN_LABELS['misc']}</span>
-                {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
-              </button>
-            );
-          })()}
-        </div>
-      )}
+      {/* ── Domain grid — always visible, full width ─────── */}
+      <div className={styles.domainGrid}>
+        {PRIMARY_DOMAINS.map((domain) => {
+          const Icon = DOMAIN_ICON_MAP[domain];
+          const cnt = countDomain(domain);
+          const hasSubs = domainHasSubs[domain];
+          return (
+            <button
+              key={domain}
+              className={`${styles.domainTile} ${activeDomain === domain ? styles.domainTileActive : ''} ${!hasSubs ? styles.domainTileDisabled : ''}`}
+              onClick={() => hasSubs && setActiveDomain(domain)}
+              title={DOMAIN_LABELS[domain]}
+            >
+              <Icon size={16} />
+              <span className={styles.domainTileLabel}>{DOMAIN_LABELS[domain]}</span>
+              {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+            </button>
+          );
+        })}
+        {/* Разное — spans all 3 columns */}
+        {(() => {
+          const Icon = DOMAIN_ICON_MAP['misc'];
+          const cnt = countDomain('misc');
+          const hasSubs = domainHasSubs['misc'];
+          return (
+            <button
+              className={`${styles.domainTile} ${styles.domainTileMisc} ${activeDomain === 'misc' ? styles.domainTileActive : ''} ${!hasSubs ? styles.domainTileDisabled : ''}`}
+              onClick={() => hasSubs && setActiveDomain('misc')}
+              title={DOMAIN_LABELS['misc']}
+            >
+              <Icon size={14} />
+              <span className={styles.domainTileLabel}>{DOMAIN_LABELS['misc']}</span>
+              {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+            </button>
+          );
+        })()}
+      </div>
 
       {/* ── Body: subcategories + tools side by side ─────── */}
       <div className={styles.body}>

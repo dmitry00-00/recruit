@@ -1,6 +1,7 @@
 /* ── Wrapper ───────────────────────────────── */
 .wrapper {
   display: flex;
+  flex-direction: column;
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-lg);
   height: 420px;
@@ -12,11 +13,6 @@
   height: 100%;
   border-radius: 0;
   border: none;
-}
-
-/* When domain grid is active, stack vertically */
-.wrapperDomain {
-  flex-direction: column;
 }
 
 /* ── Domain grid — full width, top of picker ── */
@@ -60,6 +56,12 @@
   flex-direction: row;
   gap: 6px;
   padding: 6px 12px;
+}
+
+/* Domain has no matching subcategories (filtered out) */
+.domainTileDisabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 .domainTileLabel {
@@ -489,10 +491,6 @@
     flex-direction: column;
     height: auto;
     max-height: 80vh;
-  }
-
-  .wrapperDomain {
-    flex-direction: column;
   }
 
   .domainGrid {
