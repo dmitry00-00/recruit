@@ -1,4 +1,4 @@
-/* ── Wrapper ───────────────────────────────── */
+/* ── Wrapper ──────────────────────────────── */
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -15,200 +15,16 @@
   border: none;
 }
 
-/* ── Domain grid — full width, top of picker ── */
-.domainGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border-tertiary);
-  border-bottom: 1px solid var(--border-tertiary);
-  flex-shrink: 0;
-}
-
-.domainTile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 10px 6px 8px;
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  border: none;
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: background 0.15s, color 0.15s;
-}
-
-.domainTile:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-.domainTileActive {
-  background: var(--amber-bg) !important;
-  color: var(--amber) !important;
-}
-
-/* Разное — spans all 3 columns */
-.domainTileMisc {
-  grid-column: 1 / -1;
-  flex-direction: row;
-  gap: 6px;
-  padding: 6px 12px;
-}
-
-/* Domain has no matching subcategories (filtered out) */
-.domainTileDisabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-.domainTileLabel {
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.domainTileCount {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1;
-  background: var(--amber);
-  color: #fff;
-  padding: 1px 5px;
-  border-radius: var(--radius-pill);
-  min-width: 16px;
-  text-align: center;
-}
-
-/* ── Body: sidebar + content, horizontal ────── */
-.body {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* ── Left panel: subcategories ────────────── */
-.sidebar {
-  width: 200px;
-  border-right: 1px solid var(--border-tertiary);
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.sidebarScroll {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.sidebarFooter {
-  border-top: 1px solid var(--border-tertiary);
-  flex-shrink: 0;
-}
-
-/* Non-clickable category header */
-.catHeader {
-  padding: 8px 12px 4px;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--border-tertiary);
-  background: var(--bg-secondary);
-}
-
-.catItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 8px 12px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--border-tertiary);
-  cursor: pointer;
-  text-align: left;
-}
-
-.catItem:hover {
-  background: var(--bg-secondary);
-}
-
-.catItemActive {
-  background: var(--amber-bg);
-  color: var(--amber);
-}
-
-.catCount {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  background: var(--bg-tertiary);
-  padding: 1px 6px;
-  border-radius: var(--radius-pill);
-  color: var(--text-tertiary);
-}
-
-.catCountActive {
-  background: var(--amber);
-  color: #fff;
-}
-
-.subItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 6px 12px 6px 16px;
-  font-family: var(--font-sans);
-  font-size: 11px;
-  color: var(--text-tertiary);
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--border-tertiary);
-  cursor: pointer;
-  text-align: left;
-}
-
-.subItem:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-.subItemActive {
-  background: var(--amber-bg);
-  color: var(--amber);
-  font-weight: 600;
-}
-
-/* ── Right panel: tools ────────────────── */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
+/* ── Search bar ──────────────────────────── */
 .searchBar {
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--border-tertiary);
+  flex-shrink: 0;
 }
 
 .searchInput {
   width: 100%;
-  padding: 6px 10px;
+  padding: 5px 10px;
   font-family: var(--font-sans);
   font-size: 12px;
   border: 1px solid var(--border-secondary);
@@ -222,152 +38,236 @@
   border-color: var(--amber);
 }
 
-.toolsList {
+/* ── Search results (flat list) ──────────── */
+.searchResults {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
-  grid-auto-rows: max-content;
-  gap: 4px;
-  align-content: start;
-}
-
-/* Row layout for modes with inline controls */
-.toolsListRows {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
+  padding: 4px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
+/* ── Domain grid — THE picker ────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr auto;
+  gap: 1px;
+  flex: 1;
+  min-height: 0;
+  background: var(--border-tertiary);
+}
+
+/* ── Domain cell ─────────────────────────── */
+.cell {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.cellMisc {
+  grid-column: 1 / -1;
+}
+
+.cellEmpty {
+  opacity: 0.35;
+}
+
+.cellHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border-tertiary);
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.cellTitle {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.cellCount {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--amber);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  min-width: 16px;
+  text-align: center;
+}
+
+.cellBody {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.cellCatHeader {
+  padding: 3px 8px 2px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+/* ── Subcategory toggle ──────────────────── */
+.subToggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 4px 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-tertiary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.subToggle:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.subToggleOpen {
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.subToggleName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subToggleCount {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: var(--bg-tertiary);
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ── Tools panel inside expanded subcategory ── */
+.toolsPanel {
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--border-tertiary);
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* ── Tool row ────────────────────────────── */
 .toolRow {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 6px 4px;
+  gap: 6px;
+  padding: 3px 6px;
   border-radius: var(--radius-sm);
-  cursor: pointer;
-  position: relative;
 }
 
-/* Row layout variant */
-.toolRowInline {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.toolRow:hover,
-.toolRowInline:hover {
+.toolRow:hover {
   background: var(--bg-secondary);
 }
 
-.toolCheckbox {
+.toolCb {
   accent-color: var(--amber);
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   flex-shrink: 0;
 }
 
 .toolLogo {
-  width: 28px;
-  height: 28px;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
   flex-shrink: 0;
-}
-
-.toolName {
-  display: none;
-}
-
-.toolNameVisible {
-  display: inline;
-  font-size: 12px;
-  color: var(--text-primary);
-  flex: 1;
-}
-
-.toolLogoSmall {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.toolNoLogoSmall {
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  font-size: 7px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  text-transform: uppercase;
 }
 
 .toolNoLogo {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 6px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   text-transform: uppercase;
-  line-height: 1;
+}
+
+.toolName {
+  font-size: 11px;
+  color: var(--text-primary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .toolLocked {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .toolLockedBadge {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   color: var(--amber);
   background: var(--amber-bg);
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: var(--radius-sm);
+  flex-shrink: 0;
 }
 
 .yearsInput {
-  width: 48px;
-  padding: 2px 6px;
+  width: 42px;
+  padding: 1px 4px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-sm);
   background: var(--bg-primary);
   color: var(--text-primary);
   text-align: center;
+  flex-shrink: 0;
 }
 
 .emptyTools {
-  grid-column: 1 / -1;
   padding: 24px;
   text-align: center;
   font-size: 12px;
   color: var(--text-tertiary);
 }
 
-/* ── Vacancy mode row states ─────────────────── */
+/* ── Vacancy mode states ─────────────────── */
 .toolRowMin {
   border-left: 3px solid var(--amber) !important;
   background: var(--amber-bg) !important;
@@ -378,71 +278,53 @@
   background: rgba(59, 130, 246, 0.06) !important;
 }
 
-.vacancyDot {
-  width: 10px;
-  height: 10px;
+.dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.vacancyDotNone {
-  border: 1.5px solid var(--border-secondary);
-  background: transparent;
-}
+.dotNone  { border: 1.5px solid var(--border-secondary); background: transparent; }
+.dotMin   { background: var(--amber); border: none; }
+.dotMax   { background: #3b82f6; border: none; }
 
-.vacancyDotMin {
-  background: var(--amber);
-  border: none;
-}
-
-.vacancyDotMax {
-  background: #3b82f6;
-  border: none;
-}
-
-.vacancyBadge {
-  font-size: 9px;
+.vacBadge {
+  font-size: 8px;
   font-weight: 700;
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
-.vacancyBadgeMin {
-  background: var(--amber-bg);
-  color: var(--amber);
-}
+.vacBadgeMin { background: var(--amber-bg); color: var(--amber); }
+.vacBadgeMax { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 
-.vacancyBadgeMax {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-/* ── Candidate-agg mode ──────────────────────── */
-.aggBarWrapper {
+/* ── Candidate-agg bars ──────────────────── */
+.aggWrap {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 .aggBar {
-  height: 6px;
+  height: 5px;
   background: var(--cand-color, #22c55e);
   border-radius: 3px;
-  min-width: 4px;
+  min-width: 3px;
   flex-shrink: 0;
 }
 
-.aggBarLabel {
+.aggLabel {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-tertiary);
   white-space: nowrap;
 }
 
-/* ── Compare mode row states ─────────────────── */
+/* ── Compare mode ────────────────────────── */
 .toolRowMatched {
   border-left: 3px solid #22c55e !important;
   background: rgba(34, 197, 94, 0.06) !important;
@@ -459,9 +341,9 @@
 }
 
 .cmpIcon {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  width: 14px;
+  width: 12px;
   text-align: center;
   flex-shrink: 0;
 }
@@ -474,67 +356,50 @@
 .cmpYears {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   margin-left: auto;
   flex-shrink: 0;
 }
 
-.cmpReqYears  { color: var(--amber); }
-.cmpSlash     { color: var(--text-tertiary); }
-.cmpCandYears { color: var(--cand-color, #22c55e); }
+.cmpReq   { color: var(--amber); }
+.cmpSlash { color: var(--text-tertiary); }
+.cmpCand  { color: var(--cand-color, #22c55e); }
 
-/* ── Mobile ────────────────────────────────── */
+/* ── Footer (sidebarFooter) ──────────────── */
+.footer {
+  border-top: 1px solid var(--border-tertiary);
+  flex-shrink: 0;
+}
+
+/* ── Mobile ──────────────────────────────── */
 @media (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
     height: auto;
     max-height: 80vh;
   }
 
-  .domainGrid {
-    flex-shrink: 0;
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
   }
 
-  .body {
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
+  .cellMisc {
+    grid-column: 1 / -1;
   }
 
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border-tertiary);
-    max-height: 100px;
+  .toolName {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 
-  .sidebarScroll {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 0;
-  }
-
-  .subItem {
-    white-space: nowrap;
-    padding: 6px 10px;
-    border-bottom: none;
-    border-right: 1px solid var(--border-tertiary);
-  }
-
-  .catHeader {
-    white-space: nowrap;
-    padding: 6px 10px;
-    border-bottom: none;
-  }
-
-  .toolsList {
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-  }
-
-  .toolsListRows {
-    padding: 6px;
+  .cellMisc {
+    grid-column: 1;
   }
 }
