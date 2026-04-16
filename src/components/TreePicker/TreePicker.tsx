@@ -188,303 +188,305 @@ export function TreePicker({
   const isReadonly    = mode === 'candidate-agg' || mode === 'compare';
   const useInlineRows = mode !== 'candidate-agg';
 
-  // ── Render ─────────────────────────────────────────────────
-  return (
-    <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''}`}>
+  // ── Subcategory list renderer ─────────────────────────────
+  const renderSubcatList = () => {
+    if (useFlat) {
+      let lastCat = '';
+      return flatSubs.map(({ catName, sub }) => {
+        const showHeader = catName !== lastCat;
+        lastCat = catName;
+        const sc = countSub(sub);
+        return (
+          <div key={sub.id}>
+            {showHeader && <div className={styles.catHeader}>{catName}</div>}
+            <button
+              className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
+              onClick={() => setActiveSub(sub.id)}
+            >
+              {sub.name}
+              {sc > 0 && <span className={styles.catCount}>{sc}</span>}
+            </button>
+          </div>
+        );
+      });
+    }
 
-      {/* ── Left: sidebar ─────────────────────────────────── */}
-      <div className={styles.sidebar}>
+    let lastCatId = '';
+    return domainSubs.map(({ catName, catId, sub }) => {
+      const showHeader = catId !== lastCatId;
+      lastCatId = catId;
+      const sc = countSub(sub);
+      return (
+        <div key={sub.id}>
+          {showHeader && <div className={styles.catHeader}>{catName}</div>}
+          <button
+            className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
+            onClick={() => setActiveSub(sub.id)}
+          >
+            {sub.name}
+            {sc > 0 && <span className={styles.catCount}>{sc}</span>}
+          </button>
+        </div>
+      );
+    });
+  };
 
-        {/* Domain grid — hidden in flat/analytics mode */}
-        {!useFlat && (
-          <div className={styles.domainGrid}>
-            {PRIMARY_DOMAINS.map((domain) => {
-              const Icon = DOMAIN_ICON_MAP[domain];
-              const cnt = countDomain(domain);
-              return (
-                <button
-                  key={domain}
-                  className={`${styles.domainTile} ${activeDomain === domain ? styles.domainTileActive : ''}`}
-                  onClick={() => setActiveDomain(domain)}
-                  title={DOMAIN_LABELS[domain]}
-                >
-                  <Icon size={14} />
-                  <span className={styles.domainTileLabel}>{DOMAIN_LABELS[domain]}</span>
-                  {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
-                </button>
-              );
-            })}
-            {/* Разное — spans all 3 columns */}
-            {(() => {
-              const Icon = DOMAIN_ICON_MAP['misc'];
-              const cnt = countDomain('misc');
-              return (
-                <button
-                  className={`${styles.domainTile} ${styles.domainTileMisc} ${activeDomain === 'misc' ? styles.domainTileActive : ''}`}
-                  onClick={() => setActiveDomain('misc')}
-                  title={DOMAIN_LABELS['misc']}
-                >
-                  <Icon size={14} />
-                  <span className={styles.domainTileLabel}>{DOMAIN_LABELS['misc']}</span>
-                  {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
-                </button>
-              );
-            })()}
+  // ── Tool row renderer ─────────────────────────────────────
+  const renderToolRow = (tool: Tool) => {
+    const isLocked   = lockedSet.has(tool.id);
+    const isSelected = selectedSet.has(tool.id);
+    const vacState   = getVacState(tool.id);
+
+    const isMatched = matchedSet.has(tool.id);
+    const isGap     = gapSet.has(tool.id);
+    const isExtra   = extraSet.has(tool.id);
+
+    let rowClass = useInlineRows ? styles.toolRowInline : styles.toolRow;
+    if (mode === 'vacancy') {
+      if (vacState === 'min') rowClass += ` ${styles.toolRowMin}`;
+      else if (vacState === 'max') rowClass += ` ${styles.toolRowMax}`;
+    } else if (mode === 'compare') {
+      if (isMatched) rowClass += ` ${styles.toolRowMatched}`;
+      else if (isGap) rowClass += ` ${styles.toolRowGap}`;
+      else if (isExtra) rowClass += ` ${styles.toolRowExtra}`;
+    } else if (isLocked) {
+      rowClass += ` ${styles.toolLocked}`;
+    }
+
+    const clickable = !isReadonly && !isLocked;
+
+    return (
+      <div
+        key={tool.id}
+        className={rowClass}
+        onClick={
+          clickable
+            ? () => {
+                if (mode === 'vacancy') {
+                  onVacancyClick?.(tool.id, vacState);
+                } else {
+                  if (!onChange) return;
+                  if (isSelected) onChange(selected.filter((id) => id !== tool.id));
+                  else onChange([...selected, tool.id]);
+                }
+              }
+            : undefined
+        }
+        style={clickable ? { cursor: 'pointer' } : undefined}
+      >
+        {/* Checkbox — legacy modes */}
+        {(mode === 'vacancy-min' || mode === 'vacancy-max' || mode === 'candidate') && (
+          <input
+            type="checkbox"
+            className={styles.toolCheckbox}
+            checked={isSelected}
+            disabled={isLocked}
+            readOnly
+          />
+        )}
+
+        {/* Dot — vacancy mode */}
+        {mode === 'vacancy' && (
+          <span className={`${styles.vacancyDot} ${
+            vacState === 'min' ? styles.vacancyDotMin
+            : vacState === 'max' ? styles.vacancyDotMax
+            : styles.vacancyDotNone
+          }`} />
+        )}
+
+        {/* Indicator — compare mode */}
+        {mode === 'compare' && (
+          <span className={`${styles.cmpIcon} ${
+            isMatched ? styles.cmpMatched
+            : isGap   ? styles.cmpGap
+            : isExtra ? styles.cmpExtra
+                     : styles.cmpNeutral
+          }`}>
+            {isMatched ? '✓' : isGap ? '✗' : isExtra ? '~' : ''}
+          </span>
+        )}
+
+        {/* Logo */}
+        {tool.logoUrl ? (
+          <img
+            src={tool.logoUrl}
+            alt={tool.name}
+            title={tool.name}
+            className={useInlineRows ? styles.toolLogoSmall : styles.toolLogo}
+            loading="lazy"
+          />
+        ) : (
+          <span
+            className={useInlineRows ? styles.toolNoLogoSmall : styles.toolNoLogo}
+            title={tool.name}
+          >
+            {tool.name.slice(0, 3)}
+          </span>
+        )}
+
+        {/* Name */}
+        <span className={useInlineRows ? styles.toolNameVisible : styles.toolName}>
+          {tool.name}
+        </span>
+
+        {/* Locked badge */}
+        {(mode === 'vacancy-min' || mode === 'vacancy-max') && isLocked && (
+          <span className={styles.toolLockedBadge}>MIN</span>
+        )}
+
+        {/* Vacancy badge */}
+        {mode === 'vacancy' && vacState !== 'none' && (
+          <span className={`${styles.vacancyBadge} ${
+            vacState === 'min' ? styles.vacancyBadgeMin : styles.vacancyBadgeMax
+          }`}>
+            {vacState === 'min' ? 'MIN' : 'MAX'}
+          </span>
+        )}
+
+        {/* Vacancy years */}
+        {mode === 'vacancy' && vacState !== 'none' && (
+          <input
+            type="number"
+            className={styles.yearsInput}
+            min={0} max={15} step={0.5}
+            value={vacState === 'min' ? (minYearsMap[tool.id] ?? 0) : (maxYearsMap[tool.id] ?? 0)}
+            placeholder="лет"
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => onVacancyYears?.(tool.id, vacState, parseFloat(e.target.value) || 0)}
+          />
+        )}
+
+        {/* Legacy vacancy-min/max years */}
+        {(mode === 'vacancy-min' || mode === 'vacancy-max') && isSelected && !isLocked && (
+          <input
+            type="number"
+            className={styles.yearsInput}
+            min={0} max={15} step={0.5}
+            value={yearsMap[tool.id] ?? 0}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
+            placeholder="лет"
+          />
+        )}
+
+        {/* Candidate years */}
+        {mode === 'candidate' && isSelected && (
+          <input
+            type="number"
+            className={styles.yearsInput}
+            min={0} max={30} step={0.5}
+            value={yearsMap[tool.id] ?? 0}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
+            placeholder="лет"
+          />
+        )}
+
+        {/* Agg bars */}
+        {mode === 'candidate-agg' && yearsMap[tool.id] != null && (
+          <div className={styles.aggBarWrapper}>
+            <div
+              className={styles.aggBar}
+              style={{ width: `${Math.min(100, ((yearsMap[tool.id] ?? 0) / aggMax) * 100)}%` }}
+            />
+            <span className={styles.aggBarLabel}>{yearsMap[tool.id]}г</span>
           </div>
         )}
 
-        {/* Subcategory list */}
-        <div className={styles.sidebarScroll}>
-          {useFlat ? (
-            /* Flat mode — analytics/roadmap */
-            (() => {
-              let lastCat = '';
-              return flatSubs.map(({ catName, sub }) => {
-                const showHeader = catName !== lastCat;
-                lastCat = catName;
-                const sc = countSub(sub);
-                return (
-                  <div key={sub.id}>
-                    {showHeader && <div className={styles.catHeader}>{catName}</div>}
-                    <button
-                      className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
-                      onClick={() => setActiveSub(sub.id)}
-                    >
-                      {sub.name}
-                      {sc > 0 && <span className={styles.catCount}>{sc}</span>}
-                    </button>
-                  </div>
-                );
-              });
-            })()
-          ) : (
-            /* Domain mode — grouped by original category */
-            (() => {
-              let lastCatId = '';
-              return domainSubs.map(({ catName, catId, sub }) => {
-                const showHeader = catId !== lastCatId;
-                lastCatId = catId;
-                const sc = countSub(sub);
-                return (
-                  <div key={sub.id}>
-                    {showHeader && <div className={styles.catHeader}>{catName}</div>}
-                    <button
-                      className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
-                      onClick={() => setActiveSub(sub.id)}
-                    >
-                      {sub.name}
-                      {sc > 0 && <span className={styles.catCount}>{sc}</span>}
-                    </button>
-                  </div>
-                );
-              });
-            })()
-          )}
-        </div>
-
-        {sidebarFooter && (
-          <div className={styles.sidebarFooter}>{sidebarFooter}</div>
+        {/* Compare years */}
+        {mode === 'compare' && (isMatched || isGap || isExtra) && (
+          <div className={styles.cmpYears}>
+            <span className={styles.cmpReqYears}>
+              {requirementsYearsMap[tool.id] ? `${requirementsYearsMap[tool.id]}г` : '—'}
+            </span>
+            <span className={styles.cmpSlash}>/</span>
+            <span className={styles.cmpCandYears}>
+              {candidateYearsMap[tool.id] ? `${candidateYearsMap[tool.id]}г` : '—'}
+            </span>
+          </div>
         )}
       </div>
+    );
+  };
 
-      {/* ── Right: tools panel ────────────────────────────── */}
-      <div className={styles.content}>
-        <div className={styles.searchBar}>
-          <input
-            className={styles.searchInput}
-            placeholder={
-              mode === 'vacancy'
-                ? '1 клик — MIN   |   2 клика — MAX'
-                : 'Поиск инструментов...'
-            }
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+  // ── Render ─────────────────────────────────────────────────
+  return (
+    <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''} ${!useFlat ? styles.wrapperDomain : ''}`}>
+
+      {/* ── Domain grid — full width at the top ──────────── */}
+      {!useFlat && (
+        <div className={styles.domainGrid}>
+          {PRIMARY_DOMAINS.map((domain) => {
+            const Icon = DOMAIN_ICON_MAP[domain];
+            const cnt = countDomain(domain);
+            return (
+              <button
+                key={domain}
+                className={`${styles.domainTile} ${activeDomain === domain ? styles.domainTileActive : ''}`}
+                onClick={() => setActiveDomain(domain)}
+                title={DOMAIN_LABELS[domain]}
+              >
+                <Icon size={16} />
+                <span className={styles.domainTileLabel}>{DOMAIN_LABELS[domain]}</span>
+                {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+              </button>
+            );
+          })}
+          {/* Разное — spans all 3 columns */}
+          {(() => {
+            const Icon = DOMAIN_ICON_MAP['misc'];
+            const cnt = countDomain('misc');
+            return (
+              <button
+                className={`${styles.domainTile} ${styles.domainTileMisc} ${activeDomain === 'misc' ? styles.domainTileActive : ''}`}
+                onClick={() => setActiveDomain('misc')}
+                title={DOMAIN_LABELS['misc']}
+              >
+                <Icon size={14} />
+                <span className={styles.domainTileLabel}>{DOMAIN_LABELS['misc']}</span>
+                {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+              </button>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* ── Body: subcategories + tools side by side ─────── */}
+      <div className={styles.body}>
+        {/* Subcategory sidebar */}
+        <div className={styles.sidebar}>
+          <div className={styles.sidebarScroll}>
+            {renderSubcatList()}
+          </div>
+          {sidebarFooter && (
+            <div className={styles.sidebarFooter}>{sidebarFooter}</div>
+          )}
         </div>
 
-        <div className={useInlineRows ? styles.toolsListRows : styles.toolsList}>
-          {displayTools.length === 0 ? (
-            <div className={styles.emptyTools}>
-              {search ? 'Ничего не найдено' : 'Выберите подкатегорию'}
-            </div>
-          ) : (
-            displayTools.map((tool) => {
-              const isLocked   = lockedSet.has(tool.id);
-              const isSelected = selectedSet.has(tool.id);
-              const vacState   = getVacState(tool.id);
-
-              const isMatched = matchedSet.has(tool.id);
-              const isGap     = gapSet.has(tool.id);
-              const isExtra   = extraSet.has(tool.id);
-
-              let rowClass = useInlineRows ? styles.toolRowInline : styles.toolRow;
-              if (mode === 'vacancy') {
-                if (vacState === 'min') rowClass += ` ${styles.toolRowMin}`;
-                else if (vacState === 'max') rowClass += ` ${styles.toolRowMax}`;
-              } else if (mode === 'compare') {
-                if (isMatched) rowClass += ` ${styles.toolRowMatched}`;
-                else if (isGap) rowClass += ` ${styles.toolRowGap}`;
-                else if (isExtra) rowClass += ` ${styles.toolRowExtra}`;
-              } else if (isLocked) {
-                rowClass += ` ${styles.toolLocked}`;
+        {/* Tools panel */}
+        <div className={styles.content}>
+          <div className={styles.searchBar}>
+            <input
+              className={styles.searchInput}
+              placeholder={
+                mode === 'vacancy'
+                  ? '1 клик — MIN   |   2 клика — MAX'
+                  : 'Поиск инструментов...'
               }
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-              const clickable = !isReadonly && !isLocked;
-
-              return (
-                <div
-                  key={tool.id}
-                  className={rowClass}
-                  onClick={
-                    clickable
-                      ? () => {
-                          if (mode === 'vacancy') {
-                            onVacancyClick?.(tool.id, vacState);
-                          } else {
-                            if (!onChange) return;
-                            if (isSelected) onChange(selected.filter((id) => id !== tool.id));
-                            else onChange([...selected, tool.id]);
-                          }
-                        }
-                      : undefined
-                  }
-                  style={clickable ? { cursor: 'pointer' } : undefined}
-                >
-                  {/* Checkbox — legacy modes */}
-                  {(mode === 'vacancy-min' || mode === 'vacancy-max' || mode === 'candidate') && (
-                    <input
-                      type="checkbox"
-                      className={styles.toolCheckbox}
-                      checked={isSelected}
-                      disabled={isLocked}
-                      readOnly
-                    />
-                  )}
-
-                  {/* Dot — vacancy mode */}
-                  {mode === 'vacancy' && (
-                    <span className={`${styles.vacancyDot} ${
-                      vacState === 'min' ? styles.vacancyDotMin
-                      : vacState === 'max' ? styles.vacancyDotMax
-                      : styles.vacancyDotNone
-                    }`} />
-                  )}
-
-                  {/* Indicator — compare mode */}
-                  {mode === 'compare' && (
-                    <span className={`${styles.cmpIcon} ${
-                      isMatched ? styles.cmpMatched
-                      : isGap   ? styles.cmpGap
-                      : isExtra ? styles.cmpExtra
-                               : styles.cmpNeutral
-                    }`}>
-                      {isMatched ? '✓' : isGap ? '✗' : isExtra ? '~' : ''}
-                    </span>
-                  )}
-
-                  {/* Logo */}
-                  {tool.logoUrl ? (
-                    <img
-                      src={tool.logoUrl}
-                      alt={tool.name}
-                      title={tool.name}
-                      className={useInlineRows ? styles.toolLogoSmall : styles.toolLogo}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span
-                      className={useInlineRows ? styles.toolNoLogoSmall : styles.toolNoLogo}
-                      title={tool.name}
-                    >
-                      {tool.name.slice(0, 3)}
-                    </span>
-                  )}
-
-                  {/* Name */}
-                  <span className={useInlineRows ? styles.toolNameVisible : styles.toolName}>
-                    {tool.name}
-                  </span>
-
-                  {/* Locked badge */}
-                  {(mode === 'vacancy-min' || mode === 'vacancy-max') && isLocked && (
-                    <span className={styles.toolLockedBadge}>MIN</span>
-                  )}
-
-                  {/* Vacancy badge */}
-                  {mode === 'vacancy' && vacState !== 'none' && (
-                    <span className={`${styles.vacancyBadge} ${
-                      vacState === 'min' ? styles.vacancyBadgeMin : styles.vacancyBadgeMax
-                    }`}>
-                      {vacState === 'min' ? 'MIN' : 'MAX'}
-                    </span>
-                  )}
-
-                  {/* Vacancy years */}
-                  {mode === 'vacancy' && vacState !== 'none' && (
-                    <input
-                      type="number"
-                      className={styles.yearsInput}
-                      min={0} max={15} step={0.5}
-                      value={vacState === 'min' ? (minYearsMap[tool.id] ?? 0) : (maxYearsMap[tool.id] ?? 0)}
-                      placeholder="лет"
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => onVacancyYears?.(tool.id, vacState, parseFloat(e.target.value) || 0)}
-                    />
-                  )}
-
-                  {/* Legacy vacancy-min/max years */}
-                  {(mode === 'vacancy-min' || mode === 'vacancy-max') && isSelected && !isLocked && (
-                    <input
-                      type="number"
-                      className={styles.yearsInput}
-                      min={0} max={15} step={0.5}
-                      value={yearsMap[tool.id] ?? 0}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
-                      placeholder="лет"
-                    />
-                  )}
-
-                  {/* Candidate years */}
-                  {mode === 'candidate' && isSelected && (
-                    <input
-                      type="number"
-                      className={styles.yearsInput}
-                      min={0} max={30} step={0.5}
-                      value={yearsMap[tool.id] ?? 0}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
-                      placeholder="лет"
-                    />
-                  )}
-
-                  {/* Agg bars */}
-                  {mode === 'candidate-agg' && yearsMap[tool.id] != null && (
-                    <div className={styles.aggBarWrapper}>
-                      <div
-                        className={styles.aggBar}
-                        style={{ width: `${Math.min(100, ((yearsMap[tool.id] ?? 0) / aggMax) * 100)}%` }}
-                      />
-                      <span className={styles.aggBarLabel}>{yearsMap[tool.id]}г</span>
-                    </div>
-                  )}
-
-                  {/* Compare years */}
-                  {mode === 'compare' && (isMatched || isGap || isExtra) && (
-                    <div className={styles.cmpYears}>
-                      <span className={styles.cmpReqYears}>
-                        {requirementsYearsMap[tool.id] ? `${requirementsYearsMap[tool.id]}г` : '—'}
-                      </span>
-                      <span className={styles.cmpSlash}>/</span>
-                      <span className={styles.cmpCandYears}>
-                        {candidateYearsMap[tool.id] ? `${candidateYearsMap[tool.id]}г` : '—'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          )}
+          <div className={useInlineRows ? styles.toolsListRows : styles.toolsList}>
+            {displayTools.length === 0 ? (
+              <div className={styles.emptyTools}>
+                {search ? 'Ничего не найдено' : 'Выберите подкатегорию'}
+              </div>
+            ) : (
+              displayTools.map(renderToolRow)
+            )}
+          </div>
         </div>
       </div>
     </div>

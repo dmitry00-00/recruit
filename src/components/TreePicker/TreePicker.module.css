@@ -1,3 +1,4 @@
+/* ── Wrapper ───────────────────────────────── */
 .wrapper {
   display: flex;
   border: 1px solid var(--border-secondary);
@@ -13,7 +14,12 @@
   border: none;
 }
 
-/* ── Domain grid ───────────────────────── */
+/* When domain grid is active, stack vertically */
+.wrapperDomain {
+  flex-direction: column;
+}
+
+/* ── Domain grid — full width, top of picker ── */
 .domainGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -28,14 +34,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 7px 4px 6px;
+  gap: 3px;
+  padding: 10px 6px 8px;
   font-family: var(--font-sans);
   background: var(--bg-primary);
   border: none;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .domainTile:hover {
@@ -53,7 +59,7 @@
   grid-column: 1 / -1;
   flex-direction: row;
   gap: 6px;
-  padding: 5px 10px;
+  padding: 6px 12px;
 }
 
 .domainTileLabel {
@@ -69,12 +75,25 @@
   font-size: 9px;
   font-weight: 700;
   line-height: 1;
-  opacity: 0.85;
+  background: var(--amber);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  min-width: 16px;
+  text-align: center;
 }
 
-/* ── Left panel: categories ────────────── */
+/* ── Body: sidebar + content, horizontal ────── */
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Left panel: subcategories ────────────── */
 .sidebar {
-  width: 220px;
+  width: 200px;
   border-right: 1px solid var(--border-tertiary);
   flex-shrink: 0;
   display: flex;
@@ -90,6 +109,19 @@
 .sidebarFooter {
   border-top: 1px solid var(--border-tertiary);
   flex-shrink: 0;
+}
+
+/* Non-clickable category header */
+.catHeader {
+  padding: 8px 12px 4px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-tertiary);
+  background: var(--bg-secondary);
 }
 
 .catItem {
@@ -132,25 +164,12 @@
   color: #fff;
 }
 
-/* Non-clickable category header for flat mode */
-.catHeader {
-  padding: 8px 12px 4px;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--border-tertiary);
-  background: var(--bg-secondary);
-}
-
 .subItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 6px 12px 6px 24px;
+  padding: 6px 12px 6px 16px;
   font-family: var(--font-sans);
   font-size: 11px;
   color: var(--text-tertiary);
@@ -469,14 +488,28 @@
   .wrapper {
     flex-direction: column;
     height: auto;
-    max-height: 70vh;
+    max-height: 80vh;
+  }
+
+  .wrapperDomain {
+    flex-direction: column;
+  }
+
+  .domainGrid {
+    flex-shrink: 0;
+  }
+
+  .body {
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
   }
 
   .sidebar {
     width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--border-tertiary);
-    max-height: 120px;
+    max-height: 100px;
   }
 
   .sidebarScroll {
@@ -486,7 +519,6 @@
     gap: 0;
   }
 
-  .catItem,
   .subItem {
     white-space: nowrap;
     padding: 6px 10px;
