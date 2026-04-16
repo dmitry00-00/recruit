@@ -13,6 +13,65 @@
   border: none;
 }
 
+/* ── Domain grid ───────────────────────── */
+.domainGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-tertiary);
+  border-bottom: 1px solid var(--border-tertiary);
+  flex-shrink: 0;
+}
+
+.domainTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 4px 6px;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background 0.1s, color 0.1s;
+}
+
+.domainTile:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.domainTileActive {
+  background: var(--amber-bg) !important;
+  color: var(--amber) !important;
+}
+
+/* Разное — spans all 3 columns */
+.domainTileMisc {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 6px;
+  padding: 5px 10px;
+}
+
+.domainTileLabel {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.domainTileCount {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.85;
+}
+
 /* ── Left panel: categories ────────────── */
 .sidebar {
   width: 220px;

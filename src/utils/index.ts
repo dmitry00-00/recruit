@@ -15,4 +15,11 @@ export {
   getSubcategoryById,
   getCategoryById,
   searchTools,
+  getSubsByDomain,
+  getSubcategoryDomain,
+  DOMAIN_LABELS,
+  DOMAIN_ICONS,
+  DOMAIN_SUB_MAP,
+  PRIMARY_DOMAINS,
 } from './toolTreeHelpers';
+export type { ToolDomain } from './toolTreeHelpers';

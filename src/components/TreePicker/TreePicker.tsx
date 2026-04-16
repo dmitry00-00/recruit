@@ -1,6 +1,13 @@
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
-import { getToolTree, searchTools } from '@/utils';
-import type { ToolCategory, ToolSubcategory, Tool, MatchResult } from '@/entities';
+import {
+  Code2, Palette, BarChart2, Bug, Shield, GitBranch, LayoutGrid,
+} from 'lucide-react';
+import {
+  getToolTree, searchTools,
+  getSubsByDomain, PRIMARY_DOMAINS, DOMAIN_LABELS,
+  type ToolDomain,
+} from '@/utils';
+import type { ToolSubcategory, Tool, MatchResult } from '@/entities';
 import styles from './TreePicker.module.css';
 
 export type PickerMode =
@@ -29,7 +36,6 @@ interface TreePickerProps {
   maxIds?: string[];
   minYearsMap?: Record<string, number>;
   maxYearsMap?: Record<string, number>;
-  /** Parent should cycle: none→min→max→none */
   onVacancyClick?: (toolId: string, currentState: VacancyToolState) => void;
   onVacancyYears?: (toolId: string, level: 'min' | 'max', years: number) => void;
 
@@ -44,11 +50,21 @@ interface TreePickerProps {
 
   /**
    * When set, sidebar shows a flat vertical list of only these subcategories
-   * (grouped under category headers). Category expand/collapse is disabled.
+   * (grouped under category headers). Domain grid is hidden in this mode.
    * If empty array → show all subcategories flat.
    */
   filteredSubIds?: string[];
 }
+
+const DOMAIN_ICON_MAP: Record<ToolDomain | 'misc', React.ComponentType<{ size?: number }>> = {
+  dev:      Code2,
+  design:   Palette,
+  analysis: BarChart2,
+  qa:       Bug,
+  infosec:  Shield,
+  devops:   GitBranch,
+  misc:     LayoutGrid,
+};
 
 export function TreePicker({
   mode,
@@ -56,7 +72,6 @@ export function TreePicker({
   selected = [],
   locked = [],
   onChange,
-  withYears = false,
   yearsMap = {},
   onYearsChange,
   // vacancy combined
@@ -78,7 +93,7 @@ export function TreePicker({
   const tree = useMemo(() => getToolTree(), []);
   const useFlat = filteredSubIds !== undefined;
 
-  // Build flat subcategory list when filtered
+  // ── Flat mode (analytics / roadmap) ───────────────────────
   const flatSubs = useMemo(() => {
     if (!useFlat) return [];
     const filterSet = filteredSubIds!.length > 0 ? new Set(filteredSubIds) : null;
@@ -93,27 +108,41 @@ export function TreePicker({
     return result;
   }, [tree, filteredSubIds, useFlat]);
 
+  // ── Domain mode state ──────────────────────────────────────
+  const [activeDomain, setActiveDomain] = useState<ToolDomain>('dev');
+
+  const domainSubs = useMemo(
+    () => getSubsByDomain(activeDomain),
+    [activeDomain],
+  );
+
+  // Default active sub
   const defaultSubId = useFlat
     ? (flatSubs[0]?.sub.id ?? null)
-    : (tree[0]?.subcategories[0]?.id ?? null);
+    : (domainSubs[0]?.sub.id ?? null);
 
-  const [expandedCat, setExpandedCat] = useState<string | null>(tree[0]?.id ?? null);
   const [activeSub, setActiveSub] = useState<string | null>(defaultSubId);
   const [search, setSearch] = useState('');
 
-  // Auto-select first sub when filteredSubIds changes
+  // Sync activeSub when domain changes
+  useEffect(() => {
+    if (!useFlat) {
+      setActiveSub(domainSubs[0]?.sub.id ?? null);
+    }
+  }, [activeDomain]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sync activeSub when filteredSubIds changes
   useEffect(() => {
     if (useFlat && flatSubs.length > 0 && !flatSubs.some((f) => f.sub.id === activeSub)) {
       setActiveSub(flatSubs[0].sub.id);
     }
   }, [flatSubs, useFlat]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const lockedSet  = useMemo(() => new Set(locked), [locked]);
+  const lockedSet   = useMemo(() => new Set(locked), [locked]);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
-  const minSet     = useMemo(() => new Set(minIds), [minIds]);
-  const maxSet     = useMemo(() => new Set(maxIds), [maxIds]);
+  const minSet      = useMemo(() => new Set(minIds), [minIds]);
+  const maxSet      = useMemo(() => new Set(maxIds), [maxIds]);
 
-  // compare sets
   const matchedSet = useMemo(() => new Set(matchResult?.matched.map((m) => m.toolId) ?? []), [matchResult]);
   const gapSet     = useMemo(() => new Set(matchResult?.gaps.map((g) => g.toolId) ?? []), [matchResult]);
   const extraSet   = useMemo(() => new Set(matchResult?.extras.map((e) => e.toolId) ?? []), [matchResult]);
@@ -125,27 +154,22 @@ export function TreePicker({
     return 'none';
   };
 
-  // ── Category / subcategory counts ──────────────────────────
-  const countCat = (cat: ToolCategory) => {
-    switch (mode) {
-      case 'vacancy':
-        return cat.subcategories.reduce((a, s) => a + s.tools.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length, 0);
-      case 'compare':
-        return cat.subcategories.reduce((a, s) => a + s.tools.filter((t) => compareAll.has(t.id)).length, 0);
-      default:
-        return cat.subcategories.reduce((a, s) => a + s.tools.filter((t) => selectedSet.has(t.id)).length, 0);
-    }
-  };
-
+  // ── Count helpers ──────────────────────────────────────────
   const countSub = (sub: ToolSubcategory) => {
     switch (mode) {
-      case 'vacancy':      return sub.tools.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length;
-      case 'compare':      return sub.tools.filter((t) => compareAll.has(t.id)).length;
+      case 'vacancy':       return sub.tools.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length;
+      case 'compare':       return sub.tools.filter((t) => compareAll.has(t.id)).length;
       case 'candidate-agg': return sub.tools.filter((t) => yearsMap[t.id] != null).length;
       default:              return sub.tools.filter((t) => selectedSet.has(t.id)).length;
     }
   };
 
+  const countDomain = (domain: ToolDomain) => {
+    const subs = getSubsByDomain(domain);
+    return subs.reduce((acc, { sub }) => acc + countSub(sub), 0);
+  };
+
+  // ── Display tools ──────────────────────────────────────────
   const displayTools: Tool[] = useMemo(() => {
     if (search.trim()) return searchTools(search);
     if (!activeSub) return [];
@@ -156,23 +180,63 @@ export function TreePicker({
     return [];
   }, [search, activeSub, tree]);
 
-  // ── Agg bars: find max years for scaling ──────────────────
   const aggMax = useMemo(
     () => Math.max(1, ...Object.values(yearsMap).map(Number)),
     [yearsMap],
   );
 
-  const isReadonly = mode === 'candidate-agg' || mode === 'compare';
-  const isIconOnly = mode === 'candidate-agg';
-  const useInlineRows = !isIconOnly;
+  const isReadonly    = mode === 'candidate-agg' || mode === 'compare';
+  const useInlineRows = mode !== 'candidate-agg';
 
+  // ── Render ─────────────────────────────────────────────────
   return (
     <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''}`}>
-      {/* ── Left: category sidebar ───────────────────────── */}
+
+      {/* ── Left: sidebar ─────────────────────────────────── */}
       <div className={styles.sidebar}>
+
+        {/* Domain grid — hidden in flat/analytics mode */}
+        {!useFlat && (
+          <div className={styles.domainGrid}>
+            {PRIMARY_DOMAINS.map((domain) => {
+              const Icon = DOMAIN_ICON_MAP[domain];
+              const cnt = countDomain(domain);
+              return (
+                <button
+                  key={domain}
+                  className={`${styles.domainTile} ${activeDomain === domain ? styles.domainTileActive : ''}`}
+                  onClick={() => setActiveDomain(domain)}
+                  title={DOMAIN_LABELS[domain]}
+                >
+                  <Icon size={14} />
+                  <span className={styles.domainTileLabel}>{DOMAIN_LABELS[domain]}</span>
+                  {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+                </button>
+              );
+            })}
+            {/* Разное — spans all 3 columns */}
+            {(() => {
+              const Icon = DOMAIN_ICON_MAP['misc'];
+              const cnt = countDomain('misc');
+              return (
+                <button
+                  className={`${styles.domainTile} ${styles.domainTileMisc} ${activeDomain === 'misc' ? styles.domainTileActive : ''}`}
+                  onClick={() => setActiveDomain('misc')}
+                  title={DOMAIN_LABELS['misc']}
+                >
+                  <Icon size={14} />
+                  <span className={styles.domainTileLabel}>{DOMAIN_LABELS['misc']}</span>
+                  {cnt > 0 && <span className={styles.domainTileCount}>{cnt}</span>}
+                </button>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Subcategory list */}
         <div className={styles.sidebarScroll}>
           {useFlat ? (
-            /* ── Flat subcategory list (grouped by category headers) ── */
+            /* Flat mode — analytics/roadmap */
             (() => {
               let lastCat = '';
               return flatSubs.map(({ catName, sub }) => {
@@ -181,9 +245,7 @@ export function TreePicker({
                 const sc = countSub(sub);
                 return (
                   <div key={sub.id}>
-                    {showHeader && (
-                      <div className={styles.catHeader}>{catName}</div>
-                    )}
+                    {showHeader && <div className={styles.catHeader}>{catName}</div>}
                     <button
                       className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
                       onClick={() => setActiveSub(sub.id)}
@@ -196,40 +258,27 @@ export function TreePicker({
               });
             })()
           ) : (
-            /* ── Classic expand/collapse sidebar ── */
-            tree.map((cat) => {
-              const count = countCat(cat);
-              const isExpanded = expandedCat === cat.id;
-              return (
-                <div key={cat.id}>
-                  <button
-                    className={`${styles.catItem} ${isExpanded ? styles.catItemActive : ''}`}
-                    onClick={() => setExpandedCat(isExpanded ? null : cat.id)}
-                  >
-                    {cat.name}
-                    {count > 0 && (
-                      <span className={`${styles.catCount} ${isExpanded ? styles.catCountActive : ''}`}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                  {isExpanded &&
-                    cat.subcategories.map((sub) => {
-                      const sc = countSub(sub);
-                      return (
-                        <button
-                          key={sub.id}
-                          className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
-                          onClick={() => setActiveSub(sub.id)}
-                        >
-                          {sub.name}
-                          {sc > 0 && <span className={styles.catCount}>{sc}</span>}
-                        </button>
-                      );
-                    })}
-                </div>
-              );
-            })
+            /* Domain mode — grouped by original category */
+            (() => {
+              let lastCatId = '';
+              return domainSubs.map(({ catName, catId, sub }) => {
+                const showHeader = catId !== lastCatId;
+                lastCatId = catId;
+                const sc = countSub(sub);
+                return (
+                  <div key={sub.id}>
+                    {showHeader && <div className={styles.catHeader}>{catName}</div>}
+                    <button
+                      className={`${styles.subItem} ${activeSub === sub.id ? styles.subItemActive : ''}`}
+                      onClick={() => setActiveSub(sub.id)}
+                    >
+                      {sub.name}
+                      {sc > 0 && <span className={styles.catCount}>{sc}</span>}
+                    </button>
+                  </div>
+                );
+              });
+            })()
           )}
         </div>
 
@@ -238,7 +287,7 @@ export function TreePicker({
         )}
       </div>
 
-      {/* ── Right: tools list ─────────────────────────────── */}
+      {/* ── Right: tools panel ────────────────────────────── */}
       <div className={styles.content}>
         <div className={styles.searchBar}>
           <input
@@ -246,8 +295,6 @@ export function TreePicker({
             placeholder={
               mode === 'vacancy'
                 ? '1 клик — MIN   |   2 клика — MAX'
-                : mode === 'compare'
-                ? 'Поиск...'
                 : 'Поиск инструментов...'
             }
             value={search}
@@ -270,7 +317,6 @@ export function TreePicker({
               const isGap     = gapSet.has(tool.id);
               const isExtra   = extraSet.has(tool.id);
 
-              // Row class
               let rowClass = useInlineRows ? styles.toolRowInline : styles.toolRow;
               if (mode === 'vacancy') {
                 if (vacState === 'min') rowClass += ` ${styles.toolRowMin}`;
@@ -283,8 +329,7 @@ export function TreePicker({
                 rowClass += ` ${styles.toolLocked}`;
               }
 
-              const clickable =
-                !isReadonly && !isLocked && mode !== 'candidate-agg';
+              const clickable = !isReadonly && !isLocked;
 
               return (
                 <div
@@ -316,34 +361,28 @@ export function TreePicker({
                     />
                   )}
 
-                  {/* Indicator dot — vacancy mode */}
+                  {/* Dot — vacancy mode */}
                   {mode === 'vacancy' && (
-                    <span
-                      className={`${styles.vacancyDot} ${
-                        vacState === 'min'
-                          ? styles.vacancyDotMin
-                          : vacState === 'max'
-                          ? styles.vacancyDotMax
-                          : styles.vacancyDotNone
-                      }`}
-                    />
+                    <span className={`${styles.vacancyDot} ${
+                      vacState === 'min' ? styles.vacancyDotMin
+                      : vacState === 'max' ? styles.vacancyDotMax
+                      : styles.vacancyDotNone
+                    }`} />
                   )}
 
                   {/* Indicator — compare mode */}
                   {mode === 'compare' && (
-                    <span
-                      className={`${styles.cmpIcon} ${
-                        isMatched ? styles.cmpMatched
-                        : isGap    ? styles.cmpGap
-                        : isExtra  ? styles.cmpExtra
-                                   : styles.cmpNeutral
-                      }`}
-                    >
+                    <span className={`${styles.cmpIcon} ${
+                      isMatched ? styles.cmpMatched
+                      : isGap   ? styles.cmpGap
+                      : isExtra ? styles.cmpExtra
+                               : styles.cmpNeutral
+                    }`}>
                       {isMatched ? '✓' : isGap ? '✗' : isExtra ? '~' : ''}
                     </span>
                   )}
 
-                  {/* Logo or abbreviation */}
+                  {/* Logo */}
                   {tool.logoUrl ? (
                     <img
                       src={tool.logoUrl}
@@ -361,41 +400,35 @@ export function TreePicker({
                     </span>
                   )}
 
-                  {/* Name — visible in inline modes, hidden in icon-only */}
+                  {/* Name */}
                   <span className={useInlineRows ? styles.toolNameVisible : styles.toolName}>
                     {tool.name}
                   </span>
 
-                  {/* Locked badge (legacy) */}
+                  {/* Locked badge */}
                   {(mode === 'vacancy-min' || mode === 'vacancy-max') && isLocked && (
                     <span className={styles.toolLockedBadge}>MIN</span>
                   )}
 
                   {/* Vacancy badge */}
                   {mode === 'vacancy' && vacState !== 'none' && (
-                    <span
-                      className={`${styles.vacancyBadge} ${
-                        vacState === 'min' ? styles.vacancyBadgeMin : styles.vacancyBadgeMax
-                      }`}
-                    >
+                    <span className={`${styles.vacancyBadge} ${
+                      vacState === 'min' ? styles.vacancyBadgeMin : styles.vacancyBadgeMax
+                    }`}>
                       {vacState === 'min' ? 'MIN' : 'MAX'}
                     </span>
                   )}
 
-                  {/* Vacancy years input */}
+                  {/* Vacancy years */}
                   {mode === 'vacancy' && vacState !== 'none' && (
                     <input
                       type="number"
                       className={styles.yearsInput}
-                      min={0}
-                      max={15}
-                      step={0.5}
+                      min={0} max={15} step={0.5}
                       value={vacState === 'min' ? (minYearsMap[tool.id] ?? 0) : (maxYearsMap[tool.id] ?? 0)}
                       placeholder="лет"
                       onClick={(e) => e.stopPropagation()}
-                      onChange={(e) =>
-                        onVacancyYears?.(tool.id, vacState, parseFloat(e.target.value) || 0)
-                      }
+                      onChange={(e) => onVacancyYears?.(tool.id, vacState, parseFloat(e.target.value) || 0)}
                     />
                   )}
 
@@ -404,9 +437,7 @@ export function TreePicker({
                     <input
                       type="number"
                       className={styles.yearsInput}
-                      min={0}
-                      max={15}
-                      step={0.5}
+                      min={0} max={15} step={0.5}
                       value={yearsMap[tool.id] ?? 0}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
@@ -414,14 +445,12 @@ export function TreePicker({
                     />
                   )}
 
-                  {/* Candidate years input */}
+                  {/* Candidate years */}
                   {mode === 'candidate' && isSelected && (
                     <input
                       type="number"
                       className={styles.yearsInput}
-                      min={0}
-                      max={30}
-                      step={0.5}
+                      min={0} max={30} step={0.5}
                       value={yearsMap[tool.id] ?? 0}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => onYearsChange?.(tool.id, parseFloat(e.target.value) || 0)}
@@ -429,7 +458,7 @@ export function TreePicker({
                     />
                   )}
 
-                  {/* Candidate-agg bars */}
+                  {/* Agg bars */}
                   {mode === 'candidate-agg' && yearsMap[tool.id] != null && (
                     <div className={styles.aggBarWrapper}>
                       <div

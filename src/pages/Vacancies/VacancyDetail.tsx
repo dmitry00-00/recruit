@@ -590,7 +590,7 @@ export function VacancyDetail() {
             <div className={styles.field}>
               <label className={styles.label}>Формат</label>
               <select className={styles.select} value={workFormat} onChange={(e) => setWorkFormat(e.target.value as WorkFormat)}>
-                {(Object.entries(WORK_FORMAT_LABELS) as [WorkFormat, string][])
+                {(Object.entries(WORK_FORMAT_LABELS) as [string, string][])
                   .filter(([k]) => k !== 'any')
                   .map(([v, l]) => <option key={v} value={v}>{l}</option>)}
               </select>

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ResponseEvent, ResponseEventType } from '@/entities';
+import type { ResponseEvent } from '@/entities';
 import { db } from '@/db';
 
 interface ResponseState {
