@@ -1,0 +1,479 @@
+.page {
+  padding: 16px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+/* ── Stats row ─────────────────────────────── */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--bg-primary);
+  text-align: center;
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* ── Sections ──────────────────────────────── */
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+/* ── Matches list ──────────────────────────── */
+.matchesList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.matchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+}
+
+.matchRow:hover {
+  background: var(--bg-secondary);
+}
+
+.matchVacancy {
+  flex: 1;
+  min-width: 0;
+}
+
+.matchVacancyName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matchVacancyMeta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.matchVs {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.matchCandidate {
+  flex: 1;
+  min-width: 0;
+}
+
+.matchCandidateName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matchCandidateMeta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.matchActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.compareBtn {
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--amber);
+  background: var(--amber-bg);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.compareBtn:hover {
+  opacity: 0.85;
+}
+
+.addPipelineBtn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.addPipelineBtn:hover:not(:disabled) {
+  background: var(--amber-bg);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.addPipelineBtnDone {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #22c55e;
+  color: #22c55e;
+  cursor: default;
+}
+
+/* ── Tasks ──────────────────────────────────── */
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.taskRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+}
+
+.taskRow:hover {
+  background: var(--bg-secondary);
+}
+
+.taskCheckbox {
+  accent-color: var(--amber);
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.taskInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.taskTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.taskTitleDone {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.taskMeta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.taskDue {
+  font-family: var(--font-mono);
+}
+
+.taskDueOverdue {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.taskStatusBadge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.taskDelete {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.taskDelete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* ── Add task form ─────────────────────────── */
+.addTaskRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.addTaskInput {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.addTaskInput:focus {
+  border-color: var(--amber);
+}
+
+.addTaskDate {
+  width: 140px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.addTaskBtn {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.addTaskBtn:hover {
+  opacity: 0.9;
+}
+
+/* ── Calendar ──────────────────────────────── */
+.calendar {
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.calendarTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.calendarNav {
+  display: flex;
+  gap: 4px;
+}
+
+.calendarNavBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.calendarNavBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendarDayHeader {
+  padding: 6px 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-align: center;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.calendarDay {
+  min-height: 48px;
+  padding: 4px;
+  border-right: 1px solid var(--border-tertiary);
+  border-bottom: 1px solid var(--border-tertiary);
+  cursor: pointer;
+  position: relative;
+}
+
+.calendarDay:nth-child(7n) {
+  border-right: none;
+}
+
+.calendarDay:hover {
+  background: var(--bg-secondary);
+}
+
+.calendarDayNum {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.calendarDayToday {
+  background: var(--amber);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.calendarDayOther {
+  opacity: 0.3;
+}
+
+.calendarDot {
+  width: 100%;
+  padding: 1px 3px;
+  font-size: 8px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--amber);
+  border-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin-top: 1px;
+}
+
+.calendarDotDone {
+  background: #22c55e;
+  opacity: 0.6;
+}
+
+.emptyState {
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ── Two-column layout ─────────────────────── */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 10px 8px;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .matchRow {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .addTaskRow {
+    flex-wrap: wrap;
+  }
+
+  .addTaskDate {
+    width: 100%;
+  }
+}

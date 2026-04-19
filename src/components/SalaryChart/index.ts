@@ -1,0 +1,1 @@
+export { SalaryChart } from './SalaryChart';

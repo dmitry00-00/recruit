@@ -1,0 +1,122 @@
+.sheet {
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  border-bottom: 2px solid var(--border-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.headerVacancy {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--vac-dim);
+  color: var(--vac-color);
+  text-align: center;
+}
+
+.headerCandidate {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--cand-dim);
+  color: var(--cand-color);
+  text-align: center;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-tertiary);
+  font-size: 12px;
+  min-height: 36px;
+}
+
+.toolLeft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.toolRight {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+}
+
+.toolIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+
+.toolName {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.years {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.indicator {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.matched { background: var(--match-dim); color: var(--match); }
+.gap { background: var(--gap-dim); color: var(--gap); }
+.extra { background: var(--extra-dim); color: var(--extra); }
+
+.diffMatchedRow { background: var(--match-dim); }
+.diffGapRow { background: var(--gap-dim); }
+.diffExtraRow { background: var(--extra-dim); }
+
+.scoreBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  border-top: 2px solid var(--border-secondary);
+}
+
+.scoreLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scoreValue {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+}
