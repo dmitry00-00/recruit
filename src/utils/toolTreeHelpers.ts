@@ -1,4 +1,4 @@
-import type { ToolCategory, Tool, ToolSubcategory } from '@/entities';
+import type { ToolCategory, Tool, ToolSubcategory, PositionRequiredCategory } from '@/entities';
 import toolTreeData from '@/data/toolTree.json';
 
 const data = toolTreeData as { categories: ToolCategory[] };
@@ -135,6 +135,30 @@ export function getSubcategoryById(subcategoryId: string): ToolSubcategory | und
 
 export function getCategoryById(categoryId: string): ToolCategory | undefined {
   return data.categories.find((c) => c.id === categoryId);
+}
+
+/** Flatten requiredCategories into a plain list of subcategoryIds */
+export function flattenRequiredSubIds(
+  requiredCategories: PositionRequiredCategory[] | undefined,
+): string[] {
+  if (!requiredCategories?.length) return [];
+  return requiredCategories.flatMap((rc) => rc.subcategoryIds);
+}
+
+/** Group a flat list of subcategoryIds back into PositionRequiredCategory[] */
+export function groupSubIdsByCategory(subIds: string[]): PositionRequiredCategory[] {
+  const byCat = new Map<string, string[]>();
+  for (const subId of subIds) {
+    const sub = getSubcategoryById(subId);
+    if (!sub) continue;
+    const list = byCat.get(sub.categoryId) ?? [];
+    list.push(subId);
+    byCat.set(sub.categoryId, list);
+  }
+  return Array.from(byCat.entries()).map(([categoryId, subcategoryIds]) => ({
+    categoryId,
+    subcategoryIds,
+  }));
 }
 
 export function searchTools(query: string): Tool[] {

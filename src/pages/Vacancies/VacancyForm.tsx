@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePositionStore, useVacancyStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
 import { Button } from '@/components/ui';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import type { Grade, Currency, WorkFormat, EmploymentType, VacancyRequirement, VacancyStatus } from '@/entities';
+import { flattenRequiredSubIds } from '@/utils';
 import styles from './VacancyForm.module.css';
 
 const TOTAL_STEPS = 5;
@@ -53,6 +54,11 @@ export function VacancyForm() {
     setMinTools(ids);
     setMaxTools((prev) => [...new Set([...ids, ...prev])]);
   };
+
+  const filteredSubIds = useMemo(() => {
+    const position = positions.find((p) => p.id === positionId);
+    return flattenRequiredSubIds(position?.requiredCategories);
+  }, [positionId, positions]);
 
   const handleSubmit = async () => {
     const minReqs: VacancyRequirement[] = minTools.map((toolId) => ({
@@ -184,12 +190,18 @@ export function VacancyForm() {
       {step === 3 && (
         <div className={styles.formSection}>
           <label className={styles.label}>Минимальные требования (обязательные)</label>
+          {positionId && filteredSubIds.length === 0 && (
+            <p style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+              У выбранной должности не заданы категории требований — показываем всё дерево.
+            </p>
+          )}
           <TreePicker
             selected={minTools}
             onChange={handleMinChange}
             mode="vacancy-min"
             yearsMap={minYearsMap}
             onYearsChange={handleMinYears}
+            filteredSubIds={filteredSubIds.length ? filteredSubIds : undefined}
           />
         </div>
       )}
@@ -204,6 +216,7 @@ export function VacancyForm() {
             mode="vacancy-max"
             yearsMap={maxYearsMap}
             onYearsChange={handleMaxYears}
+            filteredSubIds={filteredSubIds.length ? filteredSubIds : undefined}
           />
         </div>
       )}

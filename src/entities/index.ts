@@ -163,6 +163,7 @@ export interface Candidate {
   city?: string;
   country?: string;
   citizenship?: string;
+  positionId?: string;
   workFormat: WorkFormat | 'any';
   relocate: boolean;
   salaryExpected?: number;
