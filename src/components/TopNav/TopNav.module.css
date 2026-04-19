@@ -129,6 +129,27 @@
   color: var(--nav-bg);
 }
 
+/* ── Add button ──────────────────────────── */
+.addBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--nav-bg);
+  background: var(--amber);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.addBtn:hover { opacity: 0.88; }
+.addBtnOpen   { opacity: 0.88; }
+
 /* ── Icon button ─────────────────────────── */
 .iconBtn {
   display: flex;

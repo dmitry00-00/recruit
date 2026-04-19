@@ -1,4 +1,5 @@
-import { Menu, Moon, Sun, PlusCircle, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Menu, Moon, Sun, Plus, User, LogOut, LayoutDashboard, Briefcase, Users, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
@@ -20,6 +21,16 @@ export function TopNav() {
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
   const isCandidateRole = currentUser?.role === 'candidate';
+
+  const [addOpen, setAddOpen] = useState(false);
+  const addRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (addRef.current && !addRef.current.contains(e.target as Node)) setAddOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const {
     positionCategory,
@@ -96,16 +107,33 @@ export function TopNav() {
       )}
 
       {!isCandidateRole && (
-        <button
-          className={styles.iconBtn}
-          onClick={() => {
-            const path = recordType === 'vacancies' ? '/vacancies/new' : '/candidates/new';
-            navigate(path);
-          }}
-          title="Добавить"
-        >
-          <PlusCircle size={18} />
-        </button>
+        <div className={styles.dropdownWrapper} ref={addRef}>
+          <button
+            className={`${styles.addBtn} ${addOpen ? styles.addBtnOpen : ''}`}
+            onClick={() => setAddOpen((v) => !v)}
+            title="Добавить"
+          >
+            <Plus size={14} />
+            <span>Добавить</span>
+            <ChevronDown size={11} />
+          </button>
+          {addOpen && (
+            <div className={styles.dropdownMenu}>
+              <button className={styles.dropdownItem} onClick={() => { navigate('/vacancies/new'); setAddOpen(false); }}>
+                <Briefcase size={13} />
+                Новая вакансия
+              </button>
+              <button className={styles.dropdownItem} onClick={() => { navigate('/positions/new'); setAddOpen(false); }}>
+                <LayoutDashboard size={13} />
+                Новая должность
+              </button>
+              <button className={styles.dropdownItem} onClick={() => { navigate('/candidates/new'); setAddOpen(false); }}>
+                <Users size={13} />
+                Новый кандидат
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       <button className={styles.iconBtn} onClick={toggleTheme} title="Тема">

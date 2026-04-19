@@ -365,7 +365,7 @@ export function TreePicker({
         ) : (
           <div className={styles.grid}>
             {PRIMARY_DOMAINS.map((d) => renderCell(d))}
-            {renderCell('misc')}
+            {DOMAIN_SUB_MAP['misc'].length > 0 && renderCell('misc')}
           </div>
         )}
       </div>

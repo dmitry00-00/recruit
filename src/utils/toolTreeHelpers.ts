@@ -30,7 +30,7 @@ export const DOMAIN_ICONS: Record<ToolDomain, string> = {
 /** Subcategory id → domain mapping */
 export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   dev: [
-    // Languages
+    // Languages (now in cat_tools but domain stays dev)
     'sub_javascript', 'sub_python', 'sub_java', 'sub_csharp', 'sub_golang',
     'sub_kotlin', 'sub_swift', 'sub_objc', 'sub_php', 'sub_cpp', 'sub_dart',
     'sub_ruby', 'sub_scala', 'sub_1c', 'sub_html_css',
@@ -48,6 +48,7 @@ export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   analysis: [
     'sub_bigdata', 'sub_ml', 'sub_project_mgmt',
     'sub_domain', 'sub_company_type', 'sub_team_scale',
+    'sub_meta_ecosystems',
   ],
   qa: [
     'sub_testing',
@@ -58,9 +59,7 @@ export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   devops: [
     'sub_devops', 'sub_cloud',
   ],
-  misc: [
-    'sub_meta_ecosystems',
-  ],
+  misc: [],
 };
 
 /** All 6 primary domains in grid order (misc is always last / full-width) */
