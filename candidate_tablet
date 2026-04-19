@@ -1,0 +1,498 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.stage{padding:1.5rem 0.5rem 3rem;display:flex;flex-direction:column;align-items:flex-start;font-family:var(--font-sans,sans-serif);}
+.hint{font-size:12px;color:var(--color-text-secondary);margin-bottom:14px;padding-left:2px;}
+
+/* ══ THREE-COLUMN TABLET ══ */
+.tablet{display:flex;align-items:flex-start;gap:0;width:100%;}
+
+/* col 1 — candidate deck */
+.col1{flex-shrink:0;width:238px;}
+.deck-root{position:relative;width:238px;}
+
+/* col 2 — candidate detail / full sheet */
+.col2{
+  flex-shrink:0;width:0;overflow:hidden;
+  border:0.5px solid var(--color-border-secondary);border-left:none;
+  border-radius:0 10px 10px 0;
+  background:var(--color-background-primary);
+  transition:width 0s;
+  display:none;
+  align-self:stretch;
+}
+.col2.open{display:block;width:220px;}
+/* when col3 is also open, col2 loses its right radius */
+.col2.merged{border-radius:0;border-right:none;}
+
+/* col 3 — job detail */
+.col3{
+  flex:1;min-width:0;
+  border:0.5px solid var(--color-border-secondary);border-left:none;
+  border-radius:0 10px 10px 0;
+  background:var(--color-background-primary);
+  display:none;
+  align-self:stretch;
+}
+.col3.open{display:block;}
+
+/* ══ CANDIDATE SPINES ══ */
+.spine{
+  position:absolute;left:0;width:238px;height:52px;
+  border-radius:10px;border:0.5px solid var(--color-border-secondary);
+  background:var(--color-background-primary);cursor:pointer;
+  display:flex;align-items:center;padding:0 8px;gap:6px;
+  transition:top 0.3s cubic-bezier(.4,0,.2,1);will-change:top;
+}
+.spine:not(.active):hover{background:var(--color-background-secondary);}
+.spine.active{border-radius:10px 0 0 10px;border-right:none;cursor:default;z-index:50!important;}
+
+/* ══ EXP SPINES (inside col2 full sheet) ══ */
+.exp-spine{
+  position:absolute;left:0;height:44px;
+  border-radius:8px;border:0.5px solid var(--color-border-secondary);
+  background:var(--color-background-primary);cursor:pointer;
+  display:flex;align-items:center;padding:0 7px;gap:5px;
+  transition:top .28s cubic-bezier(.4,0,.2,1);will-change:top;
+}
+.exp-spine:not(.active-exp):hover{background:var(--color-background-secondary);}
+/* active exp spine merges with col3 on the right */
+.exp-spine.active-exp{border-radius:8px 0 0 8px;border-right:none;cursor:default;z-index:20!important;}
+
+/* ══ SHARED TOKENS ══ */
+.av-xs{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;}
+.av-sm{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.co-logo{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0;}
+.name-block{flex:1;min-width:0;display:flex;align-items:center;gap:4px;overflow:hidden;}
+.spine-name{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.exp-name-block{flex:1;min-width:0;display:flex;align-items:center;gap:3px;overflow:hidden;}
+.exp-job-title{font-size:11px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.exp-period{font-size:10px;color:var(--color-text-secondary);flex-shrink:0;white-space:nowrap;}
+
+.badge{display:inline-flex;align-items:center;gap:0;flex-shrink:0;position:relative;cursor:default;}
+.badge-role{color:var(--color-text-secondary);display:flex;align-items:center;width:15px;height:15px;flex-shrink:0;}
+.badge-role svg{width:13px;height:13px;display:block;}
+.chev-col{width:13px;display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;}
+.badge:hover .tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.tooltip{position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:6px;padding:3px 7px;font-size:11px;color:var(--color-text-primary);white-space:nowrap;opacity:0;transition:opacity .15s,transform .15s;pointer-events:none;z-index:400;}
+.ti:hover .tooltip,.ico:hover .tooltip,.exp-ico:hover .tooltip,.contact-ico:hover .tooltip{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.tech-strip{display:flex;gap:2px;flex-shrink:0;}
+.ti{position:relative;width:19px;height:19px;border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible;cursor:default;}
+.ti svg{width:11px;height:11px;display:block;}
+
+.sec{padding:7px 10px;border-top:0.5px solid var(--color-border-tertiary);}
+.sec:first-child{border-top:none;}
+.sec-title{font-size:10px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
+.stat-row{display:flex;gap:4px;padding:7px 10px 5px;}
+.stat-b{flex:1;background:var(--color-background-secondary);border-radius:6px;padding:4px 2px;text-align:center;}
+.stat-v{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1;}
+.stat-l{font-size:10px;color:var(--color-text-secondary);margin-top:2px;}
+.stack-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+.ico{position:relative;width:22px;height:22px;border-radius:5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:default;overflow:visible;}
+.ico.core{background:var(--color-background-info);border-color:var(--color-border-info);}
+.ico.dim{opacity:.38;}
+.ico svg{width:13px;height:13px;display:block;}
+.exp-ico{position:relative;width:19px;height:19px;border-radius:4px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:default;overflow:visible;}
+.exp-ico.core{background:var(--color-background-info);border-color:var(--color-border-info);}
+.exp-ico svg{width:11px;height:11px;display:block;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin-top:2px;}
+.demo-item{display:flex;align-items:baseline;gap:3px;}
+.demo-lbl{font-size:10px;color:var(--color-text-secondary);flex-shrink:0;}
+.demo-val{font-size:11px;color:var(--color-text-primary);}
+.action-row{padding:5px 10px 6px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:4px;}
+.act-btn{font-size:11px;padding:3px 7px;border-radius:6px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);}
+.act-btn:hover{background:var(--color-background-secondary);}
+.act-btn.primary{color:var(--color-text-info);border-color:var(--color-border-info);}
+.contacts-bar{display:flex;align-items:center;gap:4px;padding:5px 10px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);}
+.contact-ico{position:relative;width:20px;height:20px;border-radius:4px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:default;flex-shrink:0;overflow:visible;color:var(--color-text-secondary);}
+.contact-ico svg{width:11px;height:11px;display:block;}
+.fs-header{padding:9px 10px;display:flex;gap:8px;align-items:center;border-bottom:0.5px solid var(--color-border-tertiary);}
+.fs-name{font-size:13px;font-weight:500;color:var(--color-text-primary);}
+.fs-role{font-size:10px;color:var(--color-text-secondary);margin-top:1px;}
+.fs-match{text-align:center;background:var(--color-background-secondary);border-radius:6px;padding:3px 7px;flex-shrink:0;}
+.fs-match-v{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1;}
+.fs-match-l{font-size:10px;color:var(--color-text-secondary);}
+.proj{padding:5px 7px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);margin-bottom:4px;}
+.proj-title{font-size:11px;font-weight:500;color:var(--color-text-primary);}
+.proj-meta{font-size:10px;color:var(--color-text-secondary);margin-top:1px;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px;}
+.proj-tag{padding:1px 4px;border-radius:3px;font-size:10px;background:var(--color-background-secondary);color:var(--color-text-secondary);}
+.proj-tag.hl{background:var(--color-background-success);color:var(--color-text-success);}
+.back-row{padding:5px 10px 6px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:4px;}
+.back-btn{font-size:11px;padding:3px 7px;border-radius:6px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);}
+.back-btn:hover{background:var(--color-background-secondary);}
+.exp-ach{display:flex;gap:4px;align-items:flex-start;margin-bottom:3px;}
+.exp-ach-dot{width:3px;height:3px;border-radius:50%;background:var(--color-text-secondary);flex-shrink:0;margin-top:4px;}
+.exp-ach-txt{font-size:11px;color:var(--color-text-primary);line-height:1.4;flex:1;}
+.exp-ach-tag{display:inline-block;padding:1px 4px;border-radius:3px;font-size:10px;background:var(--color-background-success);color:var(--color-text-success);margin-left:3px;}
+.exp-stack-row{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px;}
+.job-header{padding:8px 10px;display:flex;gap:7px;align-items:center;border-bottom:0.5px solid var(--color-border-tertiary);}
+.job-company-name{font-size:12px;font-weight:500;color:var(--color-text-primary);}
+.job-period{font-size:10px;color:var(--color-text-secondary);}
+</style>
+
+<div class="stage">
+<div class="hint">Корешок → карточка → «Полный лист» → место работы открывается в колонке 3</div>
+<div class="tablet" id="tablet">
+  <div class="col1"><div id="deck-root" class="deck-root"></div></div>
+  <div class="col2" id="col2"></div>
+  <div class="col3" id="col3"></div>
+</div>
+</div>
+
+<script>
+const IC={
+  react:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.2" fill="#61DAFB"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61DAFB" stroke-width="1.2" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61DAFB" stroke-width="1.2" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61DAFB" stroke-width="1.2" fill="none" transform="rotate(120 12 12)"/></svg>`,
+  nextjs:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#000"/><path d="M8 16V8l8 10V8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  ts:`<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#3178C6"/><text x="3.5" y="17" font-size="11" font-weight="700" fill="white" font-family="monospace">TS</text></svg>`,
+  graphql:`<svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20.7,7 20.7,17 12,22 3.3,17 3.3,7" stroke="#E535AB" stroke-width="1.5" fill="none"/><circle cx="12" cy="2" r="1.4" fill="#E535AB"/><circle cx="20.7" cy="7" r="1.4" fill="#E535AB"/><circle cx="20.7" cy="17" r="1.4" fill="#E535AB"/><circle cx="12" cy="22" r="1.4" fill="#E535AB"/><circle cx="3.3" cy="17" r="1.4" fill="#E535AB"/><circle cx="3.3" cy="7" r="1.4" fill="#E535AB"/></svg>`,
+  vite:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" fill="#646CFF" opacity=".8"/><path d="M12 7l-5 9h10L12 7z" fill="#FF9500"/></svg>`,
+  python:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 7 4 7 6v2h5v1H6C4 9 2 10 2 13s2 4.5 4 4.5h1v-2H6c-1 0-1.5-.5-1.5-2S5 12 6 12h6c2 0 4-1 4-4V6c0-2-1-4-4-4z" fill="#3776AB"/><path d="M12 22c4 0 5-2 5-4v-2h-5v-1h6c2 0 4-1 4-4s-2-4.5-4-4.5h-1v2h1c1 0 1.5.5 1.5 2S19 12 18 12h-6c-2 0-4 1-4 4v2c0 2 1 4 4 4z" fill="#FFD43B"/><circle cx="9.5" cy="6.5" r="1" fill="white"/><circle cx="14.5" cy="17.5" r="1" fill="white"/></svg>`,
+  fastapi:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#009688"/><path d="M9 6l6 6-6 6M12 12h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`,
+  postgres:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" fill="#336791"/><path d="M8 12a4 4 0 1 1 8 0" stroke="white" stroke-width="1.3" fill="none"/><circle cx="12" cy="15" r="3" fill="none" stroke="white" stroke-width="1.3"/></svg>`,
+  redis:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="8" width="20" height="10" rx="3" fill="#DC382D"/><ellipse cx="12" cy="8" rx="10" ry="3" fill="#FF6B6B"/><text x="5.5" y="16" font-size="6.5" fill="white" font-weight="700" font-family="monospace">REDIS</text></svg>`,
+  docker:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="10" width="20" height="10" rx="3" fill="#2496ED"/><rect x="4" y="7" width="4" height="3" rx="1" fill="#2496ED" stroke="white" stroke-width="0.8"/><rect x="10" y="7" width="4" height="3" rx="1" fill="#2496ED" stroke="white" stroke-width="0.8"/><rect x="10" y="4" width="4" height="3" rx="1" fill="#2496ED" stroke="white" stroke-width="0.8"/></svg>`,
+  figma:`<svg viewBox="0 0 24 24" fill="none"><rect x="8" y="2" width="8" height="6" rx="3" fill="#F24E1E"/><rect x="8" y="9" width="8" height="6" fill="#A259FF"/><rect x="8" y="16" width="8" height="6" rx="3" fill="#0ACF83"/><rect x="2" y="2" width="8" height="6" rx="3" fill="#FF7262"/><circle cx="6" cy="12" r="3" fill="#1ABCFE"/></svg>`,
+  git:`<svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="2.5" stroke="#F05032" stroke-width="1.3" fill="none"/><circle cx="18" cy="6" r="2.5" stroke="#F05032" stroke-width="1.3" fill="none"/><circle cx="6" cy="6" r="2.5" stroke="#F05032" stroke-width="1.3" fill="none"/><path d="M6 8.5v7M8.5 6h7" stroke="#F05032" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+  jira:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0052CC"/><path d="M12 5l7 7-7 7M5 12h14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  slack:`<svg viewBox="0 0 24 24" fill="none"><circle cx="8.5" cy="8.5" r="2" fill="#E01E5A"/><circle cx="15.5" cy="8.5" r="2" fill="#36C5F0"/><circle cx="15.5" cy="15.5" r="2" fill="#2EB67D"/><circle cx="8.5" cy="15.5" r="2" fill="#ECB22E"/></svg>`,
+  confluence:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0052CC"/><path d="M6 17c2-2 4-4 6-4s4 2 6 4M6 7c2 2 4 4 6 4s4-2 6-4" stroke="white" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>`,
+  vitest:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 3L3 19h18L12 3z" fill="#729B1B"/><path d="M12 8l-4 9h8l-4-9z" fill="#ACD653"/></svg>`,
+  zustand:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#433E38"/><path d="M8 14s1-2 4-2 4 2 4 2" stroke="#F5C842" stroke-width="1.3" stroke-linecap="round" fill="none"/><circle cx="9" cy="10" r="1.2" fill="#F5C842"/><circle cx="15" cy="10" r="1.2" fill="#F5C842"/></svg>`,
+};
+const CONT_IC={
+  phone:`<svg viewBox="0 0 20 20" fill="none"><path d="M4 3h4l1.5 4-2 1.5c1 2 2.5 3.5 4.5 4.5L13.5 11 17 12.5V16c0 .5-.5 1-1 1C7 17 3 10 3 4c0-.5.5-1 1-1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  email:`<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+  tg:`<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.2"/><path d="M6 10l2.5 2.5L14 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  linkedin:`<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.2"/><path d="M6 8.5v5M6 6v.5M10 13.5V11c0-1.5 1-2.5 2.5-2.5S15 10 15 11v2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+  github:`<svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33C5.73 16.37 5.26 15 5.26 15c-.36-.92-.88-1.16-.88-1.16-.72-.49.05-.48.05-.48.8.06 1.22.82 1.22.82.71 1.21 1.86.86 2.31.66.07-.52.28-.86.5-1.06-1.77-.2-3.63-.88-3.63-3.93 0-.87.31-1.58.82-2.13-.08-.2-.36-1.01.08-2.1 0 0 .67-.21 2.2.82a7.66 7.66 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.09.16 1.9.08 2.1.51.55.82 1.26.82 2.13 0 3.06-1.86 3.73-3.64 3.93.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 10 2z" fill="currentColor"/></svg>`,
+};
+const ROLES={
+  frontend:`<svg viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M4.5 6L2.5 7l2 1M9.5 6l2 1-2 1M8 4.5l-2 5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  backend:`<svg viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="3.5" rx="1.2" stroke="currentColor" stroke-width="1.1"/><rect x="1" y="8" width="12" height="3.5" rx="1.2" stroke="currentColor" stroke-width="1.1"/><circle cx="11" cy="3.75" r=".8" fill="currentColor"/><circle cx="11" cy="9.75" r=".8" fill="currentColor"/></svg>`,
+  pm:`<svg viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1" width="11" height="12" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M4 4.5h6M4 7h4M4 9.5h5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>`,
+  devops:`<svg viewBox="0 0 14 14" fill="none"><path d="M7 2C4.2 2 2 4.2 2 7s2.2 5 5 5 5-2.2 5-5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M9.5 2l2.5 1.5-2.5 1.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="1.3" fill="currentColor" opacity=".4"/></svg>`,
+};
+const GRADES={Junior:{n:1,col:'#888780'},Middle:{n:2,col:'#1D9E75'},Senior:{n:3,col:'#185FA5'},Lead:{n:4,col:'#854F0B'}};
+const SPINE_H=52,SPINE_GAP=52,EXP_H=44,EXP_GAP=44;
+
+function tip(l){return `<span class="tooltip">${l}</span>`;}
+function icoStack(k,l,cls=''){return `<span class="ico${cls?' '+cls:''}">${IC[k]||''}${tip(l)}</span>`;}
+function icoE(k,l,cls=''){return `<span class="exp-ico${cls?' '+cls:''}">${IC[k]||''}${tip(l)}</span>`;}
+function icoSpine(k,l){return `<span class="ti">${IC[k]||''}${tip(l)}</span>`;}
+
+function makeChevrons(grade){
+  const g=GRADES[grade]||GRADES.Middle;
+  const W=12,H=5,GAP=2.5,svgH=g.n*H+(g.n-1)*GAP+1;
+  let p='';
+  for(let i=0;i<g.n;i++){const y=0.5+i*(H+GAP);p+=`<path d="M1 ${y} L${W/2} ${y+H-0.5} L${W-1} ${y}" stroke="${g.col}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;}
+  return `<svg width="${W}" height="${svgH}" viewBox="0 0 ${W} ${svgH}" style="display:block;">${p}</svg>`;
+}
+function badge(rt,rl,grade){
+  return `<span class="badge" title="${rl} · ${grade}"><span class="badge-role">${ROLES[rt]||ROLES.frontend}</span><span class="chev-col">${makeChevrons(grade)}</span><span class="tooltip">${rl} · ${grade}</span></span>`;
+}
+function cbar(ct){
+  const a=[];
+  if(ct.phone) a.push(`<span class="contact-ico">${CONT_IC.phone}${tip(ct.phone)}</span>`);
+  if(ct.email) a.push(`<span class="contact-ico">${CONT_IC.email}${tip(ct.email)}</span>`);
+  if(ct.tg) a.push(`<span class="contact-ico">${CONT_IC.tg}${tip(ct.tg)}</span>`);
+  if(ct.linkedin) a.push(`<span class="contact-ico">${CONT_IC.linkedin}${tip(ct.linkedin)}</span>`);
+  if(ct.github) a.push(`<span class="contact-ico">${CONT_IC.github}${tip(ct.github)}</span>`);
+  return `<div class="contacts-bar">${a.join('')}<span style="flex:1"></span><span style="font-size:10px;color:var(--color-text-secondary);">контакты</span></div>`;
+}
+
+const data=[
+  {initials:'АК',name:'Алёна Кузнецова',roleType:'frontend',roleLabel:'Frontend Engineer',bg:'#E6F1FB',col:'#185FA5',grade:'Senior',
+    salary:'350–420k',match:'92%',exp:'6 лет',
+    spineIcons:[['react','React'],['ts','TypeScript'],['graphql','GraphQL']],
+    coreStack:[['react','React'],['nextjs','Next.js'],['ts','TypeScript'],['graphql','GraphQL']],
+    addStack:[['vite','Vite'],['zustand','Zustand'],['vitest','Vitest']],
+    defStack:[['git','Git'],['jira','Jira'],['figma','Figma'],['slack','Slack']],
+    demo:{city:'Москва',reloc:'Готова',langs:'RU · EN B2',edu:'МГТУ Бауманка, 2018',remote:'Гибрид'},
+    contacts:{phone:'+7 999 123-45-67',email:'a.kuz@email.com',tg:'@akuznetsova',linkedin:'linkedin/ak',github:'github/akuz'},
+    portfolio:[
+      {title:'Яндекс Design System',meta:'internal · 40+',tags:[['react','React'],['ts','TypeScript']],hl:'40+'},
+      {title:'Авито Каталог',meta:'product · 2M DAU',tags:[['react','React'],['graphql','GraphQL']],hl:'2M DAU'},
+      {title:'chart lib',meta:'OSS · 1.2k★',tags:[['ts','TypeScript'],['vitest','Vitest']],hl:'OSS'},
+    ],
+    experience:[
+      {company:'Яндекс',short:'Я',bg:'#FF0000',col:'#fff',role:'Senior Frontend Engineer',grade:'Senior',roleType:'frontend',period:'2022—н.в.',
+        desc:'Разработка и развитие Design System для продуктов Яндекса. Архитектурные решения компонентной библиотеки.',
+        coreStack:[['react','React'],['ts','TypeScript'],['figma','Figma']],addStack:[['nextjs','Next.js'],['vitest','Vitest']],
+        achievements:[{text:'40+ компонентов Design System, ускорение разработки 35%',tag:'+35%'},{text:'Покрытие тестами 85%',tag:'85% cover'},{text:'Менторинг 3 junior-разработчиков',tag:null}]},
+      {company:'Авито',short:'А',bg:'#00AAFF',col:'#fff',role:'Middle Frontend Engineer',grade:'Middle',roleType:'frontend',period:'2020–2022',
+        desc:'Разработка каталога товаров и страниц объявлений. Оптимизация производительности.',
+        coreStack:[['react','React'],['graphql','GraphQL'],['ts','TypeScript']],addStack:[['vite','Vite']],
+        achievements:[{text:'LCP с 4.2с до 1.8с',tag:'-57% LCP'},{text:'Продукт 2M DAU',tag:'2M DAU'}]},
+      {company:'XYZ Studio',short:'XYZ',bg:'#6C47FF',col:'#fff',role:'Junior Frontend Developer',grade:'Junior',roleType:'frontend',period:'2018–2020',
+        desc:'Landing pages и веб-приложения для клиентов студии.',
+        coreStack:[['react','React'],['vite','Vite']],addStack:[['figma','Figma']],
+        achievements:[{text:'12 клиентских проектов запущено',tag:'12 проектов'}]},
+    ]},
+  {initials:'МП',name:'Михаил Попов',roleType:'backend',roleLabel:'Backend Engineer',bg:'#E1F5EE',col:'#0F6E56',grade:'Middle',
+    salary:'240–280k',match:'85%',exp:'3 года',
+    spineIcons:[['python','Python'],['postgres','PostgreSQL'],['docker','Docker']],
+    coreStack:[['python','Python'],['fastapi','FastAPI'],['postgres','PostgreSQL']],
+    addStack:[['redis','Redis'],['docker','Docker']],
+    defStack:[['git','Git'],['jira','Jira'],['confluence','Confluence'],['slack','Slack']],
+    demo:{city:'СПб',reloc:'Рассмотрю',langs:'RU · EN B1',edu:'ИТМО, 2021',remote:'Офис/удалённо'},
+    contacts:{phone:'+7 921 456-78-90',email:'m.popov@email.com',tg:'@mxpopov',linkedin:'linkedin/mp',github:'github/mxpopov'},
+    portfolio:[
+      {title:'VK Payments API',meta:'product · 500K rps',tags:[['python','Python'],['fastapi','FastAPI'],['redis','Redis']],hl:'500K rps'},
+      {title:'fastapi-pagination',meta:'PyPI · OSS · 800★',tags:[['python','Python'],['fastapi','FastAPI']],hl:'800★'},
+    ],
+    experience:[
+      {company:'ВКонтакте',short:'VK',bg:'#0077FF',col:'#fff',role:'Middle Backend Engineer',grade:'Middle',roleType:'backend',period:'2022—н.в.',
+        desc:'Payments API — процессинг платежей, интеграция с банками.',
+        coreStack:[['python','Python'],['fastapi','FastAPI'],['redis','Redis']],addStack:[['postgres','PostgreSQL'],['docker','Docker']],
+        achievements:[{text:'500K rps в пиковой нагрузке',tag:'500K rps'},{text:'p99 latency с 320мс до 45мс',tag:'-86%'}]},
+      {company:'PRS',short:'PRS',bg:'#1D9E75',col:'#fff',role:'Junior Backend Engineer',grade:'Junior',roleType:'backend',period:'2021–2022',
+        desc:'Миграция монолита на микросервисную архитектуру.',
+        coreStack:[['python','Python'],['postgres','PostgreSQL'],['docker','Docker']],addStack:[],
+        achievements:[{text:'Выделил 5 микросервисов из монолита',tag:'Mono→Micro'}]},
+    ]},
+  {initials:'ДС',name:'Дарья Смирнова',roleType:'pm',roleLabel:'Product Manager',bg:'#FAEEDA',col:'#854F0B',grade:'Lead',
+    salary:'450–550k',match:'88%',exp:'7 лет',
+    spineIcons:[['figma','Figma'],['postgres','PostgreSQL'],['jira','Jira']],
+    coreStack:[['figma','Figma']],addStack:[['postgres','PostgreSQL'],['jira','Jira']],
+    defStack:[['slack','Slack'],['confluence','Confluence'],['jira','Jira']],
+    demo:{city:'Москва',reloc:'Нет',langs:'RU · EN C1',edu:'ВШЭ MBA, 2019',remote:'Удалённо'},
+    contacts:{phone:'+7 916 234-56-78',email:'d.smirnova@email.com',tg:'@dsmirnova',linkedin:'linkedin/ds',github:''},
+    portfolio:[
+      {title:'Ozon Search',meta:'product · +23% GMV',tags:[['figma','Figma']],hl:'+23% GMV'},
+      {title:'Tinkoff Invest',meta:'product · 1.5M users',tags:[['figma','Figma']],hl:'1.5M users'},
+    ],
+    experience:[
+      {company:'Ozon',short:'O',bg:'#005BFF',col:'#fff',role:'Lead Product Manager',grade:'Lead',roleType:'pm',period:'2021—н.в.',
+        desc:'Search & Recommendations — рост монетизации поиска.',
+        coreStack:[['figma','Figma'],['postgres','PostgreSQL']],addStack:[['jira','Jira']],
+        achievements:[{text:'+23% GMV через персонализацию поиска',tag:'+23% GMV'},{text:'Команда из 4 PM',tag:'Lead'}]},
+      {company:'Тинькофф',short:'Т',bg:'#FFDD2D',col:'#333',role:'Senior Product Manager',grade:'Senior',roleType:'pm',period:'2019–2021',
+        desc:'Инвестиционный продукт — запуск новых инструментов.',
+        coreStack:[['figma','Figma']],addStack:[['jira','Jira'],['confluence','Confluence']],
+        achievements:[{text:'1.5M активных пользователей продукта',tag:'1.5M users'}]},
+    ]},
+];
+
+const N=data.length;
+let activeCand=-1,activeJob=-1,col2Mode='none';
+const spineEls=[];
+
+/* ── EXP DECK for full-sheet (col2) ── */
+function buildExpDeckHTML(ci){
+  const c=data[ci];
+  const NJ=c.experience.length;
+  const W=198;
+  const H=(NJ-1)*EXP_GAP+EXP_H;
+  let s='';
+  c.experience.forEach((job,j)=>{
+    const isA=activeCand===ci&&activeJob===j;
+    s+=`<div class="exp-spine${isA?' active-exp':''}" id="exps-${ci}-${j}"
+      onclick="selectJob(${ci},${j},event)"
+      style="width:${W}px;top:${j*EXP_GAP}px;z-index:${isA?NJ+5:NJ-j};">
+      <div class="co-logo" style="background:${job.bg};color:${job.col}">${job.short}</div>
+      <div class="exp-name-block">
+        <span class="exp-job-title">${job.role}</span>
+        ${badge(job.roleType,job.role,job.grade)}
+      </div>
+      <span class="exp-period">${job.period}</span>
+    </div>`;
+  });
+  return `<div style="position:relative;width:${W}px;height:${H}px;">${s}</div>`;
+}
+
+/* ── COL2 CARD view ── */
+function renderCard(ci){
+  const c=data[ci];
+  const dh=c.defStack.map(([k,l])=>`<span class="ico dim">${IC[k]||''}${tip(l)}</span>`).join('');
+  return `
+    <div class="stat-row">
+      <div class="stat-b"><div class="stat-v">${c.exp}</div><div class="stat-l">опыт</div></div>
+      <div class="stat-b"><div class="stat-v">${c.match}</div><div class="stat-l">match</div></div>
+      <div class="stat-b" style="flex:1.4"><div class="stat-v" style="font-size:11px;">${c.salary} ₽</div><div class="stat-l">зарплата</div></div>
+    </div>
+    <div class="sec"><div class="sec-title">Стек</div>
+      <div class="stack-row">${c.coreStack.map(([k,l])=>icoStack(k,l,'core')).join('')}${c.addStack.map(([k,l])=>icoStack(k,l)).join('')}</div>
+      <div style="margin-top:4px"><div class="sec-title" style="margin-bottom:2px">Дефолт</div><div class="stack-row">${dh}</div></div>
+    </div>
+    <div class="sec"><div class="sec-title">О кандидате</div>
+      <div class="demo-grid">
+        <div class="demo-item"><span class="demo-lbl">Город</span><span class="demo-val">${c.demo.city}</span></div>
+        <div class="demo-item"><span class="demo-lbl">Релокация</span><span class="demo-val">${c.demo.reloc}</span></div>
+        <div class="demo-item"><span class="demo-lbl">Языки</span><span class="demo-val">${c.demo.langs}</span></div>
+        <div class="demo-item"><span class="demo-lbl">Формат</span><span class="demo-val">${c.demo.remote}</span></div>
+        <div class="demo-item" style="grid-column:1/-1"><span class="demo-lbl">Образование</span><span class="demo-val">${c.demo.edu}</span></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="act-btn primary" onclick="openFullSheet(${ci},event)">Полный лист ↗</button>
+    </div>
+    ${cbar(c.contacts)}`;
+}
+
+/* ── COL2 FULL SHEET view (with exp deck — no job detail here) ── */
+function renderFullSheet(ci){
+  const c=data[ci];
+  return `
+  <div class="fs-header">
+    <div class="av-sm" style="background:${c.bg};color:${c.col}">${c.initials}</div>
+    <div style="flex:1;min-width:0">
+      <div class="fs-name">${c.name}</div>
+      <div class="fs-role">${c.roleLabel} · ${c.grade} · ${c.demo.city}</div>
+    </div>
+    <div class="fs-match"><div class="fs-match-v">${c.match}</div><div class="fs-match-l">match</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Опыт работы</div>
+    ${buildExpDeckHTML(ci)}
+  </div>
+  <div class="sec">
+    <div class="sec-title">Портфолио</div>
+    ${c.portfolio.map(p=>`<div class="proj"><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="proj-title">${p.title}</span>${p.hl?`<span class="proj-tag hl">${p.hl}</span>`:''}</div><div class="proj-meta">${p.meta}</div><div class="proj-tags">${p.tags.map(([k,l])=>icoE(k,l)).join('')}</div></div>`).join('')}
+  </div>
+  <div class="sec"><div class="sec-title">О кандидате</div>
+    <div class="demo-grid">
+      <div class="demo-item"><span class="demo-lbl">Город</span><span class="demo-val">${c.demo.city}</span></div>
+      <div class="demo-item"><span class="demo-lbl">Релокация</span><span class="demo-val">${c.demo.reloc}</span></div>
+      <div class="demo-item"><span class="demo-lbl">Языки</span><span class="demo-val">${c.demo.langs}</span></div>
+      <div class="demo-item"><span class="demo-lbl">Формат</span><span class="demo-val">${c.demo.remote}</span></div>
+      <div class="demo-item" style="grid-column:1/-1"><span class="demo-lbl">Образование</span><span class="demo-val">${c.demo.edu}</span></div>
+    </div>
+  </div>
+  ${cbar(c.contacts)}
+  <div class="back-row"><button class="back-btn" onclick="openCard(${ci},event)">← Карточка</button></div>`;
+}
+
+/* ── COL3 JOB DETAIL ── */
+function renderJob(ci,ji){
+  const job=data[ci].experience[ji];
+  const core=job.coreStack.map(([k,l])=>icoE(k,l,'core')).join('');
+  const add=job.addStack.map(([k,l])=>icoE(k,l)).join('');
+  return `
+  <div class="job-header">
+    <div class="co-logo" style="background:${job.bg};color:${job.col};width:26px;height:26px;border-radius:7px;font-size:10px;">${job.short}</div>
+    <div style="flex:1;min-width:0">
+      <div class="job-company-name">${job.company}</div>
+      <div class="job-period">${job.role} · ${job.period}</div>
+    </div>
+    ${badge(job.roleType,job.role,job.grade)}
+  </div>
+  <div class="sec" style="border-top:none">
+    <div class="sec-title">Описание</div>
+    <div style="font-size:11px;color:var(--color-text-primary);line-height:1.5;">${job.desc}</div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Стек</div>
+    <div class="exp-stack-row">${core}${add}</div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Достижения</div>
+    ${job.achievements.map(a=>`<div class="exp-ach"><div class="exp-ach-dot"></div><div class="exp-ach-txt">${a.text}${a.tag?`<span class="exp-ach-tag">${a.tag}</span>`:''}</div></div>`).join('')}
+  </div>
+  <div class="back-row"><button class="back-btn" onclick="closeJob(event)">← Весь опыт</button></div>`;
+}
+
+/* ── STATE TRANSITIONS ── */
+
+function setCol2(ci,mode,html){
+  const el=document.getElementById('col2');
+  el.innerHTML=html;
+  el.classList.add('open');
+  col2Mode=mode;
+  /* merge border with col3 when col3 is open */
+  el.classList.toggle('merged',activeJob>=0);
+  const dh=parseInt(document.getElementById('deck-root').style.height)||220;
+  el.style.minHeight=dh+'px';
+}
+
+function setCol3(html){
+  const el=document.getElementById('col3');
+  if(html===null){el.classList.remove('open');el.innerHTML='';activeJob=-1;}
+  else{el.innerHTML=html;el.classList.add('open');}
+  /* update col2 border */
+  document.getElementById('col2').classList.toggle('merged',html!==null);
+}
+
+function openCard(ci,e){
+  if(e) e.stopPropagation();
+  activeJob=-1;
+  setCol3(null);
+  setCol2(ci,'card',renderCard(ci));
+}
+
+function openFullSheet(ci,e){
+  if(e) e.stopPropagation();
+  activeJob=-1;
+  setCol3(null);
+  setCol2(ci,'full',renderFullSheet(ci));
+}
+
+function selectJob(ci,ji,e){
+  if(e) e.stopPropagation();
+  /* toggle off */
+  if(activeJob===ji&&activeCand===ci){closeJob(e);return;}
+  activeJob=ji;
+  /* re-render col2 so spine gets active-exp class */
+  setCol2(ci,'full',renderFullSheet(ci));
+  setCol3(renderJob(ci,ji));
+}
+
+function closeJob(e){
+  if(e) e.stopPropagation();
+  activeJob=-1;
+  setCol3(null);
+  /* re-render col2 to clear active-exp */
+  setCol2(activeCand,'full',renderFullSheet(activeCand));
+}
+
+/* ── CANDIDATE DECK ── */
+function reflowDeck(ai){
+  const root=document.getElementById('deck-root');
+  const H=(N-1)*SPINE_GAP+SPINE_H;
+  root.style.height=H+'px';
+  data.forEach((_,i)=>{
+    spineEls[i].style.top=(i*SPINE_GAP)+'px';
+    spineEls[i].style.zIndex=N-i;
+    spineEls[i].classList.toggle('active',i===ai);
+  });
+  if(ai<0){
+    document.getElementById('col2').classList.remove('open');
+    setCol3(null);
+  } else {
+    document.getElementById('col2').style.minHeight=H+'px';
+  }
+}
+
+function toggleCand(idx){
+  if(activeCand===idx){
+    activeCand=-1;activeJob=-1;
+    reflowDeck(-1);
+    document.getElementById('col2').classList.remove('open');
+    setCol3(null);
+    return;
+  }
+  activeCand=idx;activeJob=-1;
+  reflowDeck(idx);
+  openCard(idx,null);
+}
+
+const root=document.getElementById('deck-root');
+data.forEach((c,i)=>{
+  const el=document.createElement('div');
+  el.className='spine';el.id='spine-'+i;
+  el.style.top=(i*SPINE_GAP)+'px';el.style.zIndex=N-i;
+  el.onclick=()=>toggleCand(i);
+  el.innerHTML=`
+    <div class="av-xs" style="background:${c.bg};color:${c.col}">${c.initials}</div>
+    <div class="name-block">
+      <span class="spine-name">${c.name}</span>
+      ${badge(c.roleType,c.roleLabel,c.grade)}
+    </div>
+    <div class="tech-strip">${c.spineIcons.map(([k,l])=>icoSpine(k,l)).join('')}</div>`;
+  root.appendChild(el);spineEls.push(el);
+});
+
+reflowDeck(-1);
+</script>
