@@ -67,7 +67,7 @@ export const POSITION_CATEGORY_LABELS: Record<PositionCategory, string> = {
   devops:    'DevOps',
   designer:  'Дизайнер',
   manager:   'Менеджер',
-  data:      'Data',
+  data:      'Разное',
 };
 
 export type Currency = 'RUB' | 'USD' | 'EUR' | 'KZT';

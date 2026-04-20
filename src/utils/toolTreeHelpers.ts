@@ -30,7 +30,7 @@ export const DOMAIN_ICONS: Record<ToolDomain, string> = {
 /** Subcategory id → domain mapping */
 export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   dev: [
-    // Languages (now in cat_tools but domain stays dev)
+    // Languages (in cat_languages, domain stays dev)
     'sub_javascript', 'sub_python', 'sub_java', 'sub_csharp', 'sub_golang',
     'sub_kotlin', 'sub_swift', 'sub_objc', 'sub_php', 'sub_cpp', 'sub_dart',
     'sub_ruby', 'sub_scala', 'sub_1c', 'sub_html_css',

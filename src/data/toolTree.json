@@ -1,9 +1,8 @@
 {
   "categories": [
     {
-      "id": "cat_tools",
-      "name": "Инструменты",
-      "icon": "Wrench",
+      "id": "cat_languages",
+      "name": "Языки разработки",
       "subcategories": [
         {
           "id": "sub_javascript",
@@ -734,7 +733,14 @@
               "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg"
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "cat_tools",
+      "name": "Инструменты",
+      "icon": "Wrench",
+      "subcategories": [
         {
           "id": "sub_db_sql",
           "categoryId": "cat_tools",
