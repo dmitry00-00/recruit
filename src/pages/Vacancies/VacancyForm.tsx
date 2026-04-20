@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePositionStore, useVacancyStore } from '@/stores';
-import { TreePicker } from '@/components/TreePicker';
+import { TreePicker, type VacancyToolState } from '@/components/TreePicker';
 import { Button } from '@/components/ui';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import type { Grade, Currency, WorkFormat, EmploymentType, VacancyRequirement, VacancyStatus } from '@/entities';
+import { flattenRequiredSubIds } from '@/utils';
 import styles from './VacancyForm.module.css';
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 export function VacancyForm() {
   const navigate = useNavigate();
@@ -32,26 +33,36 @@ export function VacancyForm() {
   const [sourceUrl, setSourceUrl] = useState('');
   const [location, setLocation] = useState('');
 
-  // Step 3: MIN requirements
+  // Step 3: Requirements (min + max combined via vacancy mode)
   const [minTools, setMinTools] = useState<string[]>([]);
-  const [minYearsMap, setMinYearsMap] = useState<Record<string, number>>({});
-
-  // Step 4: MAX requirements
   const [maxTools, setMaxTools] = useState<string[]>([]);
+  const [minYearsMap, setMinYearsMap] = useState<Record<string, number>>({});
   const [maxYearsMap, setMaxYearsMap] = useState<Record<string, number>>({});
 
-  const handleMinYears = (toolId: string, years: number) => {
-    setMinYearsMap((prev) => ({ ...prev, [toolId]: years }));
+  const filteredSubIds = useMemo(() => {
+    const position = positions.find((p) => p.id === positionId);
+    return flattenRequiredSubIds(position?.requiredCategories);
+  }, [positionId, positions]);
+
+  const handleVacancyClick = (toolId: string, state: VacancyToolState) => {
+    let nextMin = [...minTools];
+    let nextMax = [...maxTools];
+    if (state === 'none') {
+      nextMin = [...nextMin, toolId];
+      if (!nextMax.includes(toolId)) nextMax = [...nextMax, toolId];
+    } else if (state === 'min') {
+      nextMin = nextMin.filter((id) => id !== toolId);
+    } else {
+      nextMin = nextMin.filter((id) => id !== toolId);
+      nextMax = nextMax.filter((id) => id !== toolId);
+    }
+    setMinTools(nextMin);
+    setMaxTools(nextMax);
   };
 
-  const handleMaxYears = (toolId: string, years: number) => {
-    setMaxYearsMap((prev) => ({ ...prev, [toolId]: years }));
-  };
-
-  // Sync min to max
-  const handleMinChange = (ids: string[]) => {
-    setMinTools(ids);
-    setMaxTools((prev) => [...new Set([...ids, ...prev])]);
+  const handleVacancyYears = (toolId: string, level: 'min' | 'max', years: number) => {
+    if (level === 'min') setMinYearsMap((p) => ({ ...p, [toolId]: years }));
+    else setMaxYearsMap((p) => ({ ...p, [toolId]: years }));
   };
 
   const handleSubmit = async () => {
@@ -103,7 +114,7 @@ export function VacancyForm() {
           <div className={styles.field}>
             <label className={styles.label}>Должность</label>
             <select className={styles.select} value={positionId} onChange={(e) => setPositionId(e.target.value)}>
-              <option value="">Конструктор (свободный выбор)</option>
+              <option value="">Свободный выбор (без должности)</option>
               {positions.map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -183,39 +194,36 @@ export function VacancyForm() {
 
       {step === 3 && (
         <div className={styles.formSection}>
-          <label className={styles.label}>Минимальные требования (обязательные)</label>
+          <label className={styles.label}>Требования</label>
+          <p style={{ fontSize: 11, color: 'var(--text-tertiary)', margin: '0 0 8px' }}>
+            1 клик — обязательное (MIN) &nbsp;|&nbsp; 2 клика — желательное (MAX) &nbsp;|&nbsp; 3 клика — убрать
+          </p>
+          {positionId && filteredSubIds.length === 0 && (
+            <p style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 8 }}>
+              Должность без заданных требований — показываем всё дерево.
+            </p>
+          )}
           <TreePicker
-            selected={minTools}
-            onChange={handleMinChange}
-            mode="vacancy-min"
-            yearsMap={minYearsMap}
-            onYearsChange={handleMinYears}
+            mode="vacancy"
+            minIds={minTools}
+            maxIds={maxTools}
+            minYearsMap={minYearsMap}
+            maxYearsMap={maxYearsMap}
+            onVacancyClick={handleVacancyClick}
+            onVacancyYears={handleVacancyYears}
+            filteredSubIds={filteredSubIds.length ? filteredSubIds : undefined}
           />
         </div>
       )}
 
       {step === 4 && (
         <div className={styles.formSection}>
-          <label className={styles.label}>Максимальные требования (желательные)</label>
-          <TreePicker
-            selected={maxTools}
-            locked={minTools}
-            onChange={setMaxTools}
-            mode="vacancy-max"
-            yearsMap={maxYearsMap}
-            onYearsChange={handleMaxYears}
-          />
-        </div>
-      )}
-
-      {step === 5 && (
-        <div className={styles.formSection}>
           <h3>Подтверждение</h3>
           <p><strong>Компания:</strong> {companyName}</p>
           <p><strong>Грейд:</strong> {GRADE_LABELS[grade]}</p>
           <p><strong>Зарплата:</strong> {salaryFrom || '—'} – {salaryTo || '—'} {currency}</p>
-          <p><strong>MIN инструменты:</strong> {minTools.length}</p>
-          <p><strong>MAX инструменты:</strong> {maxTools.length}</p>
+          <p><strong>MIN требований:</strong> {minTools.length}</p>
+          <p><strong>MAX требований:</strong> {maxTools.length}</p>
         </div>
       )}
 

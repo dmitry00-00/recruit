@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { usePositionStore, useCandidateStore } from '@/stores';
@@ -6,6 +6,7 @@ import { TreePicker } from '@/components/TreePicker';
 import { Button } from '@/components/ui';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import type { Grade, Currency, WorkFormat, WorkEntry } from '@/entities';
+import { flattenRequiredSubIds } from '@/utils';
 import styles from '../Vacancies/VacancyForm.module.css';
 
 interface WorkEntryDraft {
@@ -54,6 +55,7 @@ export function CandidateForm() {
   const [phone, setPhone] = useState('');
   const [telegramHandle, setTelegramHandle] = useState('');
   const [city, setCity] = useState('');
+  const [candidatePositionId, setCandidatePositionId] = useState('');
   const [workFormat, setWorkFormat] = useState<WorkFormat | 'any'>('any');
   const [relocate, setRelocate] = useState(false);
   const [salaryExpected, setSalaryExpected] = useState('');
@@ -75,6 +77,7 @@ export function CandidateForm() {
     setPhone(candidate.phone ?? '');
     setTelegramHandle(candidate.telegramHandle ?? '');
     setCity(candidate.city ?? '');
+    setCandidatePositionId(candidate.positionId ?? '');
     setWorkFormat(candidate.workFormat);
     setRelocate(candidate.relocate);
     setSalaryExpected(candidate.salaryExpected ? String(candidate.salaryExpected) : '');
@@ -126,6 +129,7 @@ export function CandidateForm() {
         phone: phone || undefined,
         telegramHandle: telegramHandle || undefined,
         city: city || undefined,
+        positionId: candidatePositionId || undefined,
         workFormat,
         relocate,
         salaryExpected: salaryExpected ? parseInt(salaryExpected) : undefined,
@@ -141,6 +145,7 @@ export function CandidateForm() {
           phone: phone || undefined,
           telegramHandle: telegramHandle || undefined,
           city: city || undefined,
+          positionId: candidatePositionId || undefined,
           workFormat,
           relocate,
           salaryExpected: salaryExpected ? parseInt(salaryExpected) : undefined,
@@ -153,6 +158,29 @@ export function CandidateForm() {
   };
 
   const current = entries[activeEntry];
+
+  const entryFilteredSubIds = useMemo(() => {
+    const posId = current?.positionId || candidatePositionId;
+    if (!posId) return [];
+    const position = positions.find((p) => p.id === posId);
+    return flattenRequiredSubIds(position?.requiredCategories);
+  }, [current?.positionId, candidatePositionId, positions]);
+
+  // Auto-prefill empty entries with candidate's position
+  useEffect(() => {
+    if (!candidatePositionId) return;
+    setEntries((prev) => {
+      let changed = false;
+      const next = prev.map((e) => {
+        if (!e.positionId) {
+          changed = true;
+          return { ...e, positionId: candidatePositionId };
+        }
+        return e;
+      });
+      return changed ? next : prev;
+    });
+  }, [candidatePositionId]);
 
   return (
     <div className={styles.page}>
@@ -198,6 +226,17 @@ export function CandidateForm() {
               <label className={styles.label}>Город</label>
               <input className={styles.input} value={city} onChange={(e) => setCity(e.target.value)} />
             </div>
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Должность</label>
+            <select
+              className={styles.select}
+              value={candidatePositionId}
+              onChange={(e) => setCandidatePositionId(e.target.value)}
+            >
+              <option value="">—</option>
+              {positions.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
           </div>
           <div className={styles.row}>
             <div className={styles.field}>
@@ -248,7 +287,12 @@ export function CandidateForm() {
                 Место {i + 1}
               </Button>
             ))}
-            <Button variant="ghost" size="sm" onClick={() => { setEntries([...entries, emptyEntry()]); setActiveEntry(entries.length); }}>
+            <Button variant="ghost" size="sm" onClick={() => {
+              const next = emptyEntry();
+              if (candidatePositionId) next.positionId = candidatePositionId;
+              setEntries([...entries, next]);
+              setActiveEntry(entries.length);
+            }}>
               <Plus size={14} /> Добавить
             </Button>
           </div>
@@ -294,6 +338,11 @@ export function CandidateForm() {
           </div>
 
           <label className={styles.label}>Инструменты</label>
+          {!current.positionId && !candidatePositionId && (
+            <p style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+              Должность не выбрана — показываем всё дерево требований.
+            </p>
+          )}
           <TreePicker
             selected={current.tools}
             onChange={(ids) => updateEntry(activeEntry, { tools: ids })}
@@ -303,6 +352,7 @@ export function CandidateForm() {
             onYearsChange={(toolId, years) =>
               updateEntry(activeEntry, { yearsMap: { ...current.yearsMap, [toolId]: years } })
             }
+            filteredSubIds={entryFilteredSubIds.length ? entryFilteredSubIds : undefined}
           />
 
           {entries.length > 1 && (

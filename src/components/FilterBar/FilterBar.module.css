@@ -1,0 +1,111 @@
+.bar {
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 40;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: 6px 12px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.input,
+.select,
+.inputSmall {
+  height: 28px;
+  padding: 0 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input {
+  width: 140px;
+}
+
+.select {
+  width: 150px;
+  cursor: pointer;
+}
+
+.inputSmall {
+  width: 64px;
+  text-align: right;
+}
+
+.input:focus,
+.select:focus,
+.inputSmall:focus {
+  border-color: var(--amber);
+}
+
+.inputRange {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rangeSep {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.clearBtn:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+@media (max-width: 768px) {
+  .bar {
+    padding: 6px 8px;
+  }
+  .input,
+  .select {
+    width: 120px;
+  }
+}

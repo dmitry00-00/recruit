@@ -1,13 +1,19 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Plus, X, Check } from 'lucide-react';
-import { useVacancyStore, useCandidateStore, useTaskStore, useAuthStore } from '@/stores';
+import { ChevronLeft, ChevronRight, Plus, X, Check, Ban, ArrowLeftRight } from 'lucide-react';
+import {
+  useVacancyStore, useCandidateStore, useTaskStore, useAuthStore,
+  usePositionStore, useResponseStore,
+} from '@/stores';
+import { Spine } from '@/components/Spine';
 import { MatchBadge } from '@/components/MatchBadge';
 import { Pagination } from '@/components/ui';
 import { aggregateCandidate, computeMatchScore } from '@/utils';
 import { db, getOrCreatePipeline } from '@/db';
 import { MATCH_THRESHOLDS } from '@/config';
-import type { MatchResult, RecruitmentTask } from '@/entities';
+import type {
+  MatchResult, RecruitmentTask, Vacancy, Candidate, CandidateAggregation,
+} from '@/entities';
 import styles from './RecruiterDashboard.module.css';
 
 interface MatchPair {
@@ -15,9 +21,9 @@ interface MatchPair {
   candidateId: string;
   score: number;
   matchResult: MatchResult;
-  companyName: string;
-  vacancyGrade: string;
-  candidateName: string;
+  vacancy: Vacancy;
+  candidate: Candidate;
+  aggregation: CandidateAggregation;
 }
 
 const MONTH_NAMES = [
@@ -41,19 +47,30 @@ export function RecruiterDashboard() {
   const currentUser = useAuthStore((s) => s.currentUser);
   const { vacancies, load: loadVacancies } = useVacancyStore();
   const { candidates, load: loadCandidates, getWorkEntries } = useCandidateStore();
+  const { positions, load: loadPositions } = usePositionStore();
   const { tasks, loadAll: loadTasks, addTask, setStatus, removeTask } = useTaskStore();
+  const addEvent = useResponseStore((s) => s.addEvent);
 
   const MATCH_PAGE_SIZE = 20;
   const [matches, setMatches] = useState<MatchPair[]>([]);
   const [matchesLoading, setMatchesLoading] = useState(true);
   const [matchPage, setMatchPage] = useState(1);
   const [addedSet, setAddedSet] = useState<Set<string>>(new Set());
+  const [rejectedSet, setRejectedSet] = useState<Set<string>>(new Set());
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDate, setNewTaskDate] = useState('');
 
-  useEffect(() => { loadVacancies(); loadCandidates(); loadTasks(); }, [loadVacancies, loadCandidates, loadTasks]);
+  useEffect(() => {
+    loadVacancies(); loadCandidates(); loadTasks(); loadPositions();
+  }, [loadVacancies, loadCandidates, loadTasks, loadPositions]);
+
+  const positionMap = useMemo(() => {
+    const m = new Map<string, typeof positions[number]>();
+    for (const p of positions) m.set(p.id, p);
+    return m;
+  }, [positions]);
 
   // Compute top matches across all open vacancies × all candidates
   useEffect(() => {
@@ -74,9 +91,9 @@ export function RecruiterDashboard() {
               candidateId: cand.id,
               score: mr.scoreMin,
               matchResult: mr,
-              companyName: vac.companyName,
-              vacancyGrade: vac.grade,
-              candidateName: `${cand.lastName} ${cand.firstName}`,
+              vacancy: vac,
+              candidate: cand,
+              aggregation: agg,
             });
           }
         }
@@ -93,18 +110,20 @@ export function RecruiterDashboard() {
   useEffect(() => {
     (async () => {
       const cards = await db.pipelineCards.toArray();
-      const set = new Set<string>();
+      const stages = await db.pipelineStages.toArray();
+      const stageById = new Map(stages.map((s) => [s.id, s]));
+      const pairAdded = new Set<string>();
+      const pairRejected = new Set<string>();
       for (const c of cards) {
-        set.add(`${c.candidateId}`);
-      }
-      // Store full pipelineCards for more precise check
-      const pairSet = new Set<string>();
-      for (const c of cards) {
-        // Find which vacancy this pipeline belongs to
         const pipeline = await db.pipelines.get(c.pipelineId);
-        if (pipeline) pairSet.add(`${pipeline.vacancyId}:${c.candidateId}`);
+        if (!pipeline) continue;
+        const key = `${pipeline.vacancyId}:${c.candidateId}`;
+        pairAdded.add(key);
+        const stage = stageById.get(c.stageId);
+        if (stage && stage.order === 6) pairRejected.add(key);
       }
-      setAddedSet(pairSet);
+      setAddedSet(pairAdded);
+      setRejectedSet(pairRejected);
     })();
   }, [matches]);
 
@@ -123,6 +142,50 @@ export function RecruiterDashboard() {
     });
     setAddedSet((prev) => new Set([...prev, `${vacancyId}:${candidateId}`]));
   }, []);
+
+  const handleReject = useCallback(async (vacancyId: string, candidateId: string, score: number) => {
+    const pipeline = await getOrCreatePipeline(vacancyId);
+    const stages = await db.pipelineStages.where('pipelineId').equals(pipeline.id).sortBy('order');
+    const rejectStage = stages.find((s) => s.order === 6) ?? stages[stages.length - 1];
+    if (!rejectStage) return;
+
+    const existing = await db.pipelineCards
+      .where('pipelineId').equals(pipeline.id)
+      .and((c) => c.candidateId === candidateId)
+      .first();
+
+    let prevStageName: string | undefined;
+    if (existing) {
+      const prevStage = stages.find((s) => s.id === existing.stageId);
+      prevStageName = prevStage?.name;
+      await db.pipelineCards.update(existing.id, {
+        stageId: rejectStage.id,
+        movedAt: new Date(),
+      });
+    } else {
+      await db.pipelineCards.add({
+        id: crypto.randomUUID(),
+        pipelineId: pipeline.id,
+        stageId: rejectStage.id,
+        candidateId,
+        matchScore: score,
+        addedAt: new Date(),
+        movedAt: new Date(),
+      });
+    }
+
+    await addEvent({
+      vacancyId,
+      candidateId,
+      type: 'candidate_rejected',
+      comment: prevStageName ? `Отклонён на этапе «${prevStageName}»` : 'Отклонён из списка совпадений',
+      authorId: currentUser?.id,
+    });
+
+    const key = `${vacancyId}:${candidateId}`;
+    setAddedSet((prev) => new Set([...prev, key]));
+    setRejectedSet((prev) => new Set([...prev, key]));
+  }, [addEvent, currentUser]);
 
   const handleAddTask = useCallback(() => {
     if (!newTaskTitle.trim()) return;
@@ -238,30 +301,52 @@ export function RecruiterDashboard() {
                   {pagedMatches.map((m) => {
                     const pairKey = `${m.vacancyId}:${m.candidateId}`;
                     const isAdded = addedSet.has(pairKey);
+                    const isRejected = rejectedSet.has(pairKey);
+                    const vacPos = positionMap.get(m.vacancy.positionId) ?? null;
+                    const candPos = m.candidate.positionId ? positionMap.get(m.candidate.positionId) ?? null : null;
                     return (
-                      <div key={pairKey} className={styles.matchRow}>
-                        <div className={styles.matchVacancy}>
-                          <div className={styles.matchVacancyName}>{m.companyName}</div>
-                          <div className={styles.matchVacancyMeta}>{m.vacancyGrade}</div>
-                        </div>
-                        <MatchBadge score={m.score} size="sm" />
-                        <div className={styles.matchCandidate}>
-                          <div className={styles.matchCandidateName}>{m.candidateName}</div>
+                      <div key={pairKey} className={`${styles.matchPair} ${isRejected ? styles.matchPairRejected : ''}`}>
+                        <div className={styles.matchSpines}>
+                          <Spine
+                            kind="vacancy"
+                            vacancy={m.vacancy}
+                            position={vacPos}
+                            compact
+                            onClick={() => navigate(`/vacancies/${m.vacancyId}`)}
+                            trailing={<MatchBadge score={m.score} size="sm" />}
+                          />
+                          <Spine
+                            kind="candidate"
+                            candidate={m.candidate}
+                            aggregation={m.aggregation}
+                            position={candPos}
+                            compact
+                            onClick={() => navigate(`/candidates/${m.candidateId}`)}
+                          />
                         </div>
                         <div className={styles.matchActions}>
                           <button
                             className={styles.compareBtn}
                             onClick={() => navigate(`/compare/${m.vacancyId}/${m.candidateId}`)}
+                            title="Сравнение"
                           >
-                            Сравнение
+                            <ArrowLeftRight size={12} />
                           </button>
                           <button
-                            className={`${styles.addPipelineBtn} ${isAdded ? styles.addPipelineBtnDone : ''}`}
+                            className={`${styles.addPipelineBtn} ${isAdded && !isRejected ? styles.addPipelineBtnDone : ''}`}
                             onClick={() => !isAdded && handleAddToPipeline(m.vacancyId, m.candidateId, m.score)}
                             disabled={isAdded}
-                            title={isAdded ? 'В воронке' : 'Добавить в воронку'}
+                            title={isAdded ? (isRejected ? 'Отклонён' : 'В воронке') : 'Добавить в воронку'}
                           >
-                            {isAdded ? <Check size={12} /> : <Plus size={12} />}
+                            {isAdded && !isRejected ? <Check size={12} /> : <Plus size={12} />}
+                          </button>
+                          <button
+                            className={`${styles.rejectBtn} ${isRejected ? styles.rejectBtnDone : ''}`}
+                            onClick={() => !isRejected && handleReject(m.vacancyId, m.candidateId, m.score)}
+                            disabled={isRejected}
+                            title={isRejected ? 'Уже отклонён' : 'Отклонить'}
+                          >
+                            <Ban size={12} />
                           </button>
                         </div>
                       </div>

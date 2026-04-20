@@ -213,6 +213,13 @@
   font-weight: 600;
 }
 
+.subToggleSelected {
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-weight: 600;
+  border-left: 3px solid var(--amber);
+}
+
 .subToggleName {
   flex: 1;
   white-space: nowrap;

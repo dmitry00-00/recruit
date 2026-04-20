@@ -17,7 +17,8 @@ export type PickerMode =
   | 'candidate'
   | 'vacancy'
   | 'candidate-agg'
-  | 'compare';
+  | 'compare'
+  | 'position';
 
 export type VacancyToolState = 'none' | 'min' | 'max';
 
@@ -112,6 +113,7 @@ export function TreePicker({
       case 'vacancy':       return sub.tools.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length;
       case 'compare':       return sub.tools.filter((t) => compareAll.has(t.id)).length;
       case 'candidate-agg': return sub.tools.filter((t) => yearsMap[t.id] != null).length;
+      case 'position':      return selectedSet.has(sub.id) ? 1 : 0;
       default:              return sub.tools.filter((t) => selectedSet.has(t.id)).length;
     }
   };
@@ -266,17 +268,35 @@ export function TreePicker({
             {subs.map((sub) => {
               const sc = countSub(sub);
               const isOpen = expandedSubId === sub.id;
+              const isSubSelected = mode === 'position' && selectedSet.has(sub.id);
+              const toggleSubSelect = () => {
+                if (!onChange) return;
+                if (selectedSet.has(sub.id)) {
+                  onChange(selected.filter((id) => id !== sub.id));
+                } else {
+                  onChange([...selected, sub.id]);
+                }
+              };
               return (
                 <div key={sub.id}>
                   <button
-                    className={`${styles.subToggle} ${isOpen ? styles.subToggleOpen : ''}`}
-                    onClick={() => toggleSub(domain, sub.id)}
+                    className={`${styles.subToggle} ${isOpen ? styles.subToggleOpen : ''} ${isSubSelected ? styles.subToggleSelected : ''}`}
+                    onClick={() => mode === 'position' ? toggleSubSelect() : toggleSub(domain, sub.id)}
                   >
-                    {isOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+                    {mode === 'position' && (
+                      <input
+                        type="checkbox"
+                        className={styles.toolCb}
+                        checked={isSubSelected}
+                        onChange={toggleSubSelect}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    )}
+                    {mode !== 'position' && (isOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />)}
                     <span className={styles.subToggleName}>{sub.name}</span>
                     {sc > 0 && <span className={styles.subToggleCount}>{sc}</span>}
                   </button>
-                  {isOpen && (
+                  {mode !== 'position' && isOpen && (
                     <div className={styles.toolsPanel}>
                       {sub.tools.map(renderTool)}
                     </div>
@@ -291,7 +311,10 @@ export function TreePicker({
   };
 
   // ── Search ────────────────────────────────────────────────
-  const searchResults = useMemo(() => (search.trim() ? searchTools(search) : []), [search]);
+  const searchResults = useMemo(
+    () => (search.trim() && mode !== 'position' ? searchTools(search) : []),
+    [search, mode],
+  );
 
   // ── Render ─────────────────────────────────────────────────
   return (
@@ -299,9 +322,14 @@ export function TreePicker({
       <div className={styles.searchBar}>
         <input
           className={styles.searchInput}
-          placeholder={mode === 'vacancy' ? '1 клик — MIN   |   2 клика — MAX' : 'Поиск инструментов...'}
+          placeholder={
+            mode === 'vacancy'  ? '1 клик — MIN   |   2 клика — MAX'
+            : mode === 'position' ? 'Отметьте подкатегории, входящие в должность'
+            : 'Поиск инструментов...'
+          }
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          disabled={mode === 'position'}
         />
       </div>
 
@@ -337,7 +365,7 @@ export function TreePicker({
         ) : (
           <div className={styles.grid}>
             {PRIMARY_DOMAINS.map((d) => renderCell(d))}
-            {renderCell('misc')}
+            {DOMAIN_SUB_MAP['misc'].length > 0 && renderCell('misc')}
           </div>
         )}
       </div>
