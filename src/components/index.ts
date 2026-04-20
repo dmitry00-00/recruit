@@ -9,4 +9,4 @@ export { RoadMap } from './RoadMap';
 export { KanbanBoard } from './KanbanBoard';
 export { Spine, RoleBadge, GradeChevrons, ToolStrip } from './Spine';
 export { TabletView } from './Tablet';
-export { FilterBar } from './FilterBar';
+export { SpinePopover } from './SpinePopover';

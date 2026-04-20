@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LayoutGrid, List, Upload, ChevronUp, ChevronDown } from 'lucide-react';
 import { useFilterStore, useVacancyStore, useCandidateStore, usePositionStore, useAuthStore } from '@/stores';
-import { FilterBar } from '@/components/FilterBar';
-import { TabletView } from '@/components/Tablet';
+import { VacancyCard } from '@/components/VacancyCard';
+import { CandidateCard } from '@/components/CandidateCard';
 import { Spine } from '@/components/Spine';
+import { SpinePopover } from '@/components/SpinePopover';
 import { RoadMap } from '@/components/RoadMap';
 import { TreePicker } from '@/components/TreePicker';
 import { EmptyState, Button, Pagination } from '@/components/ui';
@@ -12,7 +13,10 @@ import { VACANCY_STATUS_LABELS, CURRENCY_SYMBOLS, WORK_FORMAT_LABELS } from '@/c
 import { GRADE_LABELS, GRADE_ORDER } from '@/entities';
 import { aggregateCandidate, computeRoadmap, getToolSubcategoryMap } from '@/utils';
 import { db } from '@/db';
-import type { ViewMode, Grade, CandidateAggregation, Candidate, Vacancy, Position, WorkEntry } from '@/entities';
+import type {
+  ViewMode, Grade, CandidateAggregation, Candidate, Vacancy, Position, WorkEntry,
+  WorkFormat, VacancyStatus,
+} from '@/entities';
 import styles from './Dashboard.module.css';
 
 type SortDir = 'asc' | 'desc';
@@ -40,9 +44,14 @@ export function Dashboard() {
     salaryMin,
     salaryMax,
     workFormatFilter,
+    setCompanyFilter,
+    setCityFilter,
+    setStatusFilter,
+    setWorkFormatFilter,
+    setSalaryRange,
   } = useFilterStore();
   const { vacancies, loading: vLoading, load: loadVacancies } = useVacancyStore();
-  const { candidates, loading: cLoading, load: loadCandidates, getWorkEntries } = useCandidateStore();
+  const { candidates, loading: cLoading, load: loadCandidates } = useCandidateStore();
   const { positions, load: loadPositions } = usePositionStore();
   const [viewMode, setViewMode] = useState<ViewMode>('table');
 
@@ -317,19 +326,60 @@ export function Dashboard() {
   }, [roadmapData]);
 
   // ── Table column header ─────────────────────────────────────
-  const Th = ({ col, label }: { col: string; label: string }) => (
-    <th>
-      <button className={styles.sortBtn} onClick={() => toggleSort(col)}>
-        {label} <SortIcon active={sortCol === col} dir={sortDir} />
-      </button>
-    </th>
+  const renderSortBtn = (col: string, label: string) => (
+    <button className={styles.sortBtn} onClick={() => toggleSort(col)}>
+      {label} <SortIcon active={sortCol === col} dir={sortDir} />
+    </button>
   );
+
+  // ── Spine popover (for both gallery and table) ──────────────
+  type PopoverState = { kind: 'vacancy' | 'candidate'; id: string; anchor: DOMRect };
+  const [popover, setPopover] = useState<PopoverState | null>(null);
+
+  const handleSpineClick = (kind: 'vacancy' | 'candidate', id: string, el: HTMLElement) => {
+    const rect = el.getBoundingClientRect();
+    setPopover((prev) => (prev && prev.id === id ? null : { kind, id, anchor: rect }));
+  };
+
+  const popoverVac = popover?.kind === 'vacancy'
+    ? vacancies.find((v) => v.id === popover.id)
+    : null;
+  const popoverCand = popover?.kind === 'candidate'
+    ? candidates.find((c) => c.id === popover.id)
+    : null;
+
+  const spineRefs = useRef<Record<string, HTMLElement | null>>({});
+  const setSpineRef = (id: string) => (el: HTMLElement | null) => {
+    spineRefs.current[id] = el;
+  };
+
+  // Recompute anchor on scroll/resize so popover follows
+  useEffect(() => {
+    if (!popover) return;
+    const recompute = () => {
+      const el = spineRefs.current[popover.id];
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setPopover((p) => (p ? { ...p, anchor: rect } : p));
+    };
+    window.addEventListener('scroll', recompute, true);
+    window.addEventListener('resize', recompute);
+    return () => {
+      window.removeEventListener('scroll', recompute, true);
+      window.removeEventListener('resize', recompute);
+    };
+  }, [popover?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const formatOptions = Object.entries(WORK_FORMAT_LABELS)
+    .filter(([k]) => k !== 'any')
+    .map(([v, l]) => ({ value: v, label: l }));
+  const statusOptions = Object.entries(VACANCY_STATUS_LABELS)
+    .map(([v, l]) => ({ value: v, label: l }));
 
   // ── Analytics section ──────────────────────────────────────
   if (section === 'analytics') {
     return (
       <>
-        <FilterBar />
         <div className={styles.page}>
           <div className={styles.header}>
             <div className={styles.counters}>
@@ -426,7 +476,6 @@ export function Dashboard() {
   // ── List section ───────────────────────────────────────────
   return (
     <>
-      <FilterBar />
       <div className={styles.page}>
         <div className={styles.header}>
           <div className={styles.counters}>
@@ -480,12 +529,15 @@ export function Dashboard() {
         {!loading && effectiveRecordType === 'vacancies' && vacancyTotal > 0 && (
           viewMode === 'gallery' ? (
             <>
-              <TabletView
-                kind="vacancy"
-                items={pagedVacancies}
-                positions={positions}
-                onOpenFull={handleNavigateVacancy}
-              />
+              <div className={styles.cardGrid}>
+                {pagedVacancies.map((v) => (
+                  <VacancyCard
+                    key={v.id}
+                    vacancy={v}
+                    onClick={() => handleNavigateVacancy(v.id)}
+                  />
+                ))}
+              </div>
               <Pagination totalItems={vacancyTotal} pageSize={PAGE_SIZE} currentPage={vacancyPage} onPageChange={setVacancyPage} />
             </>
           ) : (
@@ -494,15 +546,82 @@ export function Dashboard() {
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th style={{ minWidth: 260 }}>
-                        <button className={styles.sortBtn} onClick={() => toggleSort('company')}>
-                          Вакансия <SortIcon active={sortCol === 'company'} dir={sortDir} />
-                        </button>
+                      <th className={styles.spineCol}>
+                        {renderSortBtn('company', 'Вакансия')}
                       </th>
-                      <Th col="salary" label="Зарплата" />
-                      <Th col="city" label="Город" />
-                      <Th col="format" label="Формат" />
-                      <Th col="status" label="Статус" />
+                      <th>{renderSortBtn('salary', 'Зарплата')}</th>
+                      <th>{renderSortBtn('city', 'Город')}</th>
+                      <th>{renderSortBtn('format', 'Формат')}</th>
+                      <th>{renderSortBtn('status', 'Статус')}</th>
+                    </tr>
+                    <tr className={styles.filterRow}>
+                      <th className={styles.spineCol}>
+                        <input
+                          className={styles.filterInput}
+                          placeholder="Фильтр по компании…"
+                          value={companyFilter}
+                          onChange={(e) => setCompanyFilter(e.target.value)}
+                        />
+                      </th>
+                      <th>
+                        <div className={styles.filterRange}>
+                          <input
+                            className={styles.filterInputSmall}
+                            type="number"
+                            placeholder="от"
+                            value={salaryMin != null ? Math.round(salaryMin / 1000) : ''}
+                            onChange={(e) => {
+                              const n = Number(e.target.value);
+                              setSalaryRange(Number.isFinite(n) && n > 0 ? n * 1000 : undefined, salaryMax);
+                            }}
+                          />
+                          <span className={styles.rangeSep}>–</span>
+                          <input
+                            className={styles.filterInputSmall}
+                            type="number"
+                            placeholder="до"
+                            value={salaryMax != null ? Math.round(salaryMax / 1000) : ''}
+                            onChange={(e) => {
+                              const n = Number(e.target.value);
+                              setSalaryRange(salaryMin, Number.isFinite(n) && n > 0 ? n * 1000 : undefined);
+                            }}
+                          />
+                        </div>
+                      </th>
+                      <th>
+                        <input
+                          className={styles.filterInput}
+                          placeholder="Город…"
+                          value={cityFilter}
+                          onChange={(e) => setCityFilter(e.target.value)}
+                        />
+                      </th>
+                      <th>
+                        <select
+                          className={styles.filterSelect}
+                          value={workFormatFilter[0] ?? ''}
+                          onChange={(e) =>
+                            setWorkFormatFilter(e.target.value ? [e.target.value as WorkFormat] : [])
+                          }
+                        >
+                          <option value="">Все</option>
+                          {formatOptions.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                          ))}
+                        </select>
+                      </th>
+                      <th>
+                        <select
+                          className={styles.filterSelect}
+                          value={statusFilter ?? ''}
+                          onChange={(e) => setStatusFilter((e.target.value || null) as VacancyStatus | null)}
+                        >
+                          <option value="">Все</option>
+                          {statusOptions.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                          ))}
+                        </select>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -510,8 +629,23 @@ export function Dashboard() {
                       const pos = positionMap.get(v.positionId) ?? null;
                       return (
                         <tr key={v.id} className={styles.clickableRow} onClick={() => handleNavigateVacancy(v.id)}>
-                          <td style={{ padding: 4 }}>
-                            <Spine kind="vacancy" vacancy={v} position={pos} compact />
+                          <td className={styles.spineCol} style={{ padding: 4 }}>
+                            <div
+                              ref={setSpineRef(v.id)}
+                              className={styles.spineWrap}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSpineClick('vacancy', v.id, e.currentTarget);
+                              }}
+                            >
+                              <Spine
+                                kind="vacancy"
+                                vacancy={v}
+                                position={pos}
+                                compact
+                                active={popover?.id === v.id}
+                              />
+                            </div>
                           </td>
                           <td style={{ fontFamily: 'var(--font-mono)' }}>
                             {v.salaryFrom ? `${(v.salaryFrom / 1000).toFixed(0)}k` : '—'}
@@ -544,14 +678,19 @@ export function Dashboard() {
         {!loading && effectiveRecordType === 'candidates' && !isCandidateRole && candidateTotal > 0 && (
           viewMode === 'gallery' ? (
             <>
-              <TabletView
-                kind="candidate"
-                items={pagedCandidates}
-                aggregationById={aggregationById}
-                getWorkEntries={getWorkEntries}
-                positions={positions}
-                onOpenFull={handleNavigateCandidate}
-              />
+              <div className={styles.cardGrid}>
+                {pagedCandidates.map((c) => {
+                  const agg = aggregationById[c.id];
+                  return (
+                    <CandidateCard
+                      key={c.id}
+                      candidate={c}
+                      aggregation={agg}
+                      onClick={() => handleNavigateCandidate(c.id)}
+                    />
+                  );
+                })}
+              </div>
               <Pagination totalItems={candidateTotal} pageSize={PAGE_SIZE} currentPage={candidatePage} onPageChange={setCandidatePage} />
             </>
           ) : (
@@ -560,14 +699,62 @@ export function Dashboard() {
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th style={{ minWidth: 260 }}>
-                        <button className={styles.sortBtn} onClick={() => toggleSort('name')}>
-                          Кандидат <SortIcon active={sortCol === 'name'} dir={sortDir} />
-                        </button>
+                      <th className={styles.spineCol}>
+                        {renderSortBtn('name', 'Кандидат')}
                       </th>
-                      <Th col="city" label="Город" />
-                      <Th col="cformat" label="Формат" />
-                      <Th col="salary" label="Ожидание" />
+                      <th>{renderSortBtn('city', 'Город')}</th>
+                      <th>{renderSortBtn('cformat', 'Формат')}</th>
+                      <th>{renderSortBtn('salary', 'Ожидание')}</th>
+                    </tr>
+                    <tr className={styles.filterRow}>
+                      <th className={styles.spineCol} />
+                      <th>
+                        <input
+                          className={styles.filterInput}
+                          placeholder="Город…"
+                          value={cityFilter}
+                          onChange={(e) => setCityFilter(e.target.value)}
+                        />
+                      </th>
+                      <th>
+                        <select
+                          className={styles.filterSelect}
+                          value={workFormatFilter[0] ?? ''}
+                          onChange={(e) =>
+                            setWorkFormatFilter(e.target.value ? [e.target.value as WorkFormat] : [])
+                          }
+                        >
+                          <option value="">Все</option>
+                          {formatOptions.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                          ))}
+                        </select>
+                      </th>
+                      <th>
+                        <div className={styles.filterRange}>
+                          <input
+                            className={styles.filterInputSmall}
+                            type="number"
+                            placeholder="от"
+                            value={salaryMin != null ? Math.round(salaryMin / 1000) : ''}
+                            onChange={(e) => {
+                              const n = Number(e.target.value);
+                              setSalaryRange(Number.isFinite(n) && n > 0 ? n * 1000 : undefined, salaryMax);
+                            }}
+                          />
+                          <span className={styles.rangeSep}>–</span>
+                          <input
+                            className={styles.filterInputSmall}
+                            type="number"
+                            placeholder="до"
+                            value={salaryMax != null ? Math.round(salaryMax / 1000) : ''}
+                            onChange={(e) => {
+                              const n = Number(e.target.value);
+                              setSalaryRange(salaryMin, Number.isFinite(n) && n > 0 ? n * 1000 : undefined);
+                            }}
+                          />
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -576,8 +763,24 @@ export function Dashboard() {
                       const pos = c.positionId ? positionMap.get(c.positionId) ?? null : null;
                       return (
                         <tr key={c.id} className={styles.clickableRow} onClick={() => handleNavigateCandidate(c.id)}>
-                          <td style={{ padding: 4 }}>
-                            <Spine kind="candidate" candidate={c} aggregation={agg} position={pos} compact />
+                          <td className={styles.spineCol} style={{ padding: 4 }}>
+                            <div
+                              ref={setSpineRef(c.id)}
+                              className={styles.spineWrap}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSpineClick('candidate', c.id, e.currentTarget);
+                              }}
+                            >
+                              <Spine
+                                kind="candidate"
+                                candidate={c}
+                                aggregation={agg}
+                                position={pos}
+                                compact
+                                active={popover?.id === c.id}
+                              />
+                            </div>
                           </td>
                           <td>{c.city ?? '—'}</td>
                           <td>{WORK_FORMAT_LABELS[c.workFormat as keyof typeof WORK_FORMAT_LABELS] ?? c.workFormat}</td>
@@ -593,6 +796,34 @@ export function Dashboard() {
               <Pagination totalItems={candidateTotal} pageSize={PAGE_SIZE} currentPage={candidatePage} onPageChange={setCandidatePage} />
             </>
           )
+        )}
+
+        {popover && popoverVac && (
+          <SpinePopover
+            kind="vacancy"
+            vacancy={popoverVac}
+            position={positionMap.get(popoverVac.positionId) ?? null}
+            anchor={popover.anchor}
+            onClose={() => setPopover(null)}
+            onOpenFull={() => {
+              setPopover(null);
+              handleNavigateVacancy(popoverVac.id);
+            }}
+          />
+        )}
+        {popover && popoverCand && (
+          <SpinePopover
+            kind="candidate"
+            candidate={popoverCand}
+            aggregation={aggregationById[popoverCand.id] ?? null}
+            position={popoverCand.positionId ? positionMap.get(popoverCand.positionId) ?? null : null}
+            anchor={popover.anchor}
+            onClose={() => setPopover(null)}
+            onOpenFull={() => {
+              setPopover(null);
+              handleNavigateCandidate(popoverCand.id);
+            }}
+          />
         )}
       </div>
     </>

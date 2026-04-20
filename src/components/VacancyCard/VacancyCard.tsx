@@ -1,8 +1,8 @@
 import type { Vacancy } from '@/entities';
 import { GradeBadge } from '@/components/ui';
 import { MatchBadge } from '@/components/MatchBadge';
-import { VACANCY_STATUS_LABELS, CURRENCY_SYMBOLS, CARD_MAX_TOOLS_SHOWN } from '@/config';
-import { getToolById } from '@/utils';
+import { DomainToolStack } from '@/components/Spine';
+import { VACANCY_STATUS_LABELS, CURRENCY_SYMBOLS } from '@/config';
 import styles from './VacancyCard.module.css';
 
 interface VacancyCardProps {
@@ -12,9 +12,7 @@ interface VacancyCardProps {
 }
 
 export function VacancyCard({ vacancy, matchScore, onClick }: VacancyCardProps) {
-  const tools = vacancy.minRequirements.map((r) => getToolById(r.toolId)).filter(Boolean);
-  const visibleTools = tools.slice(0, CARD_MAX_TOOLS_SHOWN);
-  const extraCount = tools.length - visibleTools.length;
+  const toolIds = vacancy.minRequirements.map((r) => r.toolId);
   const symbol = CURRENCY_SYMBOLS[vacancy.currency] ?? '₽';
 
   const salaryText =
@@ -56,28 +54,8 @@ export function VacancyCard({ vacancy, matchScore, onClick }: VacancyCardProps) 
         </span>
       </div>
 
-      <div className={styles.tools}>
-        {visibleTools.map(
-          (tool) =>
-            tool && (
-              tool.logoUrl ? (
-                <img
-                  key={tool.id}
-                  src={tool.logoUrl}
-                  alt={tool.name}
-                  title={tool.name}
-                  className={styles.toolIcon}
-                />
-              ) : (
-                <span key={tool.id} className={styles.toolMore} title={tool.name}>
-                  {tool.name.slice(0, 3)}
-                </span>
-              )
-            ),
-        )}
-        {extraCount > 0 && (
-          <span className={styles.toolMore}>+{extraCount}</span>
-        )}
+      <div className={styles.stack}>
+        <DomainToolStack toolIds={toolIds} max={8} />
       </div>
 
       <div className={styles.footer}>
