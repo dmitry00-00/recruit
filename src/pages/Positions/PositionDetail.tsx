@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePositionStore, useVacancyStore } from '@/stores';
-import { Tabs, GradeBadge, Button } from '@/components/ui';
+import { Tabs, Button } from '@/components/ui';
 import { RoadMap } from '@/components/RoadMap';
 import { SalaryChart } from '@/components/SalaryChart';
 import { TreePicker } from '@/components/TreePicker';
@@ -139,10 +139,6 @@ export function PositionDetail() {
         <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
           {POSITION_CATEGORY_LABELS[position.category]}
         </span>
-      </div>
-
-      <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-        {position.grades.map((g) => <GradeBadge key={g} grade={g} size="sm" />)}
       </div>
 
       <Tabs tabs={[
