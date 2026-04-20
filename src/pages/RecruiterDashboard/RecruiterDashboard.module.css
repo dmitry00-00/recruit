@@ -62,7 +62,60 @@
 .matchesList {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
+}
+
+.matchPair {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+}
+
+.matchPair:hover {
+  background: var(--bg-secondary);
+}
+
+.matchPairRejected {
+  opacity: 0.55;
+}
+
+.matchSpines {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rejectBtn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rejectBtn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.rejectBtnDone {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+  cursor: default;
 }
 
 .matchRow {
@@ -125,7 +178,9 @@
 
 .matchActions {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   flex-shrink: 0;
 }
@@ -464,9 +519,14 @@
     grid-template-columns: 1fr;
   }
 
-  .matchRow {
-    flex-wrap: wrap;
-    gap: 6px;
+  .matchPair {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .matchActions {
+    flex-direction: row;
+    justify-content: flex-end;
   }
 
   .addTaskRow {

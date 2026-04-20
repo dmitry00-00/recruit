@@ -283,6 +283,11 @@ export interface FilterState {
   salaryMin?: number;
   salaryMax?: number;
   workFormatFilter: WorkFormat[];
+  // ── Non-requirement filter bar ──
+  companyFilter: string;
+  positionIdFilter: string | null;
+  cityFilter: string;
+  statusFilter: VacancyStatus | null;
 }
 
 // ── RoadMap ───────────────────────────────────────────────────

@@ -9,6 +9,7 @@ import type {
   RequirementLevel,
   Grade,
   WorkFormat,
+  VacancyStatus,
 } from '@/entities';
 
 interface FilterActions {
@@ -26,6 +27,11 @@ interface FilterActions {
   setGradeFilter: (grades: Grade[]) => void;
   setSalaryRange: (min?: number, max?: number) => void;
   setWorkFormatFilter: (formats: WorkFormat[]) => void;
+  setCompanyFilter: (v: string) => void;
+  setPositionIdFilter: (v: string | null) => void;
+  setCityFilter: (v: string) => void;
+  setStatusFilter: (v: VacancyStatus | null) => void;
+  clearNonRequirementFilters: () => void;
   resetFilters: () => void;
 }
 
@@ -45,6 +51,10 @@ const initialState: FilterState = {
   salaryMin: undefined,
   salaryMax: undefined,
   workFormatFilter: [],
+  companyFilter: '',
+  positionIdFilter: null,
+  cityFilter: '',
+  statusFilter: null,
 };
 
 export const useFilterStore = create<FilterState & FilterActions>()(
@@ -65,6 +75,20 @@ export const useFilterStore = create<FilterState & FilterActions>()(
       setGradeFilter:         (grades) => set({ gradeFilter: grades }),
       setSalaryRange:         (min, max) => set({ salaryMin: min, salaryMax: max }),
       setWorkFormatFilter:    (formats) => set({ workFormatFilter: formats }),
+      setCompanyFilter:       (v) => set({ companyFilter: v }),
+      setPositionIdFilter:    (v) => set({ positionIdFilter: v }),
+      setCityFilter:          (v) => set({ cityFilter: v }),
+      setStatusFilter:        (v) => set({ statusFilter: v }),
+      clearNonRequirementFilters: () => set({
+        companyFilter: '',
+        positionIdFilter: null,
+        cityFilter: '',
+        statusFilter: null,
+        gradeFilter: [],
+        salaryMin: undefined,
+        salaryMax: undefined,
+        workFormatFilter: [],
+      }),
       resetFilters:           ()  => set(initialState),
     }),
     { name: 'recruiting-filters' }

@@ -1,0 +1,376 @@
+/* ── Tablet 3-column shell ─────────────────────────────── */
+.tablet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  min-height: 240px;
+}
+
+.col1 {
+  flex-shrink: 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.col1 > * {
+  /* Spine inside deck */
+  width: 100%;
+}
+
+.col2 {
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.18s ease;
+  background: var(--card-bg);
+  border: 1px solid var(--border-secondary);
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  align-self: stretch;
+}
+
+.col2.open {
+  width: 280px;
+}
+
+.col2.merged {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.col3 {
+  flex: 1;
+  min-width: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-secondary);
+  border-left: none;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  align-self: stretch;
+  display: none;
+}
+
+.col3.open {
+  display: block;
+}
+
+/* ── Common layout inside col2 / col3 ─────────────────── */
+.sec {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border-tertiary);
+}
+
+.sec:first-child {
+  border-top: none;
+}
+
+.secTitle {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.fsHeader {
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.fsHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.fsName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fsMeta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.avatarVac {
+  background: var(--amber-bg);
+  color: var(--amber-dark);
+}
+
+.avatarCand {
+  background: var(--cand-dim);
+  color: #0C447C;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Stats row ───────────────────────────────────────── */
+.statRow {
+  display: flex;
+  gap: 4px;
+  padding: 10px 12px 6px;
+}
+
+.stat {
+  flex: 1;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  padding: 6px 4px;
+  text-align: center;
+  min-width: 0;
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
+}
+
+/* ── Key-value grid ──────────────────────────────────── */
+.demoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+}
+
+.demoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.demoItemWide {
+  grid-column: 1 / -1;
+}
+
+.demoLabel {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.demoValue {
+  font-size: 12px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Stack of sub-spines ─────────────────────────────── */
+.subDeck {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── Action row & back row ───────────────────────────── */
+.actionRow {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-tertiary);
+}
+
+.linkBtn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.linkBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.linkBtnPrimary {
+  color: var(--amber);
+  border-color: var(--amber-border);
+}
+
+/* ── Empty state ─────────────────────────────────────── */
+.tabletEmpty {
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  padding: 20px;
+}
+
+/* ── Exp sub-spine ───────────────────────────────────── */
+.expSpine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  height: 40px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  cursor: pointer;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.expSpine:hover {
+  background: var(--bg-secondary);
+}
+
+.expSpineActive {
+  border-right-color: transparent;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  cursor: default;
+}
+
+.expLogo {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+}
+
+.expLogoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.expTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expPeriod {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.textLine {
+  font-size: 11px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.achList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.achItem {
+  position: relative;
+  padding-left: 10px;
+  font-size: 11px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.achItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+/* Body columns become scrollable if content overflows */
+.col2Body,
+.col3Body {
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .tablet {
+    flex-direction: column;
+  }
+  .col1 {
+    width: 100%;
+  }
+  .col2,
+  .col2.open {
+    width: 100%;
+    border-left: 1px solid var(--border-secondary);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+  .col3 {
+    border-left: 1px solid var(--border-secondary);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+  .col2.merged {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
