@@ -4,6 +4,84 @@
 
 ---
 
+## ⚠️ ГЛАВНЫЙ ПРИНЦИП: MVP-first
+
+**Это самое важное. Читай внимательно и применяй ВО ВСЁМ.**
+
+### Как ты должен мыслить
+
+```
+Ты НЕ должен реализовывать всё сразу.
+
+Твоя задача — делать минимально достаточную реализацию (MVP), которая:
+- работает end-to-end
+- покрывает основной пользовательский сценарий
+- может быть расширена позже без переписывания
+
+Всегда выбирай:
+- простое решение > идеальное решение
+- синхронное > асинхронное (если нет нагрузки)
+- один источник правды > несколько уровней кэша
+- встроенные инструменты фреймворка > дополнительные зависимости
+```
+
+### 🚫 Анти-паттерны — жёстко запрещены на ранних этапах
+
+**НЕ ДЕЛАЙ, пока не попросят явно:**
+
+- Celery / RQ / сложные очереди задач (используй `BackgroundTasks` FastAPI)
+- PostgreSQL materialized views
+- pgvector / embeddings / ML-матчинг
+- Batch-алгоритмы с NumPy (чистый Python справится)
+- msgspec / ручную сериализацию (Pydantic достаточно)
+- Многоуровневое кэширование с умной инвалидацией (TTL + один слой — достаточно)
+- PostgreSQL Row-Level Security (фильтрация по `workspace_id` в WHERE — достаточно)
+- LISTEN/NOTIFY + SSE (refetch + invalidateQueries — достаточно)
+- Triggers на инвалидацию кэша (инвалидируй в коде сервиса)
+- PgBouncer, партиционирование, read replicas
+- Прекомпилированные регулярки, JIT, C-расширения
+
+**Если хочешь что-то из этого списка — опиши в "Future improvements" и НЕ реализуй.**
+
+### Принцип итеративности
+
+```
+Каждая фича реализуется в 3 этапа:
+
+1. Простая версия  — работает, но не оптимальна
+2. Улучшение UX   — оптимистичные апдейты, loading states, кэш
+3. Масштабирование — real-time, precompute, ML
+
+Сначала — ВСЕГДА этап 1. К этапу 2 переходишь только когда этап 1 готов
+и начинает ощущаться медленным на реальных данных.
+```
+
+### Правило выбора
+
+```
+Если есть выбор между:
+- сложной архитектурой
+- простой реализацией
+
+ВСЕГДА выбирай простую реализацию,
+если она не ломает будущую масштабируемость.
+```
+
+### Примеры решений в духе MVP-first
+
+| Сложный подход (НЕ делаем) | MVP-подход (делаем) |
+|---|---|
+| Celery для пересчёта матчинга | Sync-запрос на клик "Пересчитать" или background task |
+| Материализованная вьюха для RoadMap | Обычный SQL с агрегацией по запросу |
+| RLS + security context | `WHERE workspace_id = current_user.workspace_id` в каждом репозитории |
+| SSE + EventSource для pipeline | Refetch каждые 30 сек или manual refresh |
+| NumPy матрица для bulk-матчинга | Цикл по кандидатам, один SQL на каждого |
+| Redis + lock + cache stampede | In-memory `@lru_cache` или простой Redis TTL |
+| Optimistic updates с rollback | Loading spinner, после mutation — `invalidateQueries` |
+| `orjson` + кастомный serializer | Дефолтный FastAPI (переходим на orjson когда > 100 RPS) |
+
+---
+
 ## 0. Как использовать этот документ
 
 ### Для AI-агента (Claude/GPT/Copilot)
@@ -63,22 +141,32 @@
 - **sonner** (toasts)
 - **ky** (HTTP клиент)
 
-### Backend
+### Backend (MVP)
 - **Python 3.12**
-- **FastAPI** + **uvicorn**
+- **FastAPI** + **uvicorn** (`BackgroundTasks` для фоновых задач)
 - **SQLAlchemy 2.0 async** + **asyncpg**
 - **Alembic**
 - **Pydantic v2** + **pydantic-settings**
-- **Celery** + **Redis-broker**
 - **argon2-cffi**, **PyJWT**
-- **structlog** + **orjson**
+- **structlog** (дефолтный JSON-logger FastAPI)
 - **pytest-asyncio** + **httpx** + **factory_boy**
 - **uv** (package manager)
 
-### Database
-- **PostgreSQL 16** + расширения: `pgcrypto`, `pg_trgm`, `btree_gin`, `unaccent`, `vector`
-- **Redis 7** (cache, pub/sub, celery broker)
-- **PgBouncer** (connection pooling)
+**Добавляется позже (по мере роста нагрузки):**
+- Celery + Redis-broker — когда фоновые задачи становятся длиннее 30 сек
+- orjson — когда JSON-сериализация становится узким местом
+- PgBouncer — когда > 100 одновременных соединений
+- pgvector — для ML-матчинга (phase 4)
+
+### Database (MVP)
+- **PostgreSQL 16** + расширения: `pgcrypto`, `pg_trgm` (для fuzzy-поиска имён)
+- **Redis 7** — только для tool_tree кэша и опционально match-результатов
+
+**Добавляется позже:**
+- `btree_gin`, `unaccent`, `vector` — по мере необходимости конкретных фич
+- Row-Level Security — когда появится >1 workspace с реальными данными
+- Materialized views — когда аналитические запросы станут > 1 сек
+- Партиционирование `audit_events` — через год эксплуатации
 
 ### Infra
 - **Docker** + **Docker Compose** (dev)
@@ -251,20 +339,16 @@ recruit/                            # монорепо
 
 ---
 
-## 7. Порядок разработки (TL;DR)
+## 7. Порядок разработки (TL;DR, MVP-first)
 
-1. **Phase 0 (2 нед).** Скелет монорепо, docker-compose, CI. → `docs/ROADMAP.md#phase-0`
-2. **Phase 1 (3 нед).** Backend core: auth, модели, базовый CRUD. → `docs/PROMPT_BACKEND.md`
-3. **Phase 2 (3 нед).** Frontend миграция с Dexie на API. → `docs/PROMPT_FRONTEND.md`
-4. **Phase 3 (4 нед).** Матчинг на бэке, pipeline SSE, imports.
-5. **Phase 4 (3 нед).** FTS, фильтры, аналитика.
-6. **Phase 5 (3 нед).** Мультитенантность, RLS, audit.
-7. **Phase 6 (опц. 4 нед).** ML: embeddings, pgvector, гибридный матчинг.
-8. **Phase 7 (4 нед).** Интеграции: HH, Telegram, Google Calendar.
-9. **Phase 8 (2 нед).** Production-readiness: observability, security audit, docs.
+1. **Фаза 1 (1–2 нед).** Рабочий MVP end-to-end: монорепо, auth, CRUD, простой матчинг, pipeline без realtime, миграция фронта с Dexie. → `docs/ROADMAP.md#phase-1`
+2. **Фаза 2 (2–3 нед).** Нормальный UX: optimistic updates для Kanban, skeleton screens, поиск/фильтры, прочие доменные фичи. → `docs/ROADMAP.md#phase-2`
+3. **Фаза 3 (3–4 нед).** Real-time и масштабирование: SSE, precompute match, RLS, базовая observability.
+4. **Фаза 4 (4+ нед, опционально).** Умная система: ML-матчинг с pgvector, Celery, MV, интеграции, security audit.
 
-**MVP (для первых клиентов):** конец Phase 3 — 12 недель.
-**Commercial v1.0:** конец Phase 5 — 18 недель.
+**MVP в продакшене:** конец фазы 1 — **2 недели.**
+**Commercial-ready:** конец фазы 2 — 5 недель.
+**Enterprise-ready:** конец фазы 3 — 9 недель.
 
 ---
 
@@ -344,16 +428,27 @@ recruit/                            # монорепо
 
 ## 11. Anti-patterns (чего не делать)
 
+### Стратегические
 - ❌ **Next.js "потому что модно".** SPA подходит лучше — см. OPTIMIZATION.md.
 - ❌ **GraphQL ради GraphQL.** REST + OpenAPI + tanstack-query покрывают всё.
 - ❌ **Микросервисы на старте.** Монолит → модульный монолит → извлечение по необходимости.
 - ❌ **MongoDB / Firebase.** Связные данные, сложные запросы — только PostgreSQL.
 - ❌ **Django вместо FastAPI.** Нужен async, нужна OpenAPI-first разработка.
 - ❌ **Server-side rendering.** SEO не нужен, first-paint не критичен для внутреннего инструмента.
+- ❌ **Полная переделка прототипа.** Сохраняем UX, переезжаем на API.
+
+### Тактические (MVP-first)
+- ❌ **Celery на Phase 1.** BackgroundTasks FastAPI достаточно до масштаба > 100 RPS.
+- ❌ **RLS на старте.** `WHERE workspace_id = ?` в репозиториях — надёжнее для MVP.
+- ❌ **Materialized views для RoadMap.** SQL-агрегация on-demand быстрее на малых данных.
+- ❌ **NumPy batch-матчинг.** Чистый Python до десятков тысяч кандидатов — ok.
+- ❌ **SSE + LISTEN/NOTIFY сразу.** Polling через `refetchInterval` в react-query — достаточно.
+- ❌ **3-уровневый кэш.** Один слой Redis с TTL — достаточно.
+- ❌ **Optimistic updates везде.** Начни с `invalidateQueries` на mutation.
+- ❌ **pgvector на MVP.** Table FTS + фильтры по инструментам закрывают 90% сценариев.
 - ❌ **ORM magic ("auto-CRUD" из моделей).** Явные слои repository/service.
 - ❌ **Сериализация ORM-объектов напрямую.** Только через Pydantic схемы.
-- ❌ **Кэш без инвалидации.** Правило Фила Карлтона помним.
-- ❌ **Полная переделка прототипа.** Сохраняем UX, переезжаем на API.
+- ❌ **Кэш без инвалидации.** Правило Фила Карлтона помним. TTL = инвалидация MVP-уровня.
 
 ---
 

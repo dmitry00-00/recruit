@@ -2,432 +2,286 @@
 
 **Базовый стек:** Vite + React (SPA) · FastAPI (Python 3.12) · PostgreSQL 16 · Redis 7
 
-**Горизонт:** ~6 месяцев от прототипа до production-ready v1.0 с 50+ активными пользователями.
+**Подход:** MVP-first. Делаем работающий продукт простейшим способом, потом улучшаем по мере реальной нагрузки и обратной связи от пользователей.
 
 ---
 
-## Принципы
+## ⚠️ Принцип итеративности
 
-1. **Прототип → продукт, а не переписывание.** Сохраняем всю доменную модель (`src/entities/index.ts`), утилиты матчинга, TreePicker, zustand-сторы для UI-состояния. Заменяем только слой данных (Dexie → HTTP API).
-2. **Вертикальные срезы.** Каждая фаза даёт работающую end-to-end функциональность, а не отдельный горизонтальный слой.
-3. **Параллелизация fullstack.** Pydantic-схемы → генерация TypeScript-типов через `openapi-typescript`. Единый источник истины — бэкенд.
-4. **Backwards compatibility.** До phase 2 фронт умеет работать И с Dexie, И с API (через флаг) — миграция постепенная.
+Каждая фича реализуется **в 3 этапа**:
 
----
+1. **Простая версия** — работает, но не оптимальна
+2. **Улучшение UX** — оптимистичные апдейты, loading states, кэш
+3. **Масштабирование** — real-time, precompute, ML
 
-## Phase 0 · Инфраструктура (2 недели)
-
-### Цель
-Рабочее dev-окружение: `docker compose up` запускает весь стек.
-
-### Задачи
-
-**Реструктуризация репозитория → монорепо**
-```
-recruit/
-├── apps/
-│   ├── frontend/        ← текущий src/
-│   └── backend/         ← новый FastAPI
-├── packages/
-│   └── shared-types/    ← генерируемые из OpenAPI TS-типы
-├── infra/
-│   ├── docker/
-│   │   ├── Dockerfile.frontend
-│   │   ├── Dockerfile.backend
-│   │   └── docker-compose.yml
-│   ├── postgres/
-│   │   └── init.sql
-│   └── nginx/
-│       └── nginx.conf
-├── docs/
-├── domens/              ← оставляем как есть, это бизнес-реестр
-└── .github/workflows/
-    ├── ci.yml
-    └── deploy.yml
-```
-
-**Docker Compose для dev**
-- `postgres:16-alpine` с volume
-- `redis:7-alpine`
-- `backend` (hot reload через uvicorn --reload)
-- `frontend` (vite dev server)
-- `pgadmin` (опционально, для отладки)
-- `mailhog` для локального email
-
-**CI/CD**
-- GitHub Actions: lint → typecheck → test → build
-- Pre-commit hooks: `ruff` (backend), `eslint` (frontend), `prettier`
-- Conventional Commits + `commitlint`
-
-**Инструментарий**
-- `uv` вместо `pip` для бэкенда (в 10–100× быстрее)
-- `pnpm` вместо `npm` для фронта (монорепо + workspace)
-- `direnv` для env-файлов
-
-### Критерии готовности
-- [ ] `docker compose up` поднимает всё за < 30 сек
-- [ ] CI зелёный на пустом PR
-- [ ] `uv run pytest` и `pnpm test` работают
+**К этапу 2 переходим только когда этап 1 готов и ощущается медленным.**
+**К этапу 3 — только по реальной потребности.**
 
 ---
 
-## Phase 1 · Backend core (3 недели)
+## 🚀 Фаза 1 · Рабочий продукт (1–2 недели)
 
-### Цель
-Backend умеет CRUD основных сущностей + авторизация.
+**Цель:** end-to-end MVP, который можно показать первым пользователям.
 
-### Задачи
+### Что входит
 
-**Схема БД (Alembic + SQLAlchemy 2.0 async)**
+**Инфраструктура (2–3 дня)**
+- Монорепо: `apps/frontend`, `apps/backend`
+- `docker-compose.yml`: postgres + redis + backend + frontend
+- Базовый CI (lint + typecheck + test)
 
-Переносим `src/entities/index.ts` → SQLAlchemy модели. Ключевые таблицы:
-- `users`, `roles`, `refresh_tokens`
-- `tool_categories`, `tool_subcategories`, `tools` (иерархия)
-- `positions`, `position_required_categories`
-- `vacancies`, `vacancy_requirements` (min/max уровни в одной таблице с enum)
-- `candidates`, `work_entries`, `work_entry_tools`
-- `pipelines`, `pipeline_stages`, `pipeline_cards`
-- `response_events`, `recruitment_tasks`
+**Backend**
+- FastAPI + SQLAlchemy 2.0 async + Alembic
+- Auth: register + login + me (JWT, без refresh rotation)
+- CRUD:
+  - positions
+  - vacancies + vacancy_requirements (min/max)
+  - candidates + work_entries + work_entry_tools
+- Tool tree:
+  - seed из JSON при старте
+  - GET всё дерево (кэш в Redis с TTL, ручная инвалидация)
+  - CRUD для редактирования
+- Matching **on-demand**: `GET /match/vacancy/{id}` → чистый Python, без NumPy
+- Pipeline: простой CRUD карточек (без realtime)
 
-Подробнее — в `docs/SCHEMA.md`.
+**Frontend**
+- Подключение `@tanstack/react-query`
+- Генерация TS-типов из OpenAPI
+- `ky` как HTTP-клиент, auth через localStorage + headers
+- Миграция всех страниц с Dexie на useQuery
+- Mutations → `invalidateQueries` (**БЕЗ optimistic updates**)
+- Удаление `src/db/`, Dexie
 
-**Структура FastAPI**
-```
-backend/
-├── app/
-│   ├── main.py
-│   ├── core/
-│   │   ├── config.py        ← pydantic-settings
-│   │   ├── security.py       ← JWT, bcrypt
-│   │   ├── db.py             ← async engine, session
-│   │   └── deps.py           ← DI (get_current_user и т.п.)
-│   ├── models/              ← SQLAlchemy
-│   ├── schemas/             ← Pydantic (request/response)
-│   ├── repositories/        ← data access layer
-│   ├── services/            ← бизнес-логика
-│   ├── api/
-│   │   └── v1/
-│   │       ├── auth.py
-│   │       ├── positions.py
-│   │       ├── vacancies.py
-│   │       ├── candidates.py
-│   │       ├── tools.py
-│   │       ├── pipelines.py
-│   │       └── match.py
-│   └── workers/             ← Celery задачи
-├── alembic/
-├── tests/
-└── pyproject.toml
-```
+### 🚫 Чего НЕ делаем на этой фазе
 
-**Аутентификация**
-- JWT access (15 мин) + refresh (30 дней, rotation)
-- Хранение refresh в HttpOnly cookie
-- Argon2 для паролей (быстрее и безопаснее bcrypt)
-- Роли: `admin`, `recruiter`, `hiring_manager`, `viewer`, `candidate`
-- RBAC через `Depends(require_role("recruiter"))`
+- ❌ Celery / RQ — используем FastAPI `BackgroundTasks`
+- ❌ SSE / WebSockets — refetch при навигации + опциональный polling
+- ❌ Row-Level Security — фильтрация через `WHERE workspace_id = ?`
+- ❌ Optimistic updates — только `invalidateQueries`
+- ❌ Materialized views — обычные SQL-запросы
+- ❌ pgvector / embeddings / ML
+- ❌ NumPy batch-матчинг — чистый Python
+- ❌ Structured logging (structlog) — обычный `logging` + JSON formatter
+- ❌ Sentry / OpenTelemetry / Prometheus
+- ❌ Refresh token rotation — обычный long-lived JWT пока
+- ❌ Email verification — на MVP не нужна
+- ❌ Advanced RBAC — только базовые роли (`admin`, `user`)
+- ❌ Виртуализация списков — пагинация достаточна
+- ❌ Service Worker, bundle optimization, prefetch на hover
 
-**Генерация TS-типов**
-Скрипт `generate-types.sh`:
-```bash
-curl http://localhost:8000/api/openapi.json \
-  | pnpm openapi-typescript - -o packages/shared-types/api.ts
-```
-Запускается в CI и pre-commit.
+### Критерий выхода
 
-### Критерии готовности
-- [ ] Все эндпоинты CRUD покрыты интеграционными тестами (pytest-asyncio)
-- [ ] Swagger UI доступен на `/api/docs`
-- [ ] Миграции накатываются с нуля без ошибок
-- [ ] TS-типы автоматически генерируются
+- Пользователь регистрируется, создаёт вакансию, добавляет кандидата, видит match-score, двигает кандидата по pipeline
+- Тесты покрывают happy-path
+- `docker compose up` поднимает всё
 
 ---
 
-## Phase 2 · Миграция фронтенда на API (3 недели)
+## ⚡ Фаза 2 · Нормальный UX (2–3 недели)
 
-### Цель
-Фронт полностью работает через HTTP API. Dexie удалён.
+**Цель:** продукт приятно использовать, не раздражает.
 
-### Задачи
+### Что добавляем
 
-**Слой данных: tanstack-query**
-- Устанавливаем `@tanstack/react-query` v5
-- Каждый zustand-стор, который держал entity-данные, заменяется на query-ключи:
-  - `useVacancyStore.vacancies` → `useQuery(['vacancies'], api.vacancies.list)`
-  - `useCandidateStore.add()` → `useMutation(api.candidates.create, { onSuccess: invalidate(['candidates']) })`
-- **zustand остаётся** для: auth, UI-state (тема, активные модалки, scroll position), фильтров, toolTreeStore
+**Backend**
+- Search и фильтры (WHERE, `pg_trgm` для fuzzy-имён)
+- Response events, tasks, notifications (CRUD + список)
+- Refresh token rotation + logout
+- Email verification (опционально)
+- Базовая аналитика: funnel, salary distribution — простые SQL
 
-**Что убрать / заменить**
-- `src/db/` → удалить целиком
-- `src/services/` → HTTP клиент (`apiClient.ts` на fetch + interceptors)
-- `seedIfEmpty` → на бэкенде через `alembic seed` или Docker `init.sql`
+**Frontend**
+- Optimistic updates для Kanban drag-and-drop
+- Skeleton screens вместо spinner'ов
+- Prefetch детальных страниц на hover
+- Debounce 300 мс на поиске
+- Code splitting по роутам (lazy imports)
+- Toast-уведомления через sonner
+- React.memo на горячих компонентах (TreePicker)
 
-**Оптимистичные обновления**
-- Create vacancy → сразу добавить в список с `_optimistic: true`, откатить при ошибке
-- Drag-and-drop в Kanban → оптимистично переместить, rollback + toast при 4xx
+**Cache (MVP-версия)**
+- Redis с TTL для tool_tree
+- Опционально: Redis для match-результатов (TTL 1 час, без умной инвалидации)
 
-**Error handling**
-- Global Error Boundary для React rendering errors
-- Query error handling через `onError` + toast
-- Retry logic только для 5xx / network (не для 4xx)
+### 🚫 Чего НЕ делаем
 
-**Loading UX**
-- Skeleton screens (не spinner'ы) для карточек и списков
-- Suspense boundaries по роутам
+- ❌ SSE / LISTEN/NOTIFY
+- ❌ Precompute матчинга в фоне
+- ❌ Cache invalidation по events
+- ❌ Celery
+- ❌ Виртуализация (если списки < 100 элементов)
 
-### Критерии готовности
-- [ ] IndexedDB удалён из bundle
-- [ ] Все страницы работают с пустой БД корректно
-- [ ] E2E тест (Playwright): регистрация → создание должности → вакансия → кандидат → матч
+### Критерий выхода
 
----
-
-## Phase 3 · Доменные фичи и матчинг (4 недели)
-
-### Цель
-Перенос и усиление бизнес-логики на бэкенд.
-
-### Задачи
-
-**Движок матчинга (Python)**
-- Портируем `src/utils/matchScore.ts` → `app/services/matching.py`
-- Используем NumPy для векторных операций (кандидат × вакансия)
-- Кэш результатов в Redis: `match:{vacancy_id}:{candidate_id}` с TTL 1 час
-- Инвалидация при изменении vacancy или work_entry кандидата
-- Bulk matching: «все кандидаты для этой вакансии» — один SQL-запрос + numpy
-
-**RoadMap вычисления**
-- Бэкграунд-задача через Celery: пересчёт раз в сутки для каждой позиции
-- Материализованное представление `position_roadmap_mv`
-- `REFRESH MATERIALIZED VIEW CONCURRENTLY` по расписанию
-
-**Pipeline / Kanban**
-- PostgreSQL `LISTEN/NOTIFY` для realtime
-- SSE endpoint `/api/v1/pipelines/{id}/events`
-- На фронте — `EventSource` с reconnect
-
-**Response Timeline + Tasks**
-- Перенос из prototype
-- Добавляем дедлайны, напоминания (Celery-beat)
-
-**Import/Export**
-- CSV импорт кандидатов из HH.ru, LinkedIn (ручной экспорт)
-- JSON экспорт для бэкапов
-- Миграция seedVacancies/seedCandidates в seed-скрипт бэкенда
-
-### Критерии готовности
-- [ ] Pipeline обновляется в реальном времени между двумя вкладками
-- [ ] Матчинг 1000 кандидатов × 1 вакансия < 500 мс
-- [ ] RoadMap не блокирует UI
+- Клик "создать/удалить" ощущается мгновенным (optimistic)
+- Типовые операции < 300 мс
+- Lighthouse Performance > 85
 
 ---
 
-## Phase 4 · Поиск и фильтрация (3 недели)
+## 🔄 Фаза 3 · Real-time и скорость (3–4 недели)
 
-### Цель
-Быстрый продвинутый поиск по вакансиям/кандидатам.
+**Цель:** несколько рекрутеров одновременно работают с данными без конфликтов.
 
-### Задачи
+### Что добавляем
 
-**Full-text search**
-- `tsvector` колонки на `candidates.search_vector`, `vacancies.search_vector`
-- GIN индексы
-- `pg_trgm` для fuzzy (поиск по имени)
-- Веса: имя > должность > навыки > заметки
+**Realtime**
+- SSE для pipeline: `LISTEN/NOTIFY` в PostgreSQL + SSE-endpoint
+- SSE для уведомлений
+- Автоматический reconnect через `@microsoft/fetch-event-source`
 
-**Структурированные фильтры**
-- Query-builder: `{ tools: ['t_react', 't_ts'], minYears: 3, grade: 'senior' }`
-- На бэке — SQL с `ALL(ARRAY[...])` для инструментов
-- Sorting по match_score, salary, дате
+**Precompute матчинга**
+- При обновлении vacancy/candidate → `BackgroundTask` пересчитывает match
+- Результаты в таблицу `match_scores`
+- Клиент читает из таблицы, не пересчитывает on-demand
 
-**Faceted search**
-- Счётчики по граням: «+23 по React», «+12 senior», «+8 в Москве»
-- Вычисляются одним CTE-запросом
+**Cache invalidation**
+- По событию изменения — инвалидация Redis в коде сервиса
+- Версионирование tool_tree через ETag
 
-**Сохранённые фильтры**
-- Таблица `saved_filters`: имя + JSON-условия + user_id
-- UI: закрепить фильтр в навигации
+**Multitenancy**
+- Row-Level Security в PostgreSQL (если workspace'ов > 10 и есть чувствительные данные)
+- Audit log
 
-### Критерии готовности
-- [ ] Поиск по 10k кандидатов < 200 мс
-- [ ] Фасетные счётчики обновляются без задержки
-
----
-
-## Phase 5 · Многопользовательский режим (3 недели)
-
-### Цель
-Команда рекрутеров работает в одном пространстве.
-
-### Задачи
-
-**Workspaces**
-- Таблица `workspaces` (компания/агентство)
-- Все сущности получают `workspace_id`
-- Row-level security в PostgreSQL: `CREATE POLICY ... USING (workspace_id = current_workspace())`
-
-**Приглашения**
-- Invite-ссылки с токеном
-- Email через SMTP (Mailhog → продакшн MAILGUN/SES)
-
-**Audit log**
-- Таблица `audit_events`: actor, action, entity, before/after JSON
-- Триггеры в PostgreSQL или middleware в FastAPI
-
-**Уведомления**
-- In-app (таблица `notifications` + SSE)
-- Email digest (Celery-beat daily)
-- Позже: Telegram-бот (Phase 7)
-
-**Комментарии и @упоминания**
-- Таблица `comments` с polymorphic (`entity_type`, `entity_id`)
-- Упоминания парсятся регулярным выражением, триггерят notification
-
-### Критерии готовности
-- [ ] Два пользователя одного workspace видят одних кандидатов
-- [ ] Пользователь из другого workspace не может прочитать чужие данные (e2e тест на RLS)
-- [ ] Audit log покрывает 100% мутаций
-
----
-
-## Phase 6 · ML-матчинг (4 недели) · *опционально*
-
-### Цель
-Заменить ручное правило-основанное совпадение на векторный поиск.
-
-### Задачи
-
-**Embeddings для описаний**
-- `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
-- Эмбеддим `vacancy.description` и `work_entry.responsibilities`
-- Храним в `pgvector` (расширение PostgreSQL)
-
-**Гибридное скоринг**
-- `score = 0.5 * tools_match + 0.3 * embedding_cosine + 0.2 * salary_fit`
-- Веса настраиваются в admin UI
-
-**Recommender**
-- «Похожие кандидаты» — ANN search по эмбеддингам
-- «Рекомендованные вакансии кандидату» — аналогично
-
-**Career path**
-- Анализ карьерных траекторий → типичные переходы
-- «Чтобы стать senior React — добавь TypeScript, NextJS, Jest»
-- Уже есть в прототипе (`computeCareerRecommendations.ts`), переносим и усиливаем
-
-### Критерии готовности
-- [ ] Матчинг по эмбеддингам < 100 мс на 10k кандидатов
-- [ ] A/B-тест: новый алгоритм vs старый на исторических данных
-
----
-
-## Phase 7 · Интеграции (4 недели)
-
-### Задачи
-
-**Источники кандидатов**
-- HH.ru API (требует регистрации партнёра) — синхронизация резюме
-- LinkedIn (парсинг публичных профилей — с осторожностью по ToS)
-- Telegram-бот: `/start` → кандидат создаёт мини-профиль через бота
-
-**Календарь**
-- Google Calendar / Outlook интеграция для scheduled events
-- OAuth2 для доступа к календарю рекрутера
-
-**Email**
-- IMAP sync для входящих откликов
-- Транзакционный SMTP (SES/Mailgun) для исходящих
-
-**Webhooks**
-- Исходящие: `vacancy.created`, `candidate.hired` — для внешних CRM
-- Входящие: приём данных из форм на сайтах компаний
-
-**Telegram-бот для рекрутеров**
-- Уведомления о новых откликах
-- Быстрое перемещение кандидата по пайплайну из чата
-- Создание задач голосовым сообщением (через Whisper)
-
-### Критерии готовности
-- [ ] HH.ru-кандидат появляется в системе через 1 мин после отклика
-- [ ] Telegram-бот работает в group chat команды
-
----
-
-## Phase 8 · Production-ready (2 недели)
-
-### Задачи
+**Виртуализация**
+- `@tanstack/react-virtual` для больших списков кандидатов
 
 **Observability**
-- Sentry для ошибок (backend + frontend)
-- OpenTelemetry → Grafana Tempo для трейсов
-- Prometheus + Grafana для метрик
-- Логирование: `structlog` → Loki
+- structlog с контекстом
+- Sentry на backend + frontend
+- Базовые метрики Prometheus
 
-**Performance**
-- Load testing через k6: 100 RPS, 1000 одновременных пользователей
-- Query performance: все запросы < 100 мс p95
-- Profiling узких мест (py-spy, React DevTools Profiler)
+### 🚫 Чего НЕ делаем
 
-**Security audit**
-- OWASP ZAP scan
-- Dependency audit: `pnpm audit`, `uv pip audit`
-- Penetration testing (внешний подрядчик)
-- Rate limiting: `slowapi` на критичных эндпоинтах
-- CSP headers, HSTS, X-Frame-Options
+- ❌ Celery (если задачи не превышают 30 сек — BackgroundTasks достаточно)
+- ❌ pgvector, embeddings, ML-матчинг
+- ❌ Materialized views (agg-запросы всё ещё < 1 сек)
+- ❌ Партиционирование таблиц
 
-**Backups**
-- `pg_dump` ежедневно, 30 дней хранения
-- WAL-shipping в S3 для point-in-time recovery
-- Тестовый restore раз в неделю
+### Критерий выхода
 
-**Documentation**
-- User guide (Notion/Docusaurus)
-- API reference (автогенерация из OpenAPI)
-- ADR (Architecture Decision Records) для крупных решений
-- Runbook для инцидентов
+- Pipeline синхронизируется между двумя вкладками без F5
+- Precompute матчинга — средний лаг < 5 сек после изменения
+- SLO: p95 < 300 мс на 100 одновременных пользователях
 
-**Deployment**
-- Kubernetes (managed: Yandex Cloud / Scaleway / Hetzner) или docker-compose + systemd
+---
+
+## 🧠 Фаза 4 · Умная система (4+ недели, опционально)
+
+**Цель:** интеллектуальные рекомендации и полная промышленная эксплуатация.
+
+### Что добавляем
+
+**ML-матчинг**
+- Embeddings через `sentence-transformers` (мультиязычная модель)
+- `pgvector` для хранения
+- Гибридный скор: `tools_match × 0.5 + embedding_cosine × 0.3 + salary_fit × 0.2`
+- Рекомендации: "похожие кандидаты", "рекомендуемые вакансии"
+
+**Heavy background**
+- Celery + Redis-broker (когда задачи стали длиннее 30 сек)
+- Celery-beat для регулярных: ежедневный дайджест, еженедельный refresh MV
+
+**Scaling**
+- Materialized views для RoadMap и тяжёлой аналитики
+- PgBouncer перед PostgreSQL
+- Read replicas для аналитики (если нужно)
+- Партиционирование `audit_events`, `response_events`
+
+**Advanced analytics**
+- Воронка подбора с cohort-анализом
+- Time-to-hire по позициям
+- Salary benchmarks
+- Grafana-дашборды для внутренней команды
+
+**Интеграции**
+- HH.ru API — импорт откликов
+- Telegram-бот для рекрутеров
+- Google Calendar / Outlook для scheduled events
+- Email sync (IMAP)
+- Webhooks
+
+**Production-readiness**
+- Security audit (OWASP ZAP, pen-test)
+- Load testing (k6: 100 RPS, 1000 concurrent)
+- Backup strategy (pg_dump + WAL + S3)
 - Blue-green deployment
-- Feature flags через LaunchDarkly / Unleash
-- Staging среда, идентичная prod
-
-### Критерии готовности
-- [ ] SLO: 99.5% uptime, p95 < 300 мс
-- [ ] Disaster recovery тестирование пройдено
-- [ ] Security audit отчёт без critical/high issues
+- Runbooks для инцидентов
+- User documentation
 
 ---
 
 ## Timeline summary
 
-| Фаза | Длительность | Накоплено |
-|------|-------------|-----------|
-| 0. Инфраструктура | 2 нед | 2 нед |
-| 1. Backend core | 3 нед | 5 нед |
-| 2. Миграция фронта | 3 нед | 8 нед |
-| 3. Доменные фичи | 4 нед | 12 нед |
-| 4. Поиск | 3 нед | 15 нед |
-| 5. Многопользовательский | 3 нед | 18 нед |
-| 6. ML-матчинг *(опц.)* | 4 нед | 22 нед |
-| 7. Интеграции | 4 нед | 26 нед |
-| 8. Production | 2 нед | 28 нед |
+| Фаза | Длительность | Накоплено | Когда запускать |
+|------|-------------|-----------|----------------|
+| 1. Рабочий продукт | 1–2 нед | 2 нед | **Старт** |
+| 2. Нормальный UX | 2–3 нед | 5 нед | После фидбека от первых пользователей |
+| 3. Real-time + scale | 3–4 нед | 9 нед | Когда > 5 активных команд |
+| 4. Умная система | 4+ нед | 13+ нед | По реальному спросу |
 
-**MVP для первых пользователей** — конец phase 3 (12 недель).
-**Commercial v1.0** — конец phase 5 (18 недель).
-**Full platform** — 28 недель.
+**MVP в продакшене:** **конец фазы 1 — 2 недели.**
+**Commercial-ready:** конец фазы 2 — 5 недель.
+**Enterprise-ready:** конец фазы 3 — 9 недель.
+
+> Это НЕ календарный план всей разработки.
+> Это *условия*, при которых стоит начинать следующую фазу.
+> Если после фазы 1 пользователей хватает и нет жалоб — фазу 2 можно растянуть.
 
 ---
 
-## Команда (рекомендация)
+## Команда (рекомендация для MVP)
 
-Минимально жизнеспособная:
-- 1 tech-lead / fullstack senior (архитектура, ревью)
-- 1 backend (Python)
-- 1 frontend (React/TS)
-- 0.5 DevOps (инфра, CI/CD)
-- 0.3 QA (ручное + e2e автоматизация)
-- 0.2 продакт-оунер
+Для фазы 1 хватит:
+- 1 fullstack-разработчик (senior)
+- либо 1 backend + 1 frontend
 
-На phase 6 (ML) — добавить ML-инженера на 1 месяц.
-На phase 7 — при необходимости +1 backend под интеграции.
+Для фаз 2–3:
+- +DevOps (0.3 FTE — на инфру и CI/CD)
+- +QA (0.3 FTE — ручное + e2e)
+
+Для фазы 4:
+- +ML-инженер на 1 месяц (phase 6)
+- +backend на интеграции (по мере добавления)
+
+---
+
+## Что брать из прототипа как есть
+
+Прототип уже содержит сложные и выверенные компоненты. **Они портируются без изменений**, меняется только слой данных:
+
+### Компоненты UI
+- `TreePicker` — 7 режимов, domain-grid, группы
+- `KanbanBoard` — drag-and-drop
+- `Spine`, `SpinePopover` — унифицированный показ сущностей
+- `Tablet` — полноэкранный view с tabs
+- `RoadMap`, `SalaryChart`, `CompareSheet`, `MatchBadge`
+
+### Алгоритмы (портируем на Python в фазе 1)
+- `matchScore.ts` → `app/services/matching.py` (**простой цикл, без NumPy**)
+- `aggregateCandidate.ts` → `app/services/candidate_aggregation.py`
+- `computeRoadmap.ts` → `app/services/roadmap.py` (**обычный SQL, без MV**)
+- `computeCareerRecommendations.ts`, `computeVacancyOptimization.ts` → переносим на бэк или оставляем как клиентскую логику до фазы 3
+
+### Данные
+- `toolTree.json` → seed-скрипт бэкенда
+- `defaultPositions.json` → seed для dev
+- `seedVacancies`, `seedCandidates` — только в dev-среде
+
+---
+
+## Anti-patterns (жёстко запрещены на старте)
+
+Если появляется мысль сделать что-то из списка — сначала спроси себя: "это нужно для MVP?"
+
+- ❌ Celery при старте
+- ❌ Materialized views
+- ❌ pgvector / ML-матчинг
+- ❌ Сложные batch-алгоритмы (NumPy и т.п.)
+- ❌ msgspec / ручная сериализация
+- ❌ Многоуровневые кэши
+- ❌ Row-Level Security с нуля
+- ❌ SSE на фазе 1
+- ❌ Optimistic updates везде
+
+Всё это — **future improvements**. Описываются в ADR, реализуются по факту.

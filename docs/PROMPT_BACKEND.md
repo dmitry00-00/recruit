@@ -4,6 +4,24 @@
 
 ---
 
+## ⚠️ Режим разработки: MVP-first
+
+Ты работаешь в режиме **MVP-first**. Это НЕ production-grade система для scale — это рабочий MVP, который:
+- запускается end-to-end
+- обслуживает основные пользовательские сценарии
+- может быть расширен позже БЕЗ переписывания
+
+**Приоритеты (строго в этом порядке):**
+1. Рабочий API
+2. Простота кода и читаемость
+3. Быстрая доставка фич
+
+**Оптимизации, асинхронные воркеры, сложные кэши — добавляются ТОЛЬКО после того, как базовая версия готова и есть реальная нагрузка, подтверждающая необходимость.**
+
+Правило выбора: если есть два пути — сложный и простой — всегда выбирай простой, если он не ломает будущую масштабируемость.
+
+---
+
 ## Промпт
 
 > Ты — senior Python backend-разработчик. Реализуй бэкенд для рекрутинговой платформы "Recruit" — B2B SaaS для подбора технических специалистов с движком матчинга кандидатов и вакансий по дереву инструментов с учётом опыта в годах.
@@ -12,18 +30,21 @@
 >
 > **Что уже есть.** Прототип на Vite+React с полной доменной моделью в IndexedDB (файл `src/entities/index.ts` описывает все типы). Твоя задача — перенести эту модель на PostgreSQL + FastAPI, сохранив и усилив функциональность.
 >
-> ### Технический стек
+> ### Технический стек (MVP)
 >
 > - **Python 3.12**, **FastAPI**, **SQLAlchemy 2.0** (async), **Pydantic v2**
-> - **PostgreSQL 16** с расширениями `pgcrypto`, `pg_trgm`, `btree_gin`, `unaccent`, `vector` (pgvector)
+> - **PostgreSQL 16** с расширениями `pgcrypto`, `pg_trgm`
 > - **Alembic** для миграций
-> - **Redis 7** для кэша, сессий, pub/sub
-> - **Celery** + Redis-broker для фоновых задач
+> - **Redis 7** только для `tool_tree` кэша (опционально для match)
 > - **uv** для управления зависимостями (не pip/poetry)
-> - **orjson** как JSON encoder
 > - **argon2-cffi** для паролей
-> - **structlog** для логирования
 > - **pytest-asyncio** для тестов
+> - **Фоновые задачи:** FastAPI `BackgroundTasks`, НЕ Celery
+> - **JSON encoder:** дефолтный FastAPI, НЕ orjson
+> - **Логирование:** дефолтный + `logging.config`, structlog — позже
+>
+> **Не добавлять в MVP:** Celery, pgvector, btree_gin, unaccent, msgspec, структурное логирование, OpenTelemetry.
+> Эти компоненты описаны в разделе "Future improvements" каждой фичи, но НЕ реализуются сейчас.
 >
 > ### Структура проекта
 >
@@ -73,7 +94,7 @@
 >    - `models/` — SQLAlchemy ORM, без логики
 > 2. **Dependency Injection** — только через `Annotated[Foo, Depends(...)]`
 > 3. **Async everywhere.** Никакого sync-IO. Blocking-операции — через `run_in_executor` или Celery.
-> 4. **Multitenant через RLS.** Каждая сущность workspace-scoped. Session-dependency устанавливает `app.current_workspace_id` в PostgreSQL.
+> 4. **Multitenant через WHERE workspace_id.** Каждая сущность workspace-scoped. Фильтрация делается явно в каждом репозитории: `WHERE workspace_id = :current_workspace_id`. Тесты проверяют изоляцию. **RLS НЕ используем в MVP** — добавим, когда появятся реальные workspace'ы с данными.
 > 5. **Explicit > implicit.** Pydantic-схемы для каждого endpoint отдельные: `VacancyCreate`, `VacancyUpdate`, `VacancyRead`, `VacancyReadDetail`.
 > 6. **Никаких глобалов.** Engine, redis, celery получаются через DI.
 > 7. **Error handling.** Кастомные исключения в `app/core/exceptions.py` → перехватываются в `main.py` → единообразные JSON-ответы `{ error: { code, message, details } }`.
@@ -148,34 +169,52 @@
 >
 > Все мутации возвращают полный обновлённый объект (для удобства optimistic updates на фронте).
 >
-> ### Матчинг (ядро бизнес-логики)
+> ### Матчинг (MVP-версия)
 >
-> Портируем `src/utils/matchScore.ts` в `app/services/matching.py`. Алгоритм:
+> Портируем `src/utils/matchScore.ts` в `app/services/matching.py`. Алгоритм простой:
 >
-> 1. Для пары (vacancy, candidate):
->    - Собрать инструменты вакансии (min + max) с required years
->    - Собрать инструменты кандидата (из work_entries) с суммированными годами по каждому tool_id
->    - Разбить на matched / gaps / extras
->    - score_min = %требований MIN, полностью закрытых с достаточным опытом
->    - score_max = score_min + бонус за совпадения MAX
-> 2. Для массового матчинга (все кандидаты на вакансию):
->    - Один SQL-запрос поднимает все work_entry_tools по кандидатам workspace'а
->    - NumPy матрица инструментов × кандидатов
->    - Векторное сравнение с требованиями вакансии
->    - Результаты пишутся в `match_scores` батчем
+> Для каждой пары (vacancy, candidate):
+> 1. Собрать инструменты вакансии (min + max) с required years — один SQL-запрос
+> 2. Собрать инструменты кандидата из work_entries, суммировать годы по tool_id — один SQL-запрос
+> 3. Разбить на matched / gaps / extras циклом в чистом Python
+> 4. score_min = % требований MIN, полностью закрытых с достаточным опытом
+> 5. score_max = score_min + бонус за совпадения MAX
 >
-> Инвалидация: триггер PostgreSQL на INSERT/UPDATE/DELETE в `vacancy_requirements`, `work_entry_tools` → `pg_notify('match_invalidate', ...)` → listener в отдельном воркере → Celery job пересчитывает затронутые пары.
+> **Реализация:**
+> - Чистый Python, без NumPy
+> - Два простых SQL-запроса (или один с JOIN) на пару
+> - Считается **on-demand** при запросе клиента (`GET /match/...`)
+> - Если список кандидатов большой (> 50) — обёртываем в FastAPI `BackgroundTasks` и возвращаем task_id, результаты пишем в таблицу `match_scores`
+> - Без батч-оптимизаций, без NumPy, без параллелизации
 >
-> **Кэш в Redis:** `match:{vacancy_id}:{candidate_id}` с TTL 1 час. Инвалидируется по событию.
+> **Что НЕ делаем в MVP:**
+> - Celery / очереди задач
+> - NumPy матрицы
+> - Prewarming кэша
+> - Триггеры PostgreSQL с LISTEN/NOTIFY
+> - Автоматическая инвалидация при изменении данных
 >
-> ### Фоновые задачи (Celery)
+> **Future improvements (описать в ADR, НЕ реализовывать сейчас):**
+> - Batch-матчинг с NumPy при росте базы кандидатов
+> - Celery + Redis broker при длинных пересчётах
+> - Триггерная инвалидация при реальном трафике
 >
-> - `recompute_match(vacancy_id, candidate_id)` — по событию
-> - `recompute_match_bulk(vacancy_id)` — при массовом изменении вакансии
-> - `refresh_roadmap_mv()` — ежечасно
-> - `import_hh_candidates(workspace_id, token)` — по расписанию или вручную
-> - `send_notification_email(user_id, notification_id)` — по событию
-> - `daily_digest(user_id)` — celery-beat ежедневно
+> ### Кэширование (MVP)
+>
+> Используй Redis **только для двух вещей**:
+> 1. `tool_tree` — одна большая структура, читается часто, меняется редко. Ключ `tool_tree:{workspace_id}`, TTL 1 час, сбрасывается вручную при edit.
+> 2. `match:{vacancy_id}:{candidate_id}` — опционально, TTL 1 час. Без умной инвалидации — просто TTL.
+>
+> **Никаких** multi-layer кэшей, cache stampede protection, cashews, lock'ов. Простой `redis.get` / `redis.setex`.
+>
+> ### Фоновые задачи (MVP)
+>
+> Используй FastAPI `BackgroundTasks` или `asyncio.create_task` для:
+> - Отправка email (SMTP) после регистрации / оффера
+> - Пересчёт матчинга при обновлении вакансии (если > 50 кандидатов)
+> - Сохранение audit-события
+>
+> **Celery НЕ использовать** на этом этапе. Если задача дольше 30 секунд — разбивай на более мелкие или выноси в отдельный endpoint, который клиент запускает явно.
 >
 > ### Безопасность
 >
@@ -198,31 +237,51 @@
 > - Integration-тесты: httpx.AsyncClient против в памяти-FastAPI
 > - E2E тесты: docker-compose + `requests` в отдельном процессе
 >
-> ### Наблюдаемость
+> ### Наблюдаемость (MVP)
 >
-> - `structlog` JSON-логи в stdout
-> - Каждый запрос — middleware с `request_id`
-> - Integration с Sentry (backend DSN в env)
-> - OpenTelemetry auto-instrumentation для FastAPI, SQLAlchemy, httpx, redis
-> - Prometheus metrics endpoint `/metrics` (prometheus-fastapi-instrumentator)
-> - Health checks: `/healthz` (liveness), `/readyz` (readiness = DB + Redis доступны)
+> - Дефолтный Python `logging` + JSON-форматтер, логи в stdout
+> - Каждый запрос — middleware с `request_id` (UUID)
+> - Health check: `/healthz` — пинг БД и Redis
 >
-> ### Порядок реализации
+> **Future improvements (НЕ реализовывать сейчас):**
+> - structlog с контекстом
+> - Sentry integration
+> - OpenTelemetry auto-instrumentation
+> - Prometheus metrics endpoint
 >
-> 1. Скелет проекта, pyproject.toml, docker-compose.yml
-> 2. Alembic init, модели, первая миграция
-> 3. Auth (register/login/refresh/me)
-> 4. Tool tree CRUD + seed из YAML
-> 5. Positions, vacancies, candidates CRUD (без матчинга)
-> 6. Work entries + work entry tools
-> 7. Матчинг: сервис + денормализация + воркер
-> 8. Pipeline + SSE
-> 9. Search, filters, analytics
+> ### Порядок реализации (MVP-first)
+>
+> **Фаза 1 — Рабочий backend (целевая скорость: 1–2 недели)**
+> 1. Скелет проекта, pyproject.toml, docker-compose.yml (postgres + redis + backend)
+> 2. Alembic init, модели **минимального набора**: users, workspaces, positions, vacancies, candidates, work_entries, tools
+> 3. Auth: register + login + me (без refresh rotation, без email verification)
+> 4. Tool tree: GET целиком из Redis (seed из JSON при старте)
+> 5. CRUD vacancies, candidates, positions (без fancy фильтров, простая пагинация)
+> 6. Work entries + work_entry_tools
+> 7. Матчинг on-demand: `GET /match/vacancy/{id}` возвращает список кандидатов со score. Чистый Python, без NumPy.
+> 8. Pipeline — простой CRUD без realtime
+>
+> **Критерий выхода из Фазы 1:** фронт работает end-to-end через API, все основные сценарии пользователя проходят.
+>
+> **Фаза 2 — Нормальный UX**
+> 9. Search и фильтры (SQL WHERE, pg_trgm для fuzzy-имён)
 > 10. Response events, tasks, notifications
-> 11. Audit log, RLS
-> 12. Интеграции (phase 7)
+> 11. Refresh tokens, email verification
+> 12. Базовая аналитика (funnel, salary distribution) — простыми SQL
 >
-> Каждый шаг — отдельный PR с тестами и работающим swagger.
+> **Фаза 3 — Real-time и скорость (только если реально нужно)**
+> 13. SSE для pipeline
+> 14. Precompute матчинга в BackgroundTasks
+> 15. Cache invalidation на events
+> 16. RLS (если workspace'ов > 10)
+>
+> **Фаза 4 — Умная система (опционально)**
+> 17. pgvector, embeddings, рекомендации
+> 18. Celery (если задачи стали длинными)
+> 19. Materialized views для тяжёлой аналитики
+> 20. Audit log, advanced security
+>
+> Каждый шаг — отдельный PR с тестами и работающим swagger. Никогда не делай шаги из фазы N+1, пока не закончил фазу N.
 >
 > ### Deliverables
 >
@@ -252,12 +311,19 @@
 
 ## Критерии приёмки
 
-- [ ] `docker compose up` поднимает весь backend + db + redis
+### Фаза 1 (MVP)
+
+- [ ] `docker compose up` поднимает backend + postgres + redis
 - [ ] `alembic upgrade head` → `curl localhost:8000/healthz` → 200
-- [ ] Swagger UI отображает все эндпоинты с примерами
-- [ ] `pytest` проходит на чистой тестовой БД
-- [ ] OpenAPI схема генерируется и импортируется в TypeScript без warnings
-- [ ] Нагрузка: matching 1000 кандидатов на одну вакансию < 500 мс
-- [ ] Нагрузка: 100 RPS на список вакансий < 100 мс p95
-- [ ] Миграции обратимы (downgrade работает)
-- [ ] `pytest-cov` > 80% на `services/`
+- [ ] Swagger UI отображает все эндпоинты
+- [ ] Happy-path тесты для каждого API (`pytest`)
+- [ ] OpenAPI схема генерируется и импортируется в TypeScript
+- [ ] Пользовательский сценарий проходит end-to-end: регистрация → создание вакансии → создание кандидата → получение match → pipeline
+- [ ] Изоляция workspace'ов: user из workspace A не видит данные workspace B (тест)
+
+### Не-цели Фазы 1 (оставляем на потом)
+
+- ~~Matching 1000 кандидатов < 500 мс~~ — оптимизируем, когда станет медленно
+- ~~100 RPS на список вакансий < 100 мс p95~~ — меряем на реальной нагрузке
+- ~~coverage > 80%~~ — достаточно покрытия happy-path + критичных сценариев
+- ~~Sentry, OpenTelemetry, Prometheus~~ — добавляем в Фазе 3+

@@ -2,12 +2,14 @@
 
 Полная спецификация и дорожная карта разработки рекрутинговой платформы на базе существующего прототипа.
 
+**Подход:** MVP-first. Делаем минимально достаточную реализацию, которая работает end-to-end, и расширяем по мере реальной потребности. Главный принцип — см. `PROMPT_MASTER.md § 0`.
+
 ## Навигация
 
 | Документ | Для кого | Что внутри |
 |---|---|---|
 | [**PROMPT_MASTER.md**](./PROMPT_MASTER.md) | Tech-lead, AI-агент | Главный промпт, общий контекст, порядок работы |
-| [**ROADMAP.md**](./ROADMAP.md) | PM, tech-lead | 8 фаз разработки (~28 недель), критерии готовности |
+| [**ROADMAP.md**](./ROADMAP.md) | PM, tech-lead | 4 фазы: MVP → UX → real-time → ML, критерии перехода |
 | [**SCHEMA.md**](./SCHEMA.md) | Backend, DBA | Полная схема PostgreSQL: таблицы, индексы, RLS, триггеры |
 | [**OPTIMIZATION.md**](./OPTIMIZATION.md) | Все инженеры | Рекомендации по perf: frontend, backend, DB |
 | [**PROMPT_BACKEND.md**](./PROMPT_BACKEND.md) | Backend команда | Детальное ТЗ для FastAPI |

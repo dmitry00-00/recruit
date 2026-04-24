@@ -1,6 +1,8 @@
 # Схема базы данных PostgreSQL
 
-**Назначение:** целевая схема для миграции с IndexedDB. Покрывает все сущности прототипа + мультитенантность (workspaces), аудит и поисковые индексы.
+**Назначение:** **целевая** схема (всё, что понадобится к концу фазы 3–4). Для MVP (фаза 1) достаточно **минимального подмножества** — см. раздел "MVP-подмножество" в конце файла.
+
+Покрывает все сущности прототипа + мультитенантность (workspaces), аудит и поисковые индексы.
 
 Все PK — `uuid` (`gen_random_uuid()`), все FK — с `ON DELETE CASCADE` где это безопасно, иначе `RESTRICT`.
 
@@ -502,3 +504,76 @@ CREATE TRIGGER trg_vacancy_reqs_invalidate
 - Demo-workspace с 1 admin-пользователем (для smoke-тестов только в dev)
 
 В prod — **только глобальные справочники**. Никаких демо-кандидатов.
+
+---
+
+## 🚀 MVP-подмножество (Фаза 1)
+
+Для первого релиза **НЕ нужна вся схема**. Минимальный набор, с которого начинаем:
+
+### Таблицы, которые создаём на Фазе 1
+
+**Auth:**
+- `workspaces` (без поля `plan` — это fake)
+- `users` (без `email_verified_at`, `last_login_at`)
+- `workspace_members`
+- **НЕ делаем:** `refresh_tokens` (long-lived JWT), `invites`
+
+**Tool tree:**
+- `tool_categories`, `tool_subcategories`, `tools` — полностью
+
+**Core domain:**
+- `positions`, `position_required_categories`
+- `vacancies`, `vacancy_requirements`
+- `candidates`, `work_entries`, `work_entry_tools`
+
+**Pipeline:**
+- `pipelines`, `pipeline_stages`, `pipeline_cards`
+
+**События (упрощённые):**
+- `response_events` — без `author_id`, `scheduled_at` (добавим в фазе 2)
+- `recruitment_tasks` — минимум полей
+
+**Кэш матчинга (опционально):**
+- `match_scores` — **если** precompute нужен на MVP. Иначе считаем on-demand и не храним.
+
+### Что добавляется позже
+
+**Фаза 2:**
+- `saved_filters`
+- `notifications`
+- `refresh_tokens`
+- `invites`
+- FTS колонки `search_tsv` + GIN индексы
+- `pg_trgm` для fuzzy-поиска
+
+**Фаза 3:**
+- `audit_events` (**без партиционирования** — добавляем через год)
+- `comments`
+- Row-Level Security policies
+- `pipeline_cards.moved_at` триггеры с `pg_notify` для SSE
+- `match_scores` триггеры инвалидации
+
+**Фаза 4:**
+- `candidates.embedding`, `work_entries.embedding` (vector)
+- `integrations`, `webhooks`
+- Materialized views (`position_roadmap_mv`)
+- Партиционирование `audit_events`, `response_events`
+
+### Упрощения MVP-схемы
+
+1. **Никаких триггеров** для `pg_notify` и инвалидации на фазе 1
+2. **Row-Level Security — выключен.** Фильтрация через `WHERE workspace_id = ?` в репозиториях
+3. **Минимум индексов:** только PK, FK, и 2–3 композитных для горячих запросов (`(workspace_id, status)` на vacancies)
+4. **Без JSONB-колонок.** Если нужна полиморфная структура — нормализуем через отдельную таблицу
+5. **Поиск по именам** через `LIKE '%...%'` — без pg_trgm до фазы 2
+
+### Миграция от MVP к полной схеме
+
+Все добавления в фазах 2–4 — **неразрушающие**:
+- Новые таблицы → просто `CREATE TABLE`
+- Новые колонки → `ADD COLUMN ... NULL` (без дефолта на большой таблице)
+- FTS колонки → `ADD COLUMN ... GENERATED ALWAYS AS`
+- Индексы → `CREATE INDEX CONCURRENTLY`
+
+Ни на одном шаге не нужна полная перестройка данных.
