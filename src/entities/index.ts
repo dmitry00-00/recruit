@@ -14,6 +14,8 @@ export interface ToolCategory {
 export interface ToolSubcategory {
   id: string;
   categoryId: string;
+  /** Optional internal grouping label within a category (e.g. "Языки разработки") */
+  group?: string;
   name: string;
   tools: Tool[];
 }

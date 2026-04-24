@@ -7,3 +7,4 @@ export { useResponseStore } from './responseStore';
 export { useTaskStore } from './taskStore';
 export { useUiStore } from './uiStore';
 export { useAuthStore } from './authStore';
+export { useToolTreeStore } from './toolTreeStore';

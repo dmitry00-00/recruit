@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Moon, Sun, Plus, User, LogOut, LayoutDashboard, Briefcase, Users, ChevronDown } from 'lucide-react';
+import { Menu, Moon, Sun, Plus, User, LogOut, LayoutDashboard, Briefcase, Users, ChevronDown, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
@@ -130,6 +130,10 @@ export function TopNav() {
               <button className={styles.dropdownItem} onClick={() => { navigate('/candidates/new'); setAddOpen(false); }}>
                 <Users size={13} />
                 Новый кандидат
+              </button>
+              <button className={styles.dropdownItem} onClick={() => { navigate('/tools'); setAddOpen(false); }}>
+                <Wrench size={13} />
+                Редактор требований
               </button>
             </div>
           )}

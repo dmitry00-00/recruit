@@ -1,7 +1,5 @@
 import type { ToolCategory, Tool, ToolSubcategory, PositionRequiredCategory } from '@/entities';
-import toolTreeData from '@/data/toolTree.json';
-
-const data = toolTreeData as { categories: ToolCategory[] };
+import { useToolTreeStore } from '@/stores/toolTreeStore';
 
 // ── Domain taxonomy ────────────────────────────────────────────
 
@@ -27,10 +25,14 @@ export const DOMAIN_ICONS: Record<ToolDomain, string> = {
   misc:     'LayoutGrid',
 };
 
-/** Subcategory id → domain mapping */
-export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
+/**
+ * Seed mapping: subcategory id → domain. Acts as the default for bundled
+ * subcategories. User-created subcategories fall back to `misc` until the
+ * app learns their domain (extendable via `setSubcategoryDomain`).
+ */
+const SEED_DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   dev: [
-    // Languages (in cat_languages, domain stays dev)
+    // Languages (now grouped inside cat_tools under "Языки разработки")
     'sub_javascript', 'sub_python', 'sub_java', 'sub_csharp', 'sub_golang',
     'sub_kotlin', 'sub_swift', 'sub_objc', 'sub_php', 'sub_cpp', 'sub_dart',
     'sub_ruby', 'sub_scala', 'sub_1c', 'sub_html_css',
@@ -62,44 +64,57 @@ export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   misc: [],
 };
 
+/**
+ * Runtime domain map — starts from seed and is mutated when new subcategories
+ * are added. We expose it as read-only via a getter but keep the variable
+ * mutable internally.
+ */
+const _domainSubMap: Record<ToolDomain, string[]> = (() => {
+  const copy = {} as Record<ToolDomain, string[]>;
+  for (const k of Object.keys(SEED_DOMAIN_SUB_MAP) as ToolDomain[]) {
+    copy[k] = [...SEED_DOMAIN_SUB_MAP[k]];
+  }
+  return copy;
+})();
+
+export const DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = _domainSubMap;
+
+/** Register a user-created subcategory under a domain (default: misc). */
+export function setSubcategoryDomain(subId: string, domain: ToolDomain): void {
+  for (const d of Object.keys(_domainSubMap) as ToolDomain[]) {
+    _domainSubMap[d] = _domainSubMap[d].filter((id) => id !== subId);
+  }
+  if (!_domainSubMap[domain].includes(subId)) _domainSubMap[domain].push(subId);
+}
+
 /** All 6 primary domains in grid order (misc is always last / full-width) */
 export const PRIMARY_DOMAINS: ToolDomain[] = ['dev', 'design', 'analysis', 'qa', 'infosec', 'devops'];
 
 export function getSubcategoryDomain(subId: string): ToolDomain {
-  for (const [domain, subs] of Object.entries(DOMAIN_SUB_MAP) as [ToolDomain, string[]][]) {
+  for (const [domain, subs] of Object.entries(_domainSubMap) as [ToolDomain, string[]][]) {
     if (subs.includes(subId)) return domain;
   }
   return 'misc';
 }
 
-/** Returns subcategories for a domain, preserving original category grouping */
-export function getSubsByDomain(domain: ToolDomain): { catName: string; catId: string; sub: ToolSubcategory }[] {
-  const subIds = new Set(DOMAIN_SUB_MAP[domain] ?? []);
-  const result: { catName: string; catId: string; sub: ToolSubcategory }[] = [];
-  for (const cat of data.categories) {
-    for (const sub of cat.subcategories) {
-      if (subIds.has(sub.id)) {
-        result.push({ catName: cat.name, catId: cat.id, sub });
-      }
-    }
-  }
-  return result;
+// ── Core helpers (read from store) ─────────────────────────────
+
+function currentCategories(): ToolCategory[] {
+  return useToolTreeStore.getState().tree;
 }
 
-// ── Core helpers ───────────────────────────────────────────────
-
 export function getToolTree(): ToolCategory[] {
-  return data.categories;
+  return currentCategories();
 }
 
 export function getAllTools(): Tool[] {
-  return data.categories.flatMap((cat) =>
+  return currentCategories().flatMap((cat) =>
     cat.subcategories.flatMap((sub) => sub.tools)
   );
 }
 
 export function getToolById(toolId: string): Tool | undefined {
-  for (const cat of data.categories) {
+  for (const cat of currentCategories()) {
     for (const sub of cat.subcategories) {
       const tool = sub.tools.find((t) => t.id === toolId);
       if (tool) return tool;
@@ -114,7 +129,7 @@ export function getToolName(toolId: string): string {
 
 export function getToolSubcategoryMap(): Map<string, string> {
   const map = new Map<string, string>();
-  for (const cat of data.categories) {
+  for (const cat of currentCategories()) {
     for (const sub of cat.subcategories) {
       for (const tool of sub.tools) {
         map.set(tool.id, sub.id);
@@ -125,7 +140,7 @@ export function getToolSubcategoryMap(): Map<string, string> {
 }
 
 export function getSubcategoryById(subcategoryId: string): ToolSubcategory | undefined {
-  for (const cat of data.categories) {
+  for (const cat of currentCategories()) {
     const sub = cat.subcategories.find((s) => s.id === subcategoryId);
     if (sub) return sub;
   }
@@ -133,7 +148,21 @@ export function getSubcategoryById(subcategoryId: string): ToolSubcategory | und
 }
 
 export function getCategoryById(categoryId: string): ToolCategory | undefined {
-  return data.categories.find((c) => c.id === categoryId);
+  return currentCategories().find((c) => c.id === categoryId);
+}
+
+/** Returns subcategories for a domain, preserving original category grouping */
+export function getSubsByDomain(domain: ToolDomain): { catName: string; catId: string; sub: ToolSubcategory }[] {
+  const subIds = new Set(_domainSubMap[domain] ?? []);
+  const result: { catName: string; catId: string; sub: ToolSubcategory }[] = [];
+  for (const cat of currentCategories()) {
+    for (const sub of cat.subcategories) {
+      if (subIds.has(sub.id)) {
+        result.push({ catName: cat.name, catId: cat.id, sub });
+      }
+    }
+  }
+  return result;
 }
 
 /** Flatten requiredCategories into a plain list of subcategoryIds */

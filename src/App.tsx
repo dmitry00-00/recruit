@@ -10,6 +10,7 @@ import { CandidateForm, CandidateDetail, CandidateImport, CandidateHistory } fro
 import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
 import { LoginPage, RegisterPage, ProfilePage } from '@/pages/Auth';
+import { ToolsEditor } from '@/pages/Tools';
 import { ErrorBoundary } from '@/components/ui';
 import { seedIfEmpty } from '@/db';
 import { usePositionStore, useAuthStore } from '@/stores';
@@ -58,6 +59,7 @@ export function App() {
           <Route path="/compare/:vacancyId/:candidateId" element={<ProtectedRoute><ComparePage /></ProtectedRoute>} />
           <Route path="/pipeline/:vacancyId" element={<ProtectedRoute><PipelinePage /></ProtectedRoute>} />
           <Route path="/recruiter" element={<ProtectedRoute roles={['admin', 'recruiter', 'hiring_manager']}><RecruiterDashboard /></ProtectedRoute>} />
+          <Route path="/tools" element={<ProtectedRoute roles={['admin', 'recruiter']}><ToolsEditor /></ProtectedRoute>} />
           <Route path="/roadmap/:positionId" element={<ProtectedRoute><PositionDetail /></ProtectedRoute>} />
         </Routes>
         </ErrorBoundary>

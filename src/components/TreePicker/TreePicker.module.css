@@ -185,6 +185,60 @@
   min-height: 0;
 }
 
+/* ── Group header (internal category within a domain cell) ─── */
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-tertiary);
+  border-bottom: 1px solid var(--border-tertiary);
+  flex-shrink: 0;
+}
+
+.groupHeadFirst {
+  border-top: none;
+}
+
+.groupLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.groupCount {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: var(--amber);
+  color: #fff;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  min-width: 16px;
+  text-align: center;
+}
+
+.groupIconBtn {
+  background: none;
+  border: none;
+  padding: 1px 3px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.groupIconBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--amber);
+}
+
 /* ── Subcategory toggle ──────────────────── */
 .subToggle {
   display: flex;
@@ -428,6 +482,86 @@
 .cmpGap     { color: #ef4444; }
 .cmpExtra   { color: #6366f1; }
 .cmpNeutral { color: transparent; }
+
+/* ── Edit mode ───────────────────────────── */
+.editBtn {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.editBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--amber);
+}
+
+.editBtnDanger:hover {
+  color: #ef4444;
+}
+
+.inlineAdd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-top: 1px dashed var(--border-tertiary);
+}
+
+.inlineAddInput {
+  flex: 1;
+  padding: 3px 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.inlineAddInput:focus {
+  border-color: var(--amber);
+}
+
+.inlineAddBtn {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.inlineAddBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.inlineAddRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  margin: 2px 0;
+}
+
+.subActionRow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
 
 .cmpYears {
   display: flex;

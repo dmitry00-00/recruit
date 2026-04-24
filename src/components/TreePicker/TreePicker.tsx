@@ -1,13 +1,14 @@
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import {
   Code2, Palette, BarChart2, Bug, Shield, GitBranch, LayoutGrid,
-  ChevronRight, ChevronDown,
+  ChevronRight, ChevronDown, Plus, Trash2, Pencil, Check, X,
 } from 'lucide-react';
 import {
   getToolTree, searchTools, DOMAIN_SUB_MAP,
-  PRIMARY_DOMAINS, DOMAIN_LABELS,
+  PRIMARY_DOMAINS, DOMAIN_LABELS, setSubcategoryDomain,
   type ToolDomain,
 } from '@/utils';
+import { useToolTreeStore } from '@/stores';
 import type { ToolCategory, ToolSubcategory, Tool, MatchResult } from '@/entities';
 import styles from './TreePicker.module.css';
 
@@ -18,7 +19,8 @@ export type PickerMode =
   | 'vacancy'
   | 'candidate-agg'
   | 'compare'
-  | 'position';
+  | 'position'
+  | 'edit';
 
 export type VacancyToolState = 'none' | 'min' | 'max';
 
@@ -61,7 +63,17 @@ export function TreePicker({
   sidebarFooter, fullHeight = false,
   filteredSubIds,
 }: TreePickerProps) {
-  const tree = useMemo(() => getToolTree(), []);
+  // Subscribe to the store so tree edits propagate into render.
+  const storeTree = useToolTreeStore((s) => s.tree);
+  const addSubcategory = useToolTreeStore((s) => s.addSubcategory);
+  const updateSubcategory = useToolTreeStore((s) => s.updateSubcategory);
+  const removeSubcategory = useToolTreeStore((s) => s.removeSubcategory);
+  const addTool = useToolTreeStore((s) => s.addTool);
+  const updateTool = useToolTreeStore((s) => s.updateTool);
+  const removeTool = useToolTreeStore((s) => s.removeTool);
+
+  const tree = storeTree.length ? storeTree : getToolTree();
+  const isEdit = mode === 'edit';
 
   const filterSet = useMemo(() => {
     if (filteredSubIds === undefined || filteredSubIds.length === 0) return null;
@@ -114,6 +126,7 @@ export function TreePicker({
       case 'compare':       return sub.tools.filter((t) => compareAll.has(t.id)).length;
       case 'candidate-agg': return sub.tools.filter((t) => yearsMap[t.id] != null).length;
       case 'position':      return selectedSet.has(sub.id) ? 1 : 0;
+      case 'edit':          return sub.tools.length;
       default:              return sub.tools.filter((t) => selectedSet.has(t.id)).length;
     }
   };
@@ -141,6 +154,14 @@ export function TreePicker({
   const toggleSub = (domain: string, subId: string) =>
     setExpanded((p) => ({ ...p, [domain]: p[domain] === subId ? null : subId }));
 
+  // ── Edit-mode local UI state ──────────────────────────────
+  const [editingSubId, setEditingSubId] = useState<string | null>(null);
+  const [editingSubName, setEditingSubName] = useState('');
+  const [newSubDraft, setNewSubDraft] = useState<Record<string, string>>({});
+  const [newToolDraft, setNewToolDraft] = useState<Record<string, string>>({});
+  const [editingToolId, setEditingToolId] = useState<string | null>(null);
+  const [editingToolName, setEditingToolName] = useState('');
+
   // ── Tool row renderer ─────────────────────────────────────
   const renderTool = (tool: Tool) => {
     const isLocked   = lockedSet.has(tool.id);
@@ -162,7 +183,8 @@ export function TreePicker({
       cls += ` ${styles.toolLocked}`;
     }
 
-    const clickable = !isReadonly && !isLocked;
+    const clickable = !isReadonly && !isLocked && !isEdit;
+    const isToolEditing = editingToolId === tool.id;
 
     return (
       <div
@@ -194,7 +216,25 @@ export function TreePicker({
           <span className={styles.toolNoLogo} title={tool.name}>{tool.name.slice(0, 3)}</span>
         )}
 
-        <span className={styles.toolName}>{tool.name}</span>
+        {isEdit && isToolEditing ? (
+          <input
+            className={styles.inlineAddInput}
+            value={editingToolName}
+            autoFocus
+            onChange={(e) => setEditingToolName(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && editingToolName.trim()) {
+                updateTool(tool.id, { name: editingToolName.trim() });
+                setEditingToolId(null);
+              } else if (e.key === 'Escape') {
+                setEditingToolId(null);
+              }
+            }}
+          />
+        ) : (
+          <span className={styles.toolName}>{tool.name}</span>
+        )}
 
         {(mode === 'vacancy-min' || mode === 'vacancy-max') && isLocked && (
           <span className={styles.toolLockedBadge}>MIN</span>
@@ -241,6 +281,223 @@ export function TreePicker({
             <span className={styles.cmpCand}>{candidateYearsMap[tool.id] ? `${candidateYearsMap[tool.id]}г` : '—'}</span>
           </div>
         )}
+
+        {isEdit && (
+          <span className={styles.subActionRow}>
+            {isToolEditing ? (
+              <>
+                <button
+                  className={styles.editBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (editingToolName.trim()) {
+                      updateTool(tool.id, { name: editingToolName.trim() });
+                      setEditingToolId(null);
+                    }
+                  }}
+                  title="Сохранить"
+                >
+                  <Check size={12} />
+                </button>
+                <button
+                  className={styles.editBtn}
+                  onClick={(e) => { e.stopPropagation(); setEditingToolId(null); }}
+                  title="Отмена"
+                >
+                  <X size={12} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={styles.editBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditingToolId(tool.id);
+                    setEditingToolName(tool.name);
+                  }}
+                  title="Переименовать"
+                >
+                  <Pencil size={11} />
+                </button>
+                <button
+                  className={`${styles.editBtn} ${styles.editBtnDanger}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm(`Удалить инструмент "${tool.name}"?`)) removeTool(tool.id);
+                  }}
+                  title="Удалить"
+                >
+                  <Trash2 size={11} />
+                </button>
+              </>
+            )}
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  // ── Inline "add tool" row ─────────────────────────────────
+  const renderAddToolRow = (subId: string) => {
+    const value = newToolDraft[subId] ?? '';
+    const submit = () => {
+      const name = value.trim();
+      if (!name) return;
+      addTool(subId, name);
+      setNewToolDraft((d) => ({ ...d, [subId]: '' }));
+    };
+    return (
+      <div className={styles.inlineAddRow}>
+        <Plus size={12} />
+        <input
+          className={styles.inlineAddInput}
+          placeholder="Новый инструмент…"
+          value={value}
+          onChange={(e) => setNewToolDraft((d) => ({ ...d, [subId]: e.target.value }))}
+          onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+        />
+        <button
+          className={styles.inlineAddBtn}
+          onClick={submit}
+          disabled={!value.trim()}
+        >
+          Добавить
+        </button>
+      </div>
+    );
+  };
+
+  // ── Group header + inline rename ──────────────────────────
+  const renderGroupHead = (groupName: string, count: number, isFirst: boolean) => (
+    <div className={`${styles.groupHead} ${isFirst ? styles.groupHeadFirst : ''}`}>
+      <span className={styles.groupLabel}>{groupName}</span>
+      {count > 0 && <span className={styles.groupCount}>{count}</span>}
+    </div>
+  );
+
+  // ── Subcategory toggle ────────────────────────────────────
+  const renderSubToggle = (sub: ToolSubcategory, domain: ToolDomain) => {
+    const sc = countSub(sub);
+    const isOpen = (expanded[domain] ?? null) === sub.id;
+    const isSubSelected = mode === 'position' && selectedSet.has(sub.id);
+    const isSubEditing = editingSubId === sub.id;
+
+    const toggleSubSelect = () => {
+      if (!onChange) return;
+      if (selectedSet.has(sub.id)) {
+        onChange(selected.filter((id) => id !== sub.id));
+      } else {
+        onChange([...selected, sub.id]);
+      }
+    };
+
+    return (
+      <div key={sub.id}>
+        <div
+          className={`${styles.subToggle} ${isOpen ? styles.subToggleOpen : ''} ${isSubSelected ? styles.subToggleSelected : ''}`}
+          onClick={() => {
+            if (isSubEditing) return;
+            if (mode === 'position') toggleSubSelect();
+            else toggleSub(domain, sub.id);
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          {mode === 'position' && (
+            <input
+              type="checkbox"
+              className={styles.toolCb}
+              checked={isSubSelected}
+              onChange={toggleSubSelect}
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
+          {mode !== 'position' && (isOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />)}
+
+          {isEdit && isSubEditing ? (
+            <input
+              className={styles.inlineAddInput}
+              value={editingSubName}
+              autoFocus
+              onChange={(e) => setEditingSubName(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && editingSubName.trim()) {
+                  updateSubcategory(sub.id, { name: editingSubName.trim() });
+                  setEditingSubId(null);
+                } else if (e.key === 'Escape') {
+                  setEditingSubId(null);
+                }
+              }}
+            />
+          ) : (
+            <span className={styles.subToggleName}>{sub.name}</span>
+          )}
+
+          {sc > 0 && <span className={styles.subToggleCount}>{sc}</span>}
+
+          {isEdit && (
+            <span className={styles.subActionRow}>
+              {isSubEditing ? (
+                <>
+                  <button
+                    className={styles.editBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (editingSubName.trim()) {
+                        updateSubcategory(sub.id, { name: editingSubName.trim() });
+                        setEditingSubId(null);
+                      }
+                    }}
+                    title="Сохранить"
+                  >
+                    <Check size={12} />
+                  </button>
+                  <button
+                    className={styles.editBtn}
+                    onClick={(e) => { e.stopPropagation(); setEditingSubId(null); }}
+                    title="Отмена"
+                  >
+                    <X size={12} />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className={styles.editBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingSubId(sub.id);
+                      setEditingSubName(sub.name);
+                    }}
+                    title="Переименовать категорию"
+                  >
+                    <Pencil size={11} />
+                  </button>
+                  <button
+                    className={`${styles.editBtn} ${styles.editBtnDanger}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`Удалить категорию "${sub.name}" со всеми инструментами (${sub.tools.length})?`)) {
+                        removeSubcategory(sub.id);
+                      }
+                    }}
+                    title="Удалить категорию"
+                  >
+                    <Trash2 size={11} />
+                  </button>
+                </>
+              )}
+            </span>
+          )}
+        </div>
+
+        {(isOpen || isEdit) && mode !== 'position' && (
+          <div className={styles.toolsPanel}>
+            {sub.tools.map(renderTool)}
+            {isEdit && renderAddToolRow(sub.id)}
+          </div>
+        )}
       </div>
     );
   };
@@ -251,61 +508,66 @@ export function TreePicker({
     const Icon = ICON_MAP[domain];
     const cnt = countCell(domain);
     const isMisc = domain === 'misc';
-    const expandedSubId = expanded[domain] ?? null;
+
+    // Group subcategories by sub.group (ungrouped ones come first under '')
+    const groupOrder: string[] = [];
+    const grouped = new Map<string, ToolSubcategory[]>();
+    for (const sub of subs) {
+      const g = sub.group ?? '';
+      if (!grouped.has(g)) { grouped.set(g, []); groupOrder.push(g); }
+      grouped.get(g)!.push(sub);
+    }
+
+    const newSubValue = newSubDraft[domain] ?? '';
+    const submitNewSub = () => {
+      const name = newSubValue.trim();
+      if (!name || !activeCat) return;
+      const id = addSubcategory(activeCat.id, name);
+      setSubcategoryDomain(id, domain);
+      setNewSubDraft((d) => ({ ...d, [domain]: '' }));
+    };
 
     return (
       <div
         key={domain}
-        className={`${styles.cell} ${isMisc ? styles.cellMisc : ''} ${subs.length === 0 ? styles.cellEmpty : ''}`}
+        className={`${styles.cell} ${isMisc ? styles.cellMisc : ''} ${subs.length === 0 && !isEdit ? styles.cellEmpty : ''}`}
       >
         <div className={styles.cellHead}>
           <Icon size={13} />
           <span className={styles.cellTitle}>{DOMAIN_LABELS[domain]}</span>
           {cnt > 0 && <span className={styles.cellCount}>{cnt}</span>}
         </div>
-        {subs.length > 0 && (
-          <div className={styles.cellBody}>
-            {subs.map((sub) => {
-              const sc = countSub(sub);
-              const isOpen = expandedSubId === sub.id;
-              const isSubSelected = mode === 'position' && selectedSet.has(sub.id);
-              const toggleSubSelect = () => {
-                if (!onChange) return;
-                if (selectedSet.has(sub.id)) {
-                  onChange(selected.filter((id) => id !== sub.id));
-                } else {
-                  onChange([...selected, sub.id]);
-                }
-              };
-              return (
-                <div key={sub.id}>
-                  <button
-                    className={`${styles.subToggle} ${isOpen ? styles.subToggleOpen : ''} ${isSubSelected ? styles.subToggleSelected : ''}`}
-                    onClick={() => mode === 'position' ? toggleSubSelect() : toggleSub(domain, sub.id)}
-                  >
-                    {mode === 'position' && (
-                      <input
-                        type="checkbox"
-                        className={styles.toolCb}
-                        checked={isSubSelected}
-                        onChange={toggleSubSelect}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    )}
-                    {mode !== 'position' && (isOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />)}
-                    <span className={styles.subToggleName}>{sub.name}</span>
-                    {sc > 0 && <span className={styles.subToggleCount}>{sc}</span>}
-                  </button>
-                  {mode !== 'position' && isOpen && (
-                    <div className={styles.toolsPanel}>
-                      {sub.tools.map(renderTool)}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        <div className={styles.cellBody}>
+          {groupOrder.map((g, gi) => {
+            const list = grouped.get(g)!;
+            const groupCount = list.reduce((a, s) => a + countSub(s), 0);
+            return (
+              <div key={g || `__ungrouped_${gi}`}>
+                {g && renderGroupHead(g, groupCount, gi === 0)}
+                {list.map((sub) => renderSubToggle(sub, domain))}
+              </div>
+            );
+          })}
+          {isEdit && activeCat && (
+            <div className={styles.inlineAdd}>
+              <Plus size={12} />
+              <input
+                className={styles.inlineAddInput}
+                placeholder="Новая категория требований…"
+                value={newSubValue}
+                onChange={(e) => setNewSubDraft((d) => ({ ...d, [domain]: e.target.value }))}
+                onKeyDown={(e) => { if (e.key === 'Enter') submitNewSub(); }}
+              />
+              <button
+                className={styles.inlineAddBtn}
+                onClick={submitNewSub}
+                disabled={!newSubValue.trim()}
+              >
+                Добавить
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -316,17 +578,19 @@ export function TreePicker({
     [search, mode],
   );
 
+  const searchPlaceholder =
+    mode === 'vacancy'   ? '1 клик — MIN   |   2 клика — MAX'
+    : mode === 'position' ? 'Отметьте подкатегории, входящие в должность'
+    : mode === 'edit'    ? 'Поиск инструмента в дереве…'
+    : 'Поиск инструментов...';
+
   // ── Render ─────────────────────────────────────────────────
   return (
     <div className={`${styles.wrapper} ${fullHeight ? styles.wrapperFull : ''}`}>
       <div className={styles.searchBar}>
         <input
           className={styles.searchInput}
-          placeholder={
-            mode === 'vacancy'  ? '1 клик — MIN   |   2 клика — MAX'
-            : mode === 'position' ? 'Отметьте подкатегории, входящие в должность'
-            : 'Поиск инструментов...'
-          }
+          placeholder={searchPlaceholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           disabled={mode === 'position'}
@@ -365,7 +629,7 @@ export function TreePicker({
         ) : (
           <div className={styles.grid}>
             {PRIMARY_DOMAINS.map((d) => renderCell(d))}
-            {DOMAIN_SUB_MAP['misc'].length > 0 && renderCell('misc')}
+            {(DOMAIN_SUB_MAP['misc'].length > 0 || isEdit) && renderCell('misc')}
           </div>
         )}
       </div>

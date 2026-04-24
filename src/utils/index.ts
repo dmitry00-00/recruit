@@ -17,6 +17,7 @@ export {
   searchTools,
   getSubsByDomain,
   getSubcategoryDomain,
+  setSubcategoryDomain,
   flattenRequiredSubIds,
   groupSubIdsByCategory,
   DOMAIN_LABELS,
