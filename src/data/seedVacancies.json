@@ -14,31 +14,100 @@
       "employmentType": "full",
       "notes": "Команда поиска, разработка интерфейсов для Яндекс Поиска",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_react", "minYears": 3 },
-        { "toolId": "t_html", "minYears": 4 },
-        { "toolId": "t_css", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_react", "minYears": 3 },
-        { "toolId": "t_html", "minYears": 4 },
-        { "toolId": "t_css", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_nextjs", "minYears": 1 },
-        { "toolId": "t_redux", "minYears": 2 },
-        { "toolId": "t_webpack", "minYears": 2 },
-        { "toolId": "t_jest", "minYears": 2 },
-        { "toolId": "t_sass", "minYears": 2 },
-        { "toolId": "t_graphql", "minYears": 1 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "st_solid", "minYears": 2 },
-        { "toolId": "sk_microservices", "minYears": 1 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_nextjs",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_redux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_webpack",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_jest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_sass",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_graphql",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -55,26 +124,80 @@
       "employmentType": "full",
       "notes": "Разработка интерфейсов для внутренних банковских систем",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 2 },
-        { "toolId": "t_ts", "minYears": 1 },
-        { "toolId": "t_react", "minYears": 2 },
-        { "toolId": "t_html", "minYears": 2 },
-        { "toolId": "t_css", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 2 },
-        { "toolId": "t_ts", "minYears": 1 },
-        { "toolId": "t_react", "minYears": 2 },
-        { "toolId": "t_html", "minYears": 2 },
-        { "toolId": "t_css", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "t_redux", "minYears": 1 },
-        { "toolId": "t_jest", "minYears": 1 },
-        { "toolId": "t_webpack", "minYears": 1 },
-        { "toolId": "st_rest", "minYears": 1 },
-        { "toolId": "t_sass", "minYears": 1 },
-        { "toolId": "ex_fintech", "minYears": 1 }
+        {
+          "toolId": "t_js",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_jest",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_webpack",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_sass",
+          "minYears": 1
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -91,21 +214,60 @@
       "employmentType": "full",
       "notes": "Стартап в EdTech, разработка интерфейса для платформы онлайн-обучения",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 1 },
-        { "toolId": "t_react", "minYears": 0.5 },
-        { "toolId": "t_html", "minYears": 1 },
-        { "toolId": "t_css", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 0.5 }
+        {
+          "toolId": "t_js",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 1 },
-        { "toolId": "t_react", "minYears": 0.5 },
-        { "toolId": "t_html", "minYears": 1 },
-        { "toolId": "t_css", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 0.5 },
-        { "toolId": "t_ts", "minYears": 0.5 },
-        { "toolId": "t_vite", "minYears": 0.5 },
-        { "toolId": "t_tailwind", "minYears": 0.5 }
+        {
+          "toolId": "t_js",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_vite",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_tailwind",
+          "minYears": 0.5
+        }
       ]
     },
     {
@@ -122,31 +284,100 @@
       "employmentType": "full",
       "notes": "Платёжный шлюз, высоконагруженные сервисы на Python",
       "minRequirements": [
-        { "toolId": "t_python", "minYears": 4 },
-        { "toolId": "t_fastapi", "minYears": 2 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_python",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_fastapi",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_python", "minYears": 4 },
-        { "toolId": "t_fastapi", "minYears": 2 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_kafka", "minYears": 2 },
-        { "toolId": "t_celery", "minYears": 2 },
-        { "toolId": "t_k8s", "minYears": 1 },
-        { "toolId": "t_mongodb", "minYears": 1 },
-        { "toolId": "t_sqlalchemy", "minYears": 2 },
-        { "toolId": "sk_microservices", "minYears": 2 },
-        { "toolId": "st_solid", "minYears": 2 },
-        { "toolId": "ex_fintech", "minYears": 2 },
-        { "toolId": "oc_highload", "minYears": 2 }
+        {
+          "toolId": "t_python",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_fastapi",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_celery",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_mongodb",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_sqlalchemy",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 2
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 2
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -163,26 +394,80 @@
       "employmentType": "full",
       "notes": "Backend для маркетплейса, микросервисная архитектура",
       "minRequirements": [
-        { "toolId": "t_python", "minYears": 2 },
-        { "toolId": "t_django", "minYears": 1 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 }
+        {
+          "toolId": "t_python",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_django",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_python", "minYears": 2 },
-        { "toolId": "t_django", "minYears": 1 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 },
-        { "toolId": "t_redis", "minYears": 1 },
-        { "toolId": "t_celery", "minYears": 1 },
-        { "toolId": "t_kafka", "minYears": 1 },
-        { "toolId": "t_rabbitmq", "minYears": 1 },
-        { "toolId": "sk_microservices", "minYears": 1 },
-        { "toolId": "ex_ecommerce", "minYears": 1 }
+        {
+          "toolId": "t_python",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_django",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_celery",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "ex_ecommerce",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -199,30 +484,96 @@
       "employmentType": "full",
       "notes": "Разработка серверных компонентов антивирусных решений на C#",
       "minRequirements": [
-        { "toolId": "t_csharp", "minYears": 4 },
-        { "toolId": "t_dotnet", "minYears": 3 },
-        { "toolId": "t_aspnet", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_csharp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dotnet",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_aspnet",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_csharp", "minYears": 4 },
-        { "toolId": "t_dotnet", "minYears": 3 },
-        { "toolId": "t_aspnet", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_ef_core", "minYears": 2 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_rabbitmq", "minYears": 1 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_k8s", "minYears": 1 },
-        { "toolId": "t_mssql", "minYears": 2 },
-        { "toolId": "sk_microservices", "minYears": 2 },
-        { "toolId": "st_solid", "minYears": 3 },
-        { "toolId": "t_xunit", "minYears": 2 },
-        { "toolId": "t_signalr", "minYears": 1 }
+        {
+          "toolId": "t_csharp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dotnet",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_aspnet",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_ef_core",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_mssql",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_xunit",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_signalr",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -239,25 +590,76 @@
       "employmentType": "full",
       "notes": "Разработка модулей сетевой безопасности на C++",
       "minRequirements": [
-        { "toolId": "t_cpp", "minYears": 3 },
-        { "toolId": "t_c", "minYears": 2 },
-        { "toolId": "t_cmake", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "t_linux", "minYears": 2 }
+        {
+          "toolId": "t_cpp",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_c",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_cpp", "minYears": 3 },
-        { "toolId": "t_c", "minYears": 2 },
-        { "toolId": "t_cmake", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "t_linux", "minYears": 2 },
-        { "toolId": "t_boost", "minYears": 1 },
-        { "toolId": "t_stl", "minYears": 2 },
-        { "toolId": "t_python", "minYears": 1 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "sk_algorithms", "minYears": 2 },
-        { "toolId": "sk_concurrency", "minYears": 2 },
-        { "toolId": "sk_auth", "minYears": 1 }
+        {
+          "toolId": "t_cpp",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_c",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_algorithms",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_auth",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -274,30 +676,96 @@
       "employmentType": "full",
       "notes": "Разработка VK Messenger для Android",
       "minRequirements": [
-        { "toolId": "t_kotlin", "minYears": 3 },
-        { "toolId": "t_java", "minYears": 2 },
-        { "toolId": "t_android_studio", "minYears": 3 },
-        { "toolId": "t_compose", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "sk_mobile_arch", "minYears": 2 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_java",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_compose",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_mobile_arch",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_kotlin", "minYears": 3 },
-        { "toolId": "t_java", "minYears": 2 },
-        { "toolId": "t_android_studio", "minYears": 3 },
-        { "toolId": "t_compose", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "sk_mobile_arch", "minYears": 2 },
-        { "toolId": "t_kotlin_corout", "minYears": 2 },
-        { "toolId": "t_retrofit", "minYears": 2 },
-        { "toolId": "t_room", "minYears": 2 },
-        { "toolId": "t_dagger", "minYears": 2 },
-        { "toolId": "t_navigation", "minYears": 1 },
-        { "toolId": "t_glide", "minYears": 1 },
-        { "toolId": "t_gradle", "minYears": 2 },
-        { "toolId": "sk_push", "minYears": 1 },
-        { "toolId": "sk_animations", "minYears": 1 },
-        { "toolId": "meta_android_eco", "minYears": 3 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_java",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_compose",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_mobile_arch",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_kotlin_corout",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_retrofit",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_room",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_dagger",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_navigation",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_glide",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gradle",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_push",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_animations",
+          "minYears": 1
+        },
+        {
+          "toolId": "meta_android_eco",
+          "minYears": 3
+        }
       ]
     },
     {
@@ -314,24 +782,72 @@
       "employmentType": "full",
       "notes": "Разработка и поддержка Android-приложения Avito",
       "minRequirements": [
-        { "toolId": "t_kotlin", "minYears": 2 },
-        { "toolId": "t_android_studio", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "sk_mobile_arch", "minYears": 1 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_mobile_arch",
+          "minYears": 1
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_kotlin", "minYears": 2 },
-        { "toolId": "t_android_studio", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "sk_mobile_arch", "minYears": 1 },
-        { "toolId": "t_compose", "minYears": 1 },
-        { "toolId": "t_kotlin_corout", "minYears": 1 },
-        { "toolId": "t_retrofit", "minYears": 1 },
-        { "toolId": "t_room", "minYears": 1 },
-        { "toolId": "t_dagger", "minYears": 1 },
-        { "toolId": "t_gradle", "minYears": 1 },
-        { "toolId": "t_junit", "minYears": 1 },
-        { "toolId": "ex_ecommerce", "minYears": 1 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_mobile_arch",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_compose",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_kotlin_corout",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_retrofit",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_room",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_dagger",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gradle",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_junit",
+          "minYears": 1
+        },
+        {
+          "toolId": "ex_ecommerce",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -348,31 +864,100 @@
       "employmentType": "full",
       "notes": "Core Banking Platform, микросервисы на Java/Spring",
       "minRequirements": [
-        { "toolId": "t_java", "minYears": 5 },
-        { "toolId": "t_spring", "minYears": 3 },
-        { "toolId": "t_springboot", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_java",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_spring",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_springboot",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_java", "minYears": 5 },
-        { "toolId": "t_spring", "minYears": 3 },
-        { "toolId": "t_springboot", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_kafka_java", "minYears": 2 },
-        { "toolId": "t_hibernate", "minYears": 3 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_k8s", "minYears": 1 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_maven", "minYears": 3 },
-        { "toolId": "t_junit", "minYears": 3 },
-        { "toolId": "sk_microservices", "minYears": 3 },
-        { "toolId": "st_solid", "minYears": 3 },
-        { "toolId": "ex_fintech", "minYears": 3 },
-        { "toolId": "oc_highload", "minYears": 2 }
+        {
+          "toolId": "t_java",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_spring",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_springboot",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka_java",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_hibernate",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_maven",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_junit",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 3
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 3
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -389,31 +974,100 @@
       "employmentType": "full",
       "notes": "Тимлид фронтенд-команды VK Teams, управление 6+ разработчиками",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 5 },
-        { "toolId": "t_ts", "minYears": 4 },
-        { "toolId": "t_react", "minYears": 4 },
-        { "toolId": "t_html", "minYears": 5 },
-        { "toolId": "t_css", "minYears": 5 },
-        { "toolId": "t_git", "minYears": 5 },
-        { "toolId": "oc_team_lead", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 5
+        },
+        {
+          "toolId": "oc_team_lead",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 5 },
-        { "toolId": "t_ts", "minYears": 4 },
-        { "toolId": "t_react", "minYears": 4 },
-        { "toolId": "t_html", "minYears": 5 },
-        { "toolId": "t_css", "minYears": 5 },
-        { "toolId": "t_git", "minYears": 5 },
-        { "toolId": "oc_team_lead", "minYears": 2 },
-        { "toolId": "t_nextjs", "minYears": 2 },
-        { "toolId": "t_redux", "minYears": 3 },
-        { "toolId": "t_webpack", "minYears": 3 },
-        { "toolId": "t_nodejs", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "sk_microservices", "minYears": 2 },
-        { "toolId": "st_solid", "minYears": 3 },
-        { "toolId": "st_patterns", "minYears": 3 },
-        { "toolId": "oc_highload", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 5
+        },
+        {
+          "toolId": "oc_team_lead",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_nextjs",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redux",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_webpack",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_nodejs",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_patterns",
+          "minYears": 3
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -430,26 +1084,80 @@
       "employmentType": "full",
       "notes": "Разработка backend-сервисов на C# .NET для телеком-платформы",
       "minRequirements": [
-        { "toolId": "t_csharp", "minYears": 2 },
-        { "toolId": "t_dotnet", "minYears": 2 },
-        { "toolId": "t_aspnet", "minYears": 1 },
-        { "toolId": "t_postgres", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 }
+        {
+          "toolId": "t_csharp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_dotnet",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_aspnet",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_csharp", "minYears": 2 },
-        { "toolId": "t_dotnet", "minYears": 2 },
-        { "toolId": "t_aspnet", "minYears": 1 },
-        { "toolId": "t_postgres", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 },
-        { "toolId": "t_ef_core", "minYears": 1 },
-        { "toolId": "t_redis", "minYears": 1 },
-        { "toolId": "t_rabbitmq", "minYears": 1 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "t_nunit", "minYears": 1 },
-        { "toolId": "ex_telecom", "minYears": 1 }
+        {
+          "toolId": "t_csharp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_dotnet",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_aspnet",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_ef_core",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_nunit",
+          "minYears": 1
+        },
+        {
+          "toolId": "ex_telecom",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -466,30 +1174,96 @@
       "employmentType": "full",
       "notes": "Fullstack-разработка внутренних инструментов маркетплейса",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_react", "minYears": 3 },
-        { "toolId": "t_python", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 4 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_react", "minYears": 3 },
-        { "toolId": "t_python", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 4 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_nextjs", "minYears": 1 },
-        { "toolId": "t_fastapi", "minYears": 2 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_kafka", "minYears": 1 },
-        { "toolId": "sk_microservices", "minYears": 2 },
-        { "toolId": "ex_ecommerce", "minYears": 2 },
-        { "toolId": "oc_highload", "minYears": 1 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_react",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_nextjs",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_fastapi",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 2
+        },
+        {
+          "toolId": "ex_ecommerce",
+          "minYears": 2
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -506,26 +1280,80 @@
       "employmentType": "full",
       "notes": "Разработка CRM-системы на Angular для корпоративных клиентов",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 2 },
-        { "toolId": "t_ts", "minYears": 2 },
-        { "toolId": "t_angular", "minYears": 2 },
-        { "toolId": "t_html", "minYears": 2 },
-        { "toolId": "t_css", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_angular",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 2 },
-        { "toolId": "t_ts", "minYears": 2 },
-        { "toolId": "t_angular", "minYears": 2 },
-        { "toolId": "t_html", "minYears": 2 },
-        { "toolId": "t_css", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "t_rxjs", "minYears": 1 },
-        { "toolId": "t_sass", "minYears": 1 },
-        { "toolId": "t_jest", "minYears": 1 },
-        { "toolId": "st_rest", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 0.5 },
-        { "toolId": "ex_telecom", "minYears": 1 }
+        {
+          "toolId": "t_js",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_angular",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_rxjs",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_sass",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_jest",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "ex_telecom",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -542,21 +1370,60 @@
       "employmentType": "full",
       "notes": "Backend для EdTech платформы, Django + DRF",
       "minRequirements": [
-        { "toolId": "t_python", "minYears": 1 },
-        { "toolId": "t_django", "minYears": 0.5 },
-        { "toolId": "t_postgres", "minYears": 0.5 },
-        { "toolId": "t_git", "minYears": 0.5 }
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_django",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_python", "minYears": 1 },
-        { "toolId": "t_django", "minYears": 0.5 },
-        { "toolId": "t_postgres", "minYears": 0.5 },
-        { "toolId": "t_git", "minYears": 0.5 },
-        { "toolId": "t_redis", "minYears": 0.5 },
-        { "toolId": "t_docker", "minYears": 0.5 },
-        { "toolId": "t_celery", "minYears": 0.5 },
-        { "toolId": "st_rest", "minYears": 0.5 },
-        { "toolId": "ex_edtech", "minYears": 0.5 }
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_django",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_celery",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "ex_edtech",
+          "minYears": 0.5
+        }
       ]
     },
     {
@@ -573,34 +1440,112 @@
       "employmentType": "full",
       "notes": "Тимлид Java-команды, Core Banking, 8+ разработчиков",
       "minRequirements": [
-        { "toolId": "t_java", "minYears": 6 },
-        { "toolId": "t_spring", "minYears": 4 },
-        { "toolId": "t_springboot", "minYears": 4 },
-        { "toolId": "t_postgres", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 5 },
-        { "toolId": "st_rest", "minYears": 4 },
-        { "toolId": "oc_team_lead", "minYears": 2 }
+        {
+          "toolId": "t_java",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_spring",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_springboot",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 5
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_team_lead",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_java", "minYears": 6 },
-        { "toolId": "t_spring", "minYears": 4 },
-        { "toolId": "t_springboot", "minYears": 4 },
-        { "toolId": "t_postgres", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 5 },
-        { "toolId": "st_rest", "minYears": 4 },
-        { "toolId": "oc_team_lead", "minYears": 2 },
-        { "toolId": "t_kafka_java", "minYears": 3 },
-        { "toolId": "t_hibernate", "minYears": 4 },
-        { "toolId": "t_docker", "minYears": 3 },
-        { "toolId": "t_k8s", "minYears": 2 },
-        { "toolId": "t_redis", "minYears": 3 },
-        { "toolId": "t_maven", "minYears": 4 },
-        { "toolId": "sk_microservices", "minYears": 4 },
-        { "toolId": "st_solid", "minYears": 4 },
-        { "toolId": "st_patterns", "minYears": 4 },
-        { "toolId": "ex_fintech", "minYears": 4 },
-        { "toolId": "oc_highload", "minYears": 3 },
-        { "toolId": "oc_distributed", "minYears": 2 }
+        {
+          "toolId": "t_java",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_spring",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_springboot",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 5
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_team_lead",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_kafka_java",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_hibernate",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_maven",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_patterns",
+          "minYears": 4
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 3
+        },
+        {
+          "toolId": "oc_distributed",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -617,19 +1562,52 @@
       "employmentType": "full",
       "notes": "Junior Android в команду мобильного банкинга",
       "minRequirements": [
-        { "toolId": "t_kotlin", "minYears": 0.5 },
-        { "toolId": "t_android_studio", "minYears": 0.5 },
-        { "toolId": "t_git", "minYears": 0.5 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_kotlin", "minYears": 0.5 },
-        { "toolId": "t_android_studio", "minYears": 0.5 },
-        { "toolId": "t_git", "minYears": 0.5 },
-        { "toolId": "t_java", "minYears": 0.5 },
-        { "toolId": "t_compose", "minYears": 0.5 },
-        { "toolId": "t_retrofit", "minYears": 0.5 },
-        { "toolId": "sk_mobile_arch", "minYears": 0.5 },
-        { "toolId": "ex_fintech", "minYears": 0.5 }
+        {
+          "toolId": "t_kotlin",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_android_studio",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_java",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_compose",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_retrofit",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "sk_mobile_arch",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 0.5
+        }
       ]
     },
     {
@@ -646,28 +1624,88 @@
       "employmentType": "full",
       "notes": "Backend на Go для сервиса доставки, высокая нагрузка",
       "minRequirements": [
-        { "toolId": "t_go", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 }
+        {
+          "toolId": "t_go",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_go", "minYears": 3 },
-        { "toolId": "t_postgres", "minYears": 3 },
-        { "toolId": "t_docker", "minYears": 2 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "t_gin", "minYears": 2 },
-        { "toolId": "t_grpc_go", "minYears": 2 },
-        { "toolId": "t_kafka", "minYears": 2 },
-        { "toolId": "t_redis", "minYears": 2 },
-        { "toolId": "t_k8s", "minYears": 2 },
-        { "toolId": "t_mongodb", "minYears": 1 },
-        { "toolId": "sk_microservices", "minYears": 3 },
-        { "toolId": "st_grpc", "minYears": 2 },
-        { "toolId": "oc_highload", "minYears": 2 },
-        { "toolId": "ex_ecommerce", "minYears": 2 }
+        {
+          "toolId": "t_go",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_gin",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_grpc_go",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_mongodb",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_grpc",
+          "minYears": 2
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 2
+        },
+        {
+          "toolId": "ex_ecommerce",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -684,30 +1722,96 @@
       "employmentType": "full",
       "notes": "Разработка интернет-банка для бизнеса на Angular",
       "minRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_angular", "minYears": 3 },
-        { "toolId": "t_html", "minYears": 4 },
-        { "toolId": "t_css", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "t_rxjs", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_angular",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_rxjs",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_js", "minYears": 4 },
-        { "toolId": "t_ts", "minYears": 3 },
-        { "toolId": "t_angular", "minYears": 3 },
-        { "toolId": "t_html", "minYears": 4 },
-        { "toolId": "t_css", "minYears": 4 },
-        { "toolId": "t_git", "minYears": 3 },
-        { "toolId": "t_rxjs", "minYears": 2 },
-        { "toolId": "t_sass", "minYears": 2 },
-        { "toolId": "t_jest", "minYears": 2 },
-        { "toolId": "t_webpack", "minYears": 2 },
-        { "toolId": "t_nodejs", "minYears": 1 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "st_rest", "minYears": 3 },
-        { "toolId": "st_solid", "minYears": 2 },
-        { "toolId": "ex_fintech", "minYears": 2 }
+        {
+          "toolId": "t_js",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_ts",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_angular",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_html",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_css",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_rxjs",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_sass",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_jest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_webpack",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_nodejs",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_solid",
+          "minYears": 2
+        },
+        {
+          "toolId": "ex_fintech",
+          "minYears": 2
+        }
       ]
     },
     {
@@ -724,25 +1828,76 @@
       "employmentType": "full",
       "notes": "Микросервисы на Go для сервиса объявлений",
       "minRequirements": [
-        { "toolId": "t_go", "minYears": 1.5 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 }
+        {
+          "toolId": "t_go",
+          "minYears": 1.5
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_go", "minYears": 1.5 },
-        { "toolId": "t_postgres", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "t_git", "minYears": 2 },
-        { "toolId": "st_rest", "minYears": 2 },
-        { "toolId": "t_gin", "minYears": 1 },
-        { "toolId": "t_kafka", "minYears": 1 },
-        { "toolId": "t_redis", "minYears": 1 },
-        { "toolId": "t_k8s", "minYears": 0.5 },
-        { "toolId": "t_grpc_go", "minYears": 1 },
-        { "toolId": "sk_microservices", "minYears": 1 },
-        { "toolId": "ex_ecommerce", "minYears": 1 }
+        {
+          "toolId": "t_go",
+          "minYears": 1.5
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gin",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 0.5
+        },
+        {
+          "toolId": "t_grpc_go",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "ex_ecommerce",
+          "minYears": 1
+        }
       ]
     },
     {
@@ -759,28 +1914,4711 @@
       "employmentType": "full",
       "notes": "Разработка ядра поискового движка на C++",
       "minRequirements": [
-        { "toolId": "t_cpp", "minYears": 5 },
-        { "toolId": "t_c", "minYears": 3 },
-        { "toolId": "t_stl", "minYears": 4 },
-        { "toolId": "t_cmake", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 4 },
-        { "toolId": "t_linux", "minYears": 4 }
+        {
+          "toolId": "t_cpp",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_c",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        }
       ],
       "maxRequirements": [
-        { "toolId": "t_cpp", "minYears": 5 },
-        { "toolId": "t_c", "minYears": 3 },
-        { "toolId": "t_stl", "minYears": 4 },
-        { "toolId": "t_cmake", "minYears": 3 },
-        { "toolId": "t_git", "minYears": 4 },
-        { "toolId": "t_linux", "minYears": 4 },
-        { "toolId": "t_boost", "minYears": 2 },
-        { "toolId": "t_python", "minYears": 2 },
-        { "toolId": "t_docker", "minYears": 1 },
-        { "toolId": "sk_algorithms", "minYears": 4 },
-        { "toolId": "sk_concurrency", "minYears": 3 },
-        { "toolId": "oc_highload", "minYears": 3 },
-        { "toolId": "oc_distributed", "minYears": 2 }
+        {
+          "toolId": "t_cpp",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_c",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_algorithms",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 3
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 3
+        },
+        {
+          "toolId": "oc_distributed",
+          "minYears": 2
+        }
       ]
+    },
+    {
+      "id": "vac_cpp_001",
+      "positionId": "pos_cpp",
+      "companyName": "Открытые Решения",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 240000,
+      "salaryTo": 300000,
+      "notes": "C++ Developer (источник: Telegram, 2024-09-29)"
+    },
+    {
+      "id": "vac_cpp_002",
+      "positionId": "pos_cpp",
+      "companyName": "Looking4",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 300000,
+      "salaryTo": 500000,
+      "notes": "Senior/ Lead C++ разработчик (источник: Telegram, 2024-12-05)"
+    },
+    {
+      "id": "vac_cpp_003",
+      "positionId": "pos_cpp",
+      "companyName": "Элкомсофт",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 100000,
+      "salaryTo": 200000,
+      "notes": "C++ GUI (Windows) Developer (источник: Telegram, 2024-12-06)"
+    },
+    {
+      "id": "vac_cpp_004",
+      "positionId": "pos_cpp",
+      "companyName": "ЭЛВИС-НеоТек",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 5
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_mysql",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_mqtt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 5
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 300000,
+      "notes": "Ведущий программист C/C++ (разработка и поддержка серверного приложения) (источник: Telegram, 2024-12-21)"
+    },
+    {
+      "id": "vac_cpp_005",
+      "positionId": "pos_cpp",
+      "companyName": "ЛСЦТ",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 360000,
+      "notes": "C++ Team Lead (источник: Telegram, 2024-12-27)"
+    },
+    {
+      "id": "vac_cpp_006",
+      "positionId": "pos_cpp",
+      "companyName": "ТЕХПРOМ",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 350000,
+      "notes": "Ведущий инженер-программист С++ (источник: Telegram, 2025-02-13)"
+    },
+    {
+      "id": "vac_cpp_007",
+      "positionId": "pos_cpp",
+      "companyName": "ЛСЦТ",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 360000,
+      "notes": "C++ Team Lead (источник: Telegram, 2025-02-14)"
+    },
+    {
+      "id": "vac_cpp_008",
+      "positionId": "pos_cpp",
+      "companyName": "КОД9",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        }
+      ],
+      "salaryTo": 2500,
+      "notes": "Senior C++ developer/Tech Lead C++ (источник: Telegram, 2025-02-16)"
+    },
+    {
+      "id": "vac_cpp_009",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Р2Б",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_opencv",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "notes": "Ведущий инженер-программист С++ (источник: Telegram, 2025-02-19)"
+    },
+    {
+      "id": "vac_cpp_010",
+      "positionId": "pos_cpp",
+      "companyName": "VAS Experts",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "notes": "Ведущий инженер-программист C (источник: Telegram, 2025-02-25)"
+    },
+    {
+      "id": "vac_cpp_011",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Стахановец",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "salaryTo": 431000,
+      "notes": "Разработчик С++ (системное программирование под Linux) (источник: Telegram, 2025-03-17)"
+    },
+    {
+      "id": "vac_cpp_012",
+      "positionId": "pos_cpp",
+      "companyName": "Axiom JDK",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 400000,
+      "notes": "Ведущий инженер-программист С++ (Framework) (источник: Telegram, 2025-03-21)"
+    },
+    {
+      "id": "vac_cpp_013",
+      "positionId": "pos_cpp",
+      "companyName": "Diamond Personnel R&C",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 500000,
+      "notes": "Team Lead C++ (источник: Telegram, 2025-05-05)"
+    },
+    {
+      "id": "vac_cpp_014",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Стахановец",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 300000,
+      "notes": "Разработчик С++ (системное программирование под Linux) (источник: Telegram, 2025-06-05)"
+    },
+    {
+      "id": "vac_cpp_015",
+      "positionId": "pos_cpp",
+      "companyName": "ООО ТЕХ ФЬЮЖН",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_protobuf",
+          "minYears": 5
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_mysql",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_zeromq",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_protobuf",
+          "minYears": 5
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 350000,
+      "notes": "Ведущий программист C++ (источник: Telegram, 2025-06-16)"
+    },
+    {
+      "id": "vac_cpp_016",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Р2Б",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_opencv",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "notes": "Ведущий инженер-программист С++ (источник: Telegram, 2025-07-21)"
+    },
+    {
+      "id": "vac_cpp_017",
+      "positionId": "pos_cpp",
+      "companyName": "ТЕХПРОМ",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 300000,
+      "salaryTo": 325000,
+      "notes": "Ведущий инженер-программист С++ (источник: Telegram, 2025-08-01)"
+    },
+    {
+      "id": "vac_cpp_018",
+      "positionId": "pos_cpp",
+      "companyName": "Бюро 1440",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 5
+        }
+      ],
+      "salaryFrom": 200000,
+      "notes": "Ведущий (источник: Telegram, 2025-10-21)"
+    },
+    {
+      "id": "vac_cpp_019",
+      "positionId": "pos_cpp",
+      "companyName": "Positive Technologies",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 350000,
+      "notes": "Ведущий системный программист С++ (Windows) (источник: Telegram, 2025-10-28)"
+    },
+    {
+      "id": "vac_cpp_020",
+      "positionId": "pos_cpp",
+      "companyName": "U-System",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "salaryFrom": 220000,
+      "notes": "Ведущий разработчик С++ (источник: Telegram, 2025-11-05)"
+    },
+    {
+      "id": "vac_cpp_021",
+      "positionId": "pos_cpp",
+      "companyName": "Ориент Системс",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_mongodb",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 400000,
+      "notes": "Team Lead C++ (источник: Telegram, 2026-01-03)"
+    },
+    {
+      "id": "vac_cpp_022",
+      "positionId": "pos_cpp",
+      "companyName": "КА Heaad",
+      "grade": "lead",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 5
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 6
+        },
+        {
+          "toolId": "t_valgrind",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 400000,
+      "salaryTo": 600000,
+      "notes": "Руководитель группы системной разработки (источник: Telegram, 2026-03-20)"
+    },
+    {
+      "id": "vac_cpp_023",
+      "positionId": "pos_cpp",
+      "companyName": "GLOBAL SEARCH",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_mqtt",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 300000,
+      "salaryTo": 350000,
+      "notes": "Senior C++ dev (источник: Telegram, 2024-05-25)"
+    },
+    {
+      "id": "vac_cpp_024",
+      "positionId": "pos_cpp",
+      "companyName": "VAMI",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_elastic",
+          "minYears": 1
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 400000,
+      "notes": "Senior C++ (источник: Telegram, 2024-06-22)"
+    },
+    {
+      "id": "vac_cpp_025",
+      "positionId": "pos_cpp",
+      "companyName": "Top Selection",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        }
+      ],
+      "salaryFrom": 450000,
+      "salaryTo": 550000,
+      "notes": "C++ Senior developer (источник: Telegram, 2024-06-23)"
+    },
+    {
+      "id": "vac_cpp_026",
+      "positionId": "pos_cpp",
+      "companyName": "ППР",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 300000,
+      "notes": "Senior ANDROID Developer/ C++ (источник: Telegram, 2024-06-29)"
+    },
+    {
+      "id": "vac_cpp_027",
+      "positionId": "pos_cpp",
+      "companyName": "VAMI",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_rest",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_elastic",
+          "minYears": 1
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 450000,
+      "notes": "Senior (источник: Telegram, 2024-07-11)"
+    },
+    {
+      "id": "vac_cpp_028",
+      "positionId": "pos_cpp",
+      "companyName": "Amex Development",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 300000,
+      "salaryTo": 350000,
+      "notes": "C-разработчик (middle+/ senior)\n\nЛокация: (источник: Telegram, 2024-09-03)"
+    },
+    {
+      "id": "vac_cpp_029",
+      "positionId": "pos_cpp",
+      "companyName": "SkyWebPro",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryFrom": 80000,
+      "salaryTo": 270000,
+      "notes": "Middle/ Senior Программист C++ (источник: Telegram, 2024-10-02)"
+    },
+    {
+      "id": "vac_cpp_030",
+      "positionId": "pos_cpp",
+      "companyName": "FIS",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryTo": 400000,
+      "notes": "C++ developer (источник: Telegram, 2024-10-11)"
+    },
+    {
+      "id": "vac_cpp_031",
+      "positionId": "pos_cpp",
+      "companyName": "MIA Dev",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 300000,
+      "notes": "C#, C/C++ разработчик (Middle/ Senior) (источник: Telegram, 2024-11-01)"
+    },
+    {
+      "id": "vac_cpp_032",
+      "positionId": "pos_cpp",
+      "companyName": "Index",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 3
+        }
+      ],
+      "salaryFrom": 320000,
+      "salaryTo": 400000,
+      "notes": "С++ Developer (источник: Telegram, 2024-11-06)"
+    },
+    {
+      "id": "vac_cpp_033",
+      "positionId": "pos_cpp",
+      "companyName": "ООО«Информ-Поддержка»",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_mysql",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 180000,
+      "salaryTo": 270000,
+      "notes": "разработчик (источник: Telegram, 2024-11-15)"
+    },
+    {
+      "id": "vac_cpp_034",
+      "positionId": "pos_cpp",
+      "companyName": "FIS",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryTo": 400000,
+      "notes": "C++ developer (Senior) (источник: Telegram, 2024-11-16)"
+    },
+    {
+      "id": "vac_cpp_035",
+      "positionId": "pos_cpp",
+      "companyName": "АСКОН",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryFrom": 200000,
+      "notes": "Разработчик С++ (Middle/ Senior) (источник: Telegram, 2024-11-17)"
+    },
+    {
+      "id": "vac_cpp_036",
+      "positionId": "pos_cpp",
+      "companyName": "Новые Телеком Решения",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_grpc",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "st_grpc",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryFrom": 270000,
+      "notes": "Senior С++ Developer (источник: Telegram, 2024-11-18)"
+    },
+    {
+      "id": "vac_cpp_037",
+      "positionId": "pos_cpp",
+      "companyName": "РобоТрейдер",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_mongodb",
+          "minYears": 1
+        },
+        {
+          "toolId": "oc_distributed",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 350000,
+      "notes": "Middle+/ Senior C++ developer (источник: Telegram, 2024-11-25)"
+    },
+    {
+      "id": "vac_cpp_038",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Квантбокс",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_rabbitmq",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 400000,
+      "notes": "Разработчик на C/ C++ под Linux (источник: Telegram, 2024-11-29)"
+    },
+    {
+      "id": "vac_cpp_039",
+      "positionId": "pos_cpp",
+      "companyName": "RedLab",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 320000,
+      "notes": "Senior  С/С++ разработчик (Linux) (источник: Telegram, 2024-12-13)"
+    },
+    {
+      "id": "vac_cpp_040",
+      "positionId": "pos_cpp",
+      "companyName": "CODEX",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "salaryFrom": 250000,
+      "notes": "Разработчик С++ (источник: Telegram, 2024-12-14)"
+    },
+    {
+      "id": "vac_cpp_041",
+      "positionId": "pos_cpp",
+      "companyName": "Top Selection",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 300000,
+      "notes": "С++ разработчик (источник: Telegram, 2024-12-18)"
+    },
+    {
+      "id": "vac_cpp_042",
+      "positionId": "pos_cpp",
+      "companyName": "r_keeper",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "salaryTo": 250000,
+      "notes": "BackEnd C, С++ Developer (источник: Telegram, 2024-12-26)"
+    },
+    {
+      "id": "vac_cpp_043",
+      "positionId": "pos_cpp",
+      "companyName": "r_keeper",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        }
+      ],
+      "salaryTo": 250000,
+      "notes": "BackEnd C, С++ Developer (источник: Telegram, 2025-01-10)"
+    },
+    {
+      "id": "vac_cpp_044",
+      "positionId": "pos_cpp",
+      "companyName": "АСКОН",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryFrom": 200000,
+      "notes": "Разработчик С++ (Middle/ Senior) (источник: Telegram, 2025-01-11)"
+    },
+    {
+      "id": "vac_cpp_045",
+      "positionId": "pos_cpp",
+      "companyName": "RedLab",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_kafka",
+          "minYears": 3
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 320000,
+      "notes": "Senior  С/С++ разработчик (Linux) (источник: Telegram, 2025-01-14)"
+    },
+    {
+      "id": "vac_cpp_046",
+      "positionId": "pos_cpp",
+      "companyName": "ITQuick",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "contract",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 3
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 3
+        }
+      ],
+      "salaryFrom": 320000,
+      "salaryTo": 370000,
+      "notes": "Senior C/C++ Developer (источник: Telegram, 2025-01-15)"
+    },
+    {
+      "id": "vac_cpp_047",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Открытые решения",
+      "grade": "senior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 3
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 4
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 4
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 4
+        }
+      ],
+      "salaryTo": 280000,
+      "notes": "C/C++ Developer (источник: Telegram, 2025-01-21)"
+    },
+    {
+      "id": "vac_cpp_048",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Вайтлист",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 220000,
+      "notes": "Программист С++ (источник: Telegram, 2024-06-21)"
+    },
+    {
+      "id": "vac_cpp_049",
+      "positionId": "pos_cpp",
+      "companyName": "Geoplat",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 300000,
+      "notes": "Разработчик С++ (с опытом ML) (источник: Telegram, 2024-06-30)"
+    },
+    {
+      "id": "vac_cpp_050",
+      "positionId": "pos_cpp",
+      "companyName": "iRW",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryTo": 450000,
+      "notes": "Эксперт C/C++ (Tech Lеad) (источник: Telegram, 2024-07-01)"
+    },
+    {
+      "id": "vac_cpp_051",
+      "positionId": "pos_cpp",
+      "companyName": "RUNSET",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 415000,
+      "notes": "Разработчик Go/ C++ (источник: Telegram, 2024-07-18)"
+    },
+    {
+      "id": "vac_cpp_052",
+      "positionId": "pos_cpp",
+      "companyName": "Geoplat",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 300000,
+      "notes": "Разработчик-С++ (с опытом ML)\n\nЛокация: (источник: Telegram, 2024-08-01)"
+    },
+    {
+      "id": "vac_cpp_053",
+      "positionId": "pos_cpp",
+      "companyName": "КА \"АЙТИКА\"",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_dpdk",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 350000,
+      "notes": "Системный программист С++\n \nЛокация: (источник: Telegram, 2024-08-21)"
+    },
+    {
+      "id": "vac_cpp_054",
+      "positionId": "pos_cpp",
+      "companyName": "ООО ИнфТех",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "hybrid",
+      "employmentType": "contract",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 250000,
+      "notes": "Разработчик (источник: Telegram, 2024-08-22)"
+    },
+    {
+      "id": "vac_cpp_055",
+      "positionId": "pos_cpp",
+      "companyName": "Jaxel",
+      "grade": "middle",
+      "currency": "USD",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_k8s",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 4000,
+      "salaryTo": 5000,
+      "notes": "С++ Developer\n \nЛокация: (источник: Telegram, 2024-08-26)"
+    },
+    {
+      "id": "vac_cpp_056",
+      "positionId": "pos_cpp",
+      "companyName": "IntelligiChain",
+      "grade": "middle",
+      "currency": "USD",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 3500,
+      "salaryTo": 4500,
+      "notes": "Middle (источник: Telegram, 2024-10-03)"
+    },
+    {
+      "id": "vac_cpp_057",
+      "positionId": "pos_cpp",
+      "companyName": "Index",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 320000,
+      "salaryTo": 400000,
+      "notes": "С++/Qt/QML Developer (источник: Telegram, 2024-10-06)"
+    },
+    {
+      "id": "vac_cpp_058",
+      "positionId": "pos_cpp",
+      "companyName": "Sape",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_mysql",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_redis",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_clickhouse",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 350000,
+      "notes": "Разработчик С++ (источник: Telegram, 2024-10-24)"
+    },
+    {
+      "id": "vac_cpp_059",
+      "positionId": "pos_cpp",
+      "companyName": "BRIEF",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 300000,
+      "notes": "Программист С++ (источник: Telegram, 2024-10-27)"
+    },
+    {
+      "id": "vac_cpp_060",
+      "positionId": "pos_cpp",
+      "companyName": "Опен Сервис",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 70000,
+      "salaryTo": 120000,
+      "notes": "Middle Qt/C++ разработчик (источник: Telegram, 2024-10-29)"
+    },
+    {
+      "id": "vac_cpp_061",
+      "positionId": "pos_cpp",
+      "companyName": "Конфидент",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gtest",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 250000,
+      "notes": "Программист C++ ( Linux) (источник: Telegram, 2024-10-31)"
+    },
+    {
+      "id": "vac_cpp_062",
+      "positionId": "pos_cpp",
+      "companyName": "Научно-Медицинская Фирма МБН",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_opengl",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_opengl",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 140000,
+      "salaryTo": 200000,
+      "notes": "Middle Desktop Developer C++ (источник: Telegram, 2024-11-02)"
+    },
+    {
+      "id": "vac_cpp_063",
+      "positionId": "pos_cpp",
+      "companyName": "ООО СКБ электротехнического приборостроения",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_mysql",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_posix",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 80000,
+      "salaryTo": 200000,
+      "notes": "Инженер-программист С/С++ (источник: Telegram, 2024-11-03)"
+    },
+    {
+      "id": "vac_cpp_064",
+      "positionId": "pos_cpp",
+      "companyName": "Нейтроникс",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 330000,
+      "notes": "Разработчик С++ (источник: Telegram, 2024-11-04)"
+    },
+    {
+      "id": "vac_cpp_065",
+      "positionId": "pos_cpp",
+      "companyName": "БизнесМатика",
+      "grade": "middle",
+      "currency": "USD",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_microservices",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        },
+        {
+          "toolId": "oc_highload",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 3000,
+      "salaryTo": 4000,
+      "notes": "Backend (источник: Telegram, 2024-11-09)"
+    },
+    {
+      "id": "vac_cpp_066",
+      "positionId": "pos_cpp",
+      "companyName": "Web Control",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 250000,
+      "notes": "Разработчик С/С++ (источник: Telegram, 2024-11-13)"
+    },
+    {
+      "id": "vac_cpp_067",
+      "positionId": "pos_cpp",
+      "companyName": "JETLYN",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 250000,
+      "salaryTo": 340000,
+      "notes": "Разработчик C++ (источник: Telegram, 2024-11-22)"
+    },
+    {
+      "id": "vac_cpp_068",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Бриф",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 280000,
+      "salaryTo": 350000,
+      "notes": "Программист С++ (источник: Telegram, 2024-11-24)"
+    },
+    {
+      "id": "vac_cpp_069",
+      "positionId": "pos_cpp",
+      "companyName": "SkyWeb.Pro",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 80000,
+      "salaryTo": 270000,
+      "notes": "Разработчик С++ (источник: Telegram, 2024-11-28)"
+    },
+    {
+      "id": "vac_cpp_070",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Открытые Лаборатории",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 190000,
+      "notes": "Инженер-программист С/С++ (Linux, Embedded) (источник: Telegram, 2024-11-30)"
+    },
+    {
+      "id": "vac_cpp_071",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Телеком и Микроэлектроник Индастриз",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 2
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 2
+        }
+      ],
+      "salaryFrom": 200000,
+      "salaryTo": 250000,
+      "notes": "Программист C/C++ (источник: Telegram, 2024-12-02)"
+    },
+    {
+      "id": "vac_cpp_072",
+      "positionId": "pos_cpp",
+      "companyName": "АЙТИ.СПЕЙС",
+      "grade": "middle",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 2
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "notes": "Middle-разработчик (C/C++) для БПЛА (источник: Telegram, 2024-12-04)"
+    },
+    {
+      "id": "vac_cpp_073",
+      "positionId": "pos_cpp",
+      "companyName": "Комтех-Н",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_postgres",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 250000,
+      "notes": "Программист С++ (источник: Telegram, 2024-10-17)"
+    },
+    {
+      "id": "vac_cpp_074",
+      "positionId": "pos_cpp",
+      "companyName": "ООО Прософт-Системы",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 200000,
+      "notes": "Инженер-программист С++ (источник: Telegram, 2025-01-09)"
+    },
+    {
+      "id": "vac_cpp_075",
+      "positionId": "pos_cpp",
+      "companyName": "Визардсофт",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 100000,
+      "notes": "Программист С++ (источник: Telegram, 2025-01-29)"
+    },
+    {
+      "id": "vac_cpp_076",
+      "positionId": "pos_cpp",
+      "companyName": "Форсайт",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "salaryTo": 250000,
+      "notes": "Разработчик С++ (Qt, Аврора) (источник: Telegram, 2025-03-06)"
+    },
+    {
+      "id": "vac_cpp_077",
+      "positionId": "pos_cpp",
+      "companyName": "Junbrain.ru",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 60000,
+      "salaryTo": 90000,
+      "notes": "Junior C++ Developer (источник: Telegram, 2025-03-28)"
+    },
+    {
+      "id": "vac_cpp_078",
+      "positionId": "pos_cpp",
+      "companyName": "CODEX IT",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 70000,
+      "salaryTo": 150000,
+      "notes": "Junior C++ Developer (источник: Telegram, 2025-04-02)"
+    },
+    {
+      "id": "vac_cpp_079",
+      "positionId": "pos_cpp",
+      "companyName": "ВИЗАРДСОФТ",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_git",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 100000,
+      "notes": "Программист С++ (источник: Telegram, 2025-04-10)"
+    },
+    {
+      "id": "vac_cpp_080",
+      "positionId": "pos_cpp",
+      "companyName": "ИФК \"Опцион\"",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_valgrind",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "notes": "Разработчик C++ (источник: Telegram, 2025-05-06)"
+    },
+    {
+      "id": "vac_cpp_081",
+      "positionId": "pos_cpp",
+      "companyName": "ОПЦИОН, ИФК",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_boost",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_valgrind",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_websocket",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 150000,
+      "notes": "Разработчик C++ (источник: Telegram, 2025-05-06)"
+    },
+    {
+      "id": "vac_cpp_082",
+      "positionId": "pos_cpp",
+      "companyName": "ООО ИБИС",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_grpc",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_qt",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_docker",
+          "minYears": 1
+        },
+        {
+          "toolId": "st_grpc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 190000,
+      "notes": "программист\n\nЛокация: (источник: Telegram, 2025-07-19)"
+    },
+    {
+      "id": "vac_cpp_083",
+      "positionId": "pos_cpp",
+      "companyName": "Опен Сервис",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 50000,
+      "salaryTo": 70000,
+      "notes": "Junior C++/ Qml разработчик (источник: Telegram, 2025-08-07)"
+    },
+    {
+      "id": "vac_cpp_084",
+      "positionId": "pos_cpp",
+      "companyName": "CAD Exchanger",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_openmp",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 52000,
+      "salaryTo": 70000,
+      "notes": "Junior C++ Developer (источник: Telegram, 2025-09-10)"
+    },
+    {
+      "id": "vac_cpp_085",
+      "positionId": "pos_cpp",
+      "companyName": "Интегрус",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        }
+      ],
+      "salaryFrom": 30000,
+      "salaryTo": 50000,
+      "notes": "Junior инженер (C / C++) — dev tooling / ABI (источник: Telegram, 2026-02-09)"
+    },
+    {
+      "id": "vac_cpp_086",
+      "positionId": "pos_cpp",
+      "companyName": "Voximplant",
+      "grade": "junior",
+      "currency": "RUB",
+      "status": "open",
+      "location": "Россия (удалённо)",
+      "workFormat": "remote",
+      "employmentType": "full",
+      "minRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        }
+      ],
+      "maxRequirements": [
+        {
+          "toolId": "t_cpp",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_cmake",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_stl",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_python",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_linux",
+          "minYears": 1
+        },
+        {
+          "toolId": "sk_concurrency",
+          "minYears": 1
+        },
+        {
+          "toolId": "t_gcc",
+          "minYears": 1
+        }
+      ],
+      "salaryTo": 350000,
+      "notes": "C++ Developer (источник: Telegram, 2026-02-16)"
     }
   ]
 }

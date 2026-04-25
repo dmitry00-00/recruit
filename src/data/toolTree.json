@@ -561,6 +561,71 @@
               "id": "t_stl",
               "name": "STL",
               "logoUrl": null
+            },
+            {
+              "id": "t_posix",
+              "name": "POSIX",
+              "logoUrl": null
+            },
+            {
+              "id": "t_gcc",
+              "name": "GCC",
+              "logoUrl": null
+            },
+            {
+              "id": "t_clang",
+              "name": "Clang / LLVM",
+              "logoUrl": null
+            },
+            {
+              "id": "t_openmp",
+              "name": "OpenMP",
+              "logoUrl": null
+            },
+            {
+              "id": "t_dpdk",
+              "name": "DPDK",
+              "logoUrl": null
+            },
+            {
+              "id": "t_winapi",
+              "name": "WinAPI / Win32",
+              "logoUrl": null
+            },
+            {
+              "id": "t_opengl",
+              "name": "OpenGL",
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opengl/opengl-original.svg"
+            },
+            {
+              "id": "t_vulkan",
+              "name": "Vulkan",
+              "logoUrl": null
+            },
+            {
+              "id": "t_cuda",
+              "name": "CUDA",
+              "logoUrl": null
+            },
+            {
+              "id": "t_zeromq",
+              "name": "ZeroMQ",
+              "logoUrl": null
+            },
+            {
+              "id": "t_gtest",
+              "name": "GTest / GoogleTest",
+              "logoUrl": null
+            },
+            {
+              "id": "t_valgrind",
+              "name": "Valgrind",
+              "logoUrl": null
+            },
+            {
+              "id": "t_conan",
+              "name": "Conan",
+              "logoUrl": null
             }
           ],
           "group": "Языки разработки"
@@ -879,6 +944,11 @@
             {
               "id": "t_pulsar",
               "name": "Pulsar",
+              "logoUrl": null
+            },
+            {
+              "id": "t_mqtt",
+              "name": "MQTT",
               "logoUrl": null
             }
           ],
@@ -1554,6 +1624,11 @@
             {
               "id": "st_oauth",
               "name": "OAuth 2.0 / OIDC",
+              "logoUrl": null
+            },
+            {
+              "id": "t_protobuf",
+              "name": "Protocol Buffers (Protobuf)",
               "logoUrl": null
             }
           ]

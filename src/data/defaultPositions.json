@@ -554,6 +554,45 @@
           ]
         }
       ]
+    },
+    {
+      "id": "pos_cpp",
+      "name": "C/C++ Developer",
+      "category": "developer",
+      "subcategory": "Systems",
+      "icon": "Cpu",
+      "grades": [
+        "junior",
+        "middle",
+        "senior",
+        "lead"
+      ],
+      "description": "Системный разработчик на C/C++: embedded, highload, сетевое ПО, десктоп",
+      "requiredCategories": [
+        {
+          "categoryId": "cat_tools",
+          "subcategoryIds": [
+            "sub_cpp",
+            "sub_db_sql",
+            "sub_messaging",
+            "sub_devops",
+            "sub_vcs"
+          ]
+        },
+        {
+          "categoryId": "cat_skills",
+          "subcategoryIds": [
+            "sub_arch",
+            "sub_algo"
+          ]
+        },
+        {
+          "categoryId": "cat_standards",
+          "subcategoryIds": [
+            "sub_api_standards"
+          ]
+        }
+      ]
     }
   ]
 }
