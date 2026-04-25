@@ -12,7 +12,7 @@ import { PipelinePage } from '@/pages/Pipeline';
 import { LoginPage, RegisterPage, ProfilePage } from '@/pages/Auth';
 import { ToolsEditor } from '@/pages/Tools';
 import { ErrorBoundary } from '@/components/ui';
-import { seedIfEmpty } from '@/db';
+import { seedIfEmpty, patchSeedData } from '@/db';
 import { usePositionStore, useAuthStore } from '@/stores';
 
 export function App() {
@@ -26,9 +26,9 @@ export function App() {
     }
 
     // Seed DB and load positions
-    seedIfEmpty().then(() => {
-      usePositionStore.getState().load();
-    });
+    seedIfEmpty()
+      .then(() => patchSeedData())
+      .then(() => usePositionStore.getState().load());
   }, []);
 
   return (

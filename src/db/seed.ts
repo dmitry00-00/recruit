@@ -1,6 +1,38 @@
 import { db } from './schema';
 import type { Position, Vacancy, Candidate, WorkEntry, ResponseEvent, RecruitmentTask } from '@/entities';
 
+/**
+ * Добавляет в БД записи из seed-файлов, которых ещё нет.
+ * Безопасно вызывать при любом состоянии БД — существующие данные не трогает.
+ */
+export async function patchSeedData(): Promise<void> {
+  const now = new Date();
+
+  // Patch positions: add any missing by id
+  const posModule = await import('@/data/defaultPositions.json');
+  const allPositions = posModule.default.positions as Record<string, unknown>[];
+  const existingPosIds = new Set(await db.positions.toCollection().primaryKeys());
+  const missingPositions: Position[] = allPositions
+    .filter((p) => !existingPosIds.has(p.id as string))
+    .map((p) => ({ ...p, createdAt: now, updatedAt: now } as Position));
+  if (missingPositions.length > 0) {
+    await db.positions.bulkAdd(missingPositions);
+    console.log(`[DB] Patched ${missingPositions.length} missing positions`);
+  }
+
+  // Patch vacancies: add any missing by id
+  const vacModule = await import('@/data/seedVacancies.json');
+  const allVacancies = vacModule.default.vacancies as Record<string, unknown>[];
+  const existingVacIds = new Set(await db.vacancies.toCollection().primaryKeys());
+  const missingVacancies: Vacancy[] = allVacancies
+    .filter((v) => !existingVacIds.has(v.id as string))
+    .map((v) => ({ ...v, publishedAt: now, createdAt: now, updatedAt: now } as Vacancy));
+  if (missingVacancies.length > 0) {
+    await db.vacancies.bulkAdd(missingVacancies);
+    console.log(`[DB] Patched ${missingVacancies.length} missing vacancies`);
+  }
+}
+
 export async function seedIfEmpty(): Promise<void> {
   // Seed positions
   const positionsCount = await db.positions.count();
