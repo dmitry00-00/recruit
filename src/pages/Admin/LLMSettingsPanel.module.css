@@ -183,3 +183,207 @@
 .hint a:hover {
   text-decoration: underline;
 }
+
+/* ── Prompts section ─────────────────────────────────────────── */
+
+.promptsSection {
+  margin-top: 12px;
+  border-top: 1px solid var(--border-tertiary);
+  padding-top: 10px;
+}
+
+.promptsToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.promptsToggle:hover { color: var(--amber); }
+
+.customBadge {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 15%, var(--bg-primary));
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.promptsBody {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promptsHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--bg-primary);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+}
+
+.promptTabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+.promptTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.promptTab:hover { color: var(--text-primary); }
+
+.promptTabActive {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.promptTextarea {
+  width: 100%;
+  min-height: 280px;
+  padding: 10px 12px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.55;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  tab-size: 2;
+}
+
+.promptTextarea:focus { border-color: var(--amber); }
+
+.promptFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.promptMeta {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.customLabel {
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.promptActions {
+  display: flex;
+  gap: 6px;
+}
+
+.resetBtn,
+.diffBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-sm, 4px);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.resetBtn:hover {
+  border-color: var(--danger, #ef4444);
+  color: var(--danger, #ef4444);
+}
+
+.diffBtn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* ── Quick-insert tips ───────────────────────────────────────── */
+
+.tipsBlock {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tipsLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.tips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tipBtn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-secondary);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  white-space: nowrap;
+}
+
+.tipBtn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 8%, var(--bg-secondary));
+  border-style: solid;
+}

@@ -10,7 +10,14 @@ export {
   coerceEmploymentType,
 } from './importNormalizer';
 export type { NormalizedVacancy, NormalizedCandidate, NormalizedWorkEntry, NormalizedTool, NormalizedRequirement } from './importNormalizer';
-export { extractVacancyFromText, extractCandidateFromText, setDeepseekApiKey, getDeepseekApiKey } from './llmExtractor';
+export {
+  extractVacancyFromText,
+  extractCandidateFromText,
+  getPrompt, setPrompt, resetPrompt, isPromptCustomised,
+  DEFAULT_VACANCY_PROMPT, DEFAULT_CANDIDATE_PROMPT,
+  setDeepseekApiKey, getDeepseekApiKey,
+} from './llmExtractor';
+export type { PromptType } from './llmExtractor';
 export { aggregateCandidate } from './aggregateCandidate';
 export { computeRoadmap } from './computeRoadmap';
 export { computeCareerRecommendations } from './computeCareerRecommendations';
