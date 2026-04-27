@@ -11,6 +11,7 @@ import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
 import { LoginPage, RegisterPage, ProfilePage } from '@/pages/Auth';
 import { ToolsEditor } from '@/pages/Tools';
+import { AdminImport } from '@/pages/Admin';
 import { ErrorBoundary } from '@/components/ui';
 import { seedIfEmpty, patchSeedData } from '@/db';
 import { usePositionStore, useAuthStore } from '@/stores';
@@ -60,6 +61,7 @@ export function App() {
           <Route path="/pipeline/:vacancyId" element={<ProtectedRoute><PipelinePage /></ProtectedRoute>} />
           <Route path="/recruiter" element={<ProtectedRoute roles={['admin', 'recruiter', 'hiring_manager']}><RecruiterDashboard /></ProtectedRoute>} />
           <Route path="/tools" element={<ProtectedRoute roles={['admin', 'recruiter']}><ToolsEditor /></ProtectedRoute>} />
+          <Route path="/admin/import" element={<ProtectedRoute roles={['admin', 'recruiter']}><AdminImport /></ProtectedRoute>} />
           <Route path="/roadmap/:positionId" element={<ProtectedRoute><PositionDetail /></ProtectedRoute>} />
         </Routes>
         </ErrorBoundary>
