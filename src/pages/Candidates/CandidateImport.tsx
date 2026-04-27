@@ -4,7 +4,7 @@ import { Upload, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCandidateStore } from '@/stores';
 import {
-  checkOllamaConnection,
+  checkConnection as checkLLMConnection,
   listModels,
   configureLLM,
   getLLMConfig,
@@ -12,7 +12,7 @@ import {
   parseResumesFromFiles,
   parsedCandidateToStoreFormat,
 } from '@/services';
-import type { ParsedCandidate, ResumeParseProgress } from '@/services';
+import type { ParsedCandidate, ResumeParseProgress, LLMProvider } from '@/services';
 import styles from './CandidateImport.module.css';
 
 type InputMode = 'files' | 'text';
@@ -27,8 +27,12 @@ export function CandidateImport() {
   const [isDragging, setIsDragging] = useState(false);
 
   // LLM settings
-  const [ollamaUrl, setOllamaUrl] = useState(getLLMConfig().baseUrl);
-  const [model, setModel] = useState(getLLMConfig().model);
+  const cfg = getLLMConfig();
+  const [provider, setProvider] = useState<LLMProvider>(cfg.provider);
+  const [ollamaUrl, setOllamaUrl] = useState(cfg.baseUrl);
+  const [model, setModel] = useState(cfg.model);
+  const [deepseekKey, setDeepseekKey] = useState(cfg.deepseekApiKey);
+  const [deepseekModel, setDeepseekModel] = useState(cfg.deepseekModel);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
   const [connected, setConnected] = useState(false);
   const [checkingConnection, setCheckingConnection] = useState(true);
@@ -47,30 +51,42 @@ export function CandidateImport() {
 
   const checkConnection = useCallback(async () => {
     setCheckingConnection(true);
-    configureLLM({ baseUrl: ollamaUrl });
-    const ok = await checkOllamaConnection();
+    const ok = await checkLLMConnection();
     setConnected(ok);
     if (ok) {
       const models = await listModels();
       setAvailableModels(models);
-      if (models.length > 0 && !models.includes(model)) {
-        setModel(models[0]);
-        configureLLM({ model: models[0] });
-      }
     }
     setCheckingConnection(false);
-  }, [ollamaUrl, model]);
+  }, []);
 
   useEffect(() => { checkConnection(); }, [checkConnection]);
+
+  const handleProviderChange = (p: LLMProvider) => {
+    setProvider(p);
+    configureLLM({ provider: p });
+    setConnected(false);
+    checkConnection();
+  };
 
   const handleModelChange = (m: string) => {
     setModel(m);
     configureLLM({ model: m });
   };
 
+  const handleDeepseekModelChange = (m: string) => {
+    setDeepseekModel(m);
+    configureLLM({ deepseekModel: m });
+  };
+
   const handleOllamaUrlChange = (newUrl: string) => {
     setOllamaUrl(newUrl);
     configureLLM({ baseUrl: newUrl });
+  };
+
+  const handleDeepseekKeyChange = (key: string) => {
+    setDeepseekKey(key);
+    configureLLM({ deepseekApiKey: key });
   };
 
   // ── File handling ──
@@ -200,32 +216,52 @@ export function CandidateImport() {
       <div className={styles.settingsRow}>
         <div
           className={`${styles.connectionDot} ${connected ? styles.connected : styles.disconnected}`}
-          title={connected ? 'Ollama подключена' : 'Ollama не найдена'}
+          title={connected ? 'Подключено' : 'Нет соединения'}
         />
-        <span className={styles.settingsLabel}>Ollama:</span>
-        <input
-          className={styles.settingsInput}
-          value={ollamaUrl}
-          onChange={(e) => handleOllamaUrlChange(e.target.value)}
-          placeholder="http://localhost:11434"
-        />
-        <span className={styles.settingsLabel}>Модель:</span>
-        {availableModels.length > 0 ? (
-          <select
-            className={styles.settingsSelect}
-            value={model}
-            onChange={(e) => handleModelChange(e.target.value)}
-          >
-            {availableModels.map((m) => <option key={m} value={m}>{m}</option>)}
-          </select>
+        <span className={styles.settingsLabel}>LLM:</span>
+        <select
+          className={styles.settingsSelect}
+          value={provider}
+          onChange={(e) => handleProviderChange(e.target.value as LLMProvider)}
+          style={{ width: 110 }}
+        >
+          <option value="ollama">Ollama</option>
+          <option value="deepseek">Deepseek</option>
+        </select>
+
+        {provider === 'ollama' ? (
+          <>
+            <input
+              className={styles.settingsInput}
+              value={ollamaUrl}
+              onChange={(e) => handleOllamaUrlChange(e.target.value)}
+              placeholder="http://localhost:11434"
+            />
+            <span className={styles.settingsLabel}>Модель:</span>
+            {availableModels.length > 0 ? (
+              <select className={styles.settingsSelect} value={model} onChange={(e) => handleModelChange(e.target.value)}>
+                {availableModels.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            ) : (
+              <input className={styles.settingsInput} value={model} onChange={(e) => handleModelChange(e.target.value)} placeholder="qwen2.5:14b" style={{ width: 140 }} />
+            )}
+          </>
         ) : (
-          <input
-            className={styles.settingsInput}
-            value={model}
-            onChange={(e) => handleModelChange(e.target.value)}
-            placeholder="qwen2.5:14b"
-            style={{ width: 140 }}
-          />
+          <>
+            <input
+              className={styles.settingsInput}
+              type="password"
+              value={deepseekKey}
+              onChange={(e) => handleDeepseekKeyChange(e.target.value)}
+              placeholder="API ключ Deepseek"
+              style={{ flex: 1 }}
+            />
+            <span className={styles.settingsLabel}>Модель:</span>
+            <select className={styles.settingsSelect} value={deepseekModel} onChange={(e) => handleDeepseekModelChange(e.target.value)} style={{ width: 160 }}>
+              <option value="deepseek-chat">deepseek-chat (v4-flash)</option>
+              <option value="deepseek-reasoner">deepseek-reasoner</option>
+            </select>
+          </>
         )}
         {checkingConnection && <div className={styles.spinner} />}
       </div>

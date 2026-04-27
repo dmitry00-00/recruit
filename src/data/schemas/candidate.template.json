@@ -1,0 +1,87 @@
+{
+  "_comment": "Canonical template for importing a candidate with work history.",
+  "_version": "1.0",
+
+  "firstName": "Алексей",
+  "lastName": "Петров",
+  "middleName": "Игоревич",
+
+  "email": "alexey.petrov@gmail.com",
+  "phone": "+7 916 555-11-22",
+  "telegramHandle": "@alexey_dev",
+  "linkedinUrl": "https://linkedin.com/in/alexey-petrov",
+
+  "city": "Москва",
+  "country": "Россия",
+
+  "positionId": "pos_frontend",
+
+  "workFormat": "hybrid",
+  "relocate": false,
+
+  "salaryExpected": 450000,
+  "currency": "RUB",
+
+  "notes": "Senior Frontend. Опыт в крупных продуктовых компаниях.",
+
+  "workEntries": [
+    {
+      "companyName": "Mail.ru Group",
+      "positionId": "pos_frontend",
+      "grade": "middle",
+      "startDate": "2019-03-01",
+      "endDate": "2021-08-01",
+      "isCurrent": false,
+      "salary": 220000,
+      "currency": "RUB",
+      "responsibilities": "Разработка интерфейсов главной страницы, оптимизация производительности.",
+      "tools": [
+        { "toolId": "t_js",     "years": 2.5 },
+        { "toolId": "t_ts",     "years": 2   },
+        { "toolId": "t_react",  "years": 2.5 },
+        { "toolId": "t_redux",  "years": 2   },
+        { "toolId": "t_html",   "years": 2.5 },
+        { "toolId": "t_css",    "years": 2.5 },
+        { "toolId": "t_git",    "years": 2.5 },
+        { "toolId": "st_rest",  "years": 2   }
+      ]
+    },
+    {
+      "companyName": "Яндекс",
+      "positionId": "pos_frontend",
+      "grade": "senior",
+      "startDate": "2021-09-01",
+      "endDate": null,
+      "isCurrent": true,
+      "salary": 420000,
+      "currency": "RUB",
+      "responsibilities": "Разработка интерфейсов Яндекс Поиска. SSR, performance, A/B.",
+      "tools": [
+        { "toolId": "t_js",       "years": 3   },
+        { "toolId": "t_ts",       "years": 3   },
+        { "toolId": "t_react",    "years": 3   },
+        { "toolId": "t_nextjs",   "years": 1.5 },
+        { "toolId": "t_redux",    "years": 2   },
+        { "toolId": "t_html",     "years": 3   },
+        { "toolId": "t_css",      "years": 3   },
+        { "toolId": "t_git",      "years": 3   },
+        { "toolId": "t_docker",   "years": 1   },
+        { "toolId": "st_rest",    "years": 3   },
+        { "toolId": "st_solid",   "years": 2   }
+      ]
+    }
+  ],
+
+  "_fieldGuide": {
+    "positionId": "string — желаемая должность кандидата. ID из defaultPositions.json.",
+    "workFormat": "one of: office | remote | hybrid | any",
+    "relocate": "boolean",
+    "currency": "one of: RUB | USD | EUR | KZT",
+    "workEntries[].grade": "one of: intern | junior | middle | senior | lead | principal | staff",
+    "workEntries[].startDate": "ISO date string YYYY-MM-DD",
+    "workEntries[].endDate": "ISO date string YYYY-MM-DD или null если isCurrent=true",
+    "workEntries[].isCurrent": "boolean — текущее место работы",
+    "workEntries[].tools[].toolId": "string — ID инструмента из toolTree.json",
+    "workEntries[].tools[].years": "number — опыт в данной компании (лет)"
+  }
+}

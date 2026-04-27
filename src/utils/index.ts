@@ -1,4 +1,16 @@
 export { computeMatchScore } from './matchScore';
+export {
+  resolveToolId as resolveToolIdFromAliases,
+  resolvePositionId,
+  normalizeVacancy,
+  normalizeCandidate,
+  coerceGrade,
+  coerceCurrency,
+  coerceWorkFormat,
+  coerceEmploymentType,
+} from './importNormalizer';
+export type { NormalizedVacancy, NormalizedCandidate, NormalizedWorkEntry, NormalizedTool, NormalizedRequirement } from './importNormalizer';
+export { extractVacancyFromText, extractCandidateFromText, setDeepseekApiKey, getDeepseekApiKey } from './llmExtractor';
 export { aggregateCandidate } from './aggregateCandidate';
 export { computeRoadmap } from './computeRoadmap';
 export { computeCareerRecommendations } from './computeCareerRecommendations';

@@ -1,0 +1,547 @@
+{
+  "_comment": "Maps raw skill name variants (lower-case) to canonical toolId. Used by the import normalizer.",
+  "_version": "1.0",
+
+  "aliases": {
+
+    "javascript":          "t_js",
+    "js":                  "t_js",
+    "es6":                 "t_js",
+    "es2015":              "t_js",
+    "ecmascript":          "t_js",
+    "vanilla js":          "t_js",
+    "vanilla javascript":  "t_js",
+
+    "typescript":          "t_ts",
+    "ts":                  "t_ts",
+
+    "react":               "t_react",
+    "react.js":            "t_react",
+    "reactjs":             "t_react",
+    "react js":            "t_react",
+
+    "next.js":             "t_nextjs",
+    "nextjs":              "t_nextjs",
+    "next js":             "t_nextjs",
+
+    "vue":                 "t_vue",
+    "vue.js":              "t_vue",
+    "vuejs":               "t_vue",
+    "vue js":              "t_vue",
+    "vue 3":               "t_vue",
+    "vue 2":               "t_vue",
+
+    "nuxt":                "t_nuxt",
+    "nuxt.js":             "t_nuxt",
+    "nuxtjs":              "t_nuxt",
+
+    "angular":             "t_angular",
+    "angularjs":           "t_angular",
+    "angular 2":           "t_angular",
+    "angular 15":          "t_angular",
+
+    "svelte":              "t_svelte",
+    "sveltekit":           "t_svelte",
+
+    "node":                "t_nodejs",
+    "node.js":             "t_nodejs",
+    "nodejs":              "t_nodejs",
+    "node js":             "t_nodejs",
+
+    "nestjs":              "t_nestjs",
+    "nest.js":             "t_nestjs",
+    "nest":                "t_nestjs",
+
+    "express":             "t_express",
+    "express.js":          "t_express",
+    "expressjs":           "t_express",
+
+    "redux":               "t_redux",
+    "redux toolkit":       "t_redux",
+    "rtk":                 "t_redux",
+
+    "mobx":                "t_mobx",
+
+    "webpack":             "t_webpack",
+    "vite":                "t_vite",
+
+    "jest":                "t_jest",
+    "graphql":             "t_graphql",
+
+    "react native":        "t_reactnative",
+    "rn":                  "t_reactnative",
+
+    "python":              "t_python",
+    "python3":             "t_python",
+    "python 3":            "t_python",
+
+    "django":              "t_django",
+    "django rest":         "t_django",
+    "django rest framework": "t_django",
+    "drf":                 "t_django",
+
+    "fastapi":             "t_fastapi",
+    "fast api":            "t_fastapi",
+
+    "flask":               "t_flask",
+
+    "celery":              "t_celery",
+    "sqlalchemy":          "t_sqlalchemy",
+    "pydantic":            "t_pydantic",
+    "alembic":             "t_alembic",
+    "pytest":              "t_pytest",
+
+    "pandas":              "t_pandas",
+    "numpy":               "t_numpy",
+    "scipy":               "t_scipy",
+
+    "java":                "t_java",
+
+    "spring":              "t_spring",
+    "spring framework":    "t_spring",
+
+    "spring boot":         "t_springboot",
+    "springboot":          "t_springboot",
+
+    "hibernate":           "t_hibernate",
+    "maven":               "t_maven",
+    "gradle":              "t_gradle",
+    "junit":               "t_junit",
+    "junit5":              "t_junit",
+    "mockito":             "t_mockito",
+
+    "c#":                  "t_csharp",
+    "csharp":              "t_csharp",
+    "c sharp":             "t_csharp",
+
+    ".net":                "t_dotnet",
+    "dotnet":              "t_dotnet",
+    ".net core":           "t_dotnet",
+    ".net 6":              "t_dotnet",
+    ".net 7":              "t_dotnet",
+    ".net 8":              "t_dotnet",
+
+    "asp.net":             "t_aspnet",
+    "asp.net core":        "t_aspnet",
+    "aspnet":              "t_aspnet",
+    "asp net":             "t_aspnet",
+
+    "entity framework":    "t_ef_core",
+    "entity framework core": "t_ef_core",
+    "ef core":             "t_ef_core",
+    "ef":                  "t_ef_core",
+
+    "wpf":                 "t_wpf",
+    "signalr":             "t_signalr",
+    "linq":                "t_linq",
+    "dapper":              "t_dapper",
+
+    "go":                  "t_go",
+    "golang":              "t_go",
+
+    "gin":                 "t_gin",
+    "gin framework":       "t_gin",
+    "echo":                "t_echo_go",
+    "grpc go":             "t_grpc_go",
+
+    "kotlin":              "t_kotlin",
+    "coroutines":          "t_kotlin_corout",
+    "kotlin coroutines":   "t_kotlin_corout",
+    "ktor":                "t_ktor",
+    "kmm":                 "t_kmm",
+    "kotlin multiplatform": "t_kmm",
+
+    "swift":               "t_swift",
+    "swiftui":             "t_swiftui",
+    "swift ui":            "t_swiftui",
+    "uikit":               "t_uikit",
+    "ui kit":              "t_uikit",
+    "combine":             "t_combine",
+    "rxswift":             "t_rxswift",
+    "alamofire":           "t_alamofire",
+
+    "php":                 "t_php",
+    "laravel":             "t_laravel",
+    "symfony":             "t_symfony",
+    "wordpress":           "t_wordpress",
+    "wp":                  "t_wordpress",
+    "bitrix":              "t_bitrix",
+    "1с-битрикс":          "t_bitrix",
+    "bitrix24":            "t_bitrix",
+    "yii":                 "t_yii",
+    "yii2":                "t_yii",
+
+    "c++":                 "t_cpp",
+    "cpp":                 "t_cpp",
+    "qt":                  "t_qt",
+    "boost":               "t_boost",
+    "cmake":               "t_cmake",
+    "cuda":                "t_cuda",
+
+    "c":                   "t_c",
+
+    "dart":                "t_dart",
+    "flutter":             "t_flutter",
+
+    "ruby":                "t_ruby",
+    "ruby on rails":       "t_ror",
+    "rails":               "t_ror",
+    "ror":                 "t_ror",
+
+    "scala":               "t_scala",
+    "rust":                "t_rust",
+    "lua":                 "t_lua",
+    "bash":                "t_bash",
+    "shell":               "t_bash",
+    "shell script":        "t_bash",
+    "bash scripting":      "t_bash",
+    "powershell":          "t_powershell",
+
+    "r":                   "t_r",
+    "r language":          "t_r",
+
+    "1с":                  "t_1c",
+    "1c":                  "t_1c",
+    "1c eрp":              "t_1c_erp",
+    "1с erp":              "t_1c_erp",
+
+    "html":                "t_html",
+    "html5":               "t_html",
+    "html/css":            "t_html",
+
+    "css":                 "t_css",
+    "css3":                "t_css",
+
+    "sass":                "t_sass",
+    "scss":                "t_sass",
+    "sass/scss":           "t_sass",
+
+    "tailwind":            "t_tailwind",
+    "tailwind css":        "t_tailwind",
+    "tailwindcss":         "t_tailwind",
+
+    "bootstrap":           "t_bootstrap",
+
+    "postgresql":          "t_postgres",
+    "postgres":            "t_postgres",
+    "psql":                "t_postgres",
+
+    "mysql":               "t_mysql",
+    "mariadb":             "t_mariadb",
+    "mssql":               "t_mssql",
+    "ms sql":              "t_mssql",
+    "sql server":          "t_mssql",
+    "microsoft sql server": "t_mssql",
+
+    "oracle":              "t_oracle_db",
+    "oracle db":           "t_oracle_db",
+
+    "sqlite":              "t_sqlite",
+    "mongodb":             "t_mongodb",
+    "mongo":               "t_mongodb",
+
+    "redis":               "t_redis",
+    "cassandra":           "t_cassandra",
+    "elasticsearch":       "t_elastic",
+    "elastic":             "t_elastic",
+    "elk":                 "t_elk",
+    "elk stack":           "t_elk",
+
+    "neo4j":               "t_neo4j",
+    "clickhouse":          "t_clickhouse",
+    "influxdb":            "t_influxdb",
+    "firebase":            "t_firebase",
+    "dynamodb":            "t_dynamodb",
+
+    "kafka":               "t_kafka",
+    "apache kafka":        "t_kafka",
+
+    "rabbitmq":            "t_rabbitmq",
+    "rabbit mq":           "t_rabbitmq",
+    "nats":                "t_nats",
+    "activemq":            "t_activemq",
+    "mqtt":                "t_mqtt",
+
+    "docker":              "t_docker",
+    "kubernetes":          "t_k8s",
+    "k8s":                 "t_k8s",
+    "k8":                  "t_k8s",
+    "helm":                "t_helm",
+    "terraform":           "t_terraform",
+    "ansible":             "t_ansible",
+    "jenkins":             "t_jenkins",
+
+    "github actions":      "t_github_actions",
+    "gh actions":          "t_github_actions",
+
+    "gitlab ci":           "t_gitlab_ci",
+    "gitlab ci/cd":        "t_gitlab_ci",
+    "gitlab cicd":         "t_gitlab_ci",
+
+    "argocd":              "t_argocd",
+    "argo cd":             "t_argocd",
+    "nginx":               "t_nginx",
+    "prometheus":          "t_prometheus",
+    "grafana":             "t_grafana",
+    "vault":               "t_vault",
+    "istio":               "t_istio",
+    "linux":               "t_linux",
+
+    "aws":                 "t_aws",
+    "amazon web services": "t_aws",
+    "s3":                  "t_aws_s3",
+    "aws s3":              "t_aws_s3",
+    "ec2":                 "t_aws_ec2",
+    "aws ec2":             "t_aws_ec2",
+    "lambda":              "t_aws_lambda",
+    "aws lambda":          "t_aws_lambda",
+
+    "azure":               "t_azure",
+    "microsoft azure":     "t_azure",
+
+    "gcp":                 "t_gcp",
+    "google cloud":        "t_gcp",
+    "google cloud platform": "t_gcp",
+
+    "yandex cloud":        "t_yandex_cloud",
+
+    "git":                 "t_git",
+    "github":              "t_github",
+    "gitlab":              "t_gitlab",
+    "bitbucket":           "t_bitbucket",
+
+    "selenium":            "t_selenium",
+    "playwright":          "t_playwright",
+    "cypress":             "t_cypress",
+    "postman":             "t_postman",
+    "jmeter":              "t_jmeter",
+    "appium":              "t_appium",
+    "allure":              "t_allure",
+    "k6":                  "t_k6",
+    "gatling":             "t_gatling",
+
+    "spark":               "t_spark",
+    "apache spark":        "t_spark",
+    "hadoop":              "t_hadoop",
+    "airflow":             "t_airflow",
+    "apache airflow":      "t_airflow",
+    "flink":               "t_flink",
+    "apache flink":        "t_flink",
+    "dbt":                 "t_dbt",
+
+    "tensorflow":          "t_tensorflow",
+    "tf":                  "t_tensorflow",
+    "pytorch":             "t_pytorch",
+    "torch":               "t_pytorch",
+    "sklearn":             "t_sklearn",
+    "scikit-learn":        "t_sklearn",
+    "scikit learn":        "t_sklearn",
+    "opencv":              "t_opencv",
+    "langchain":           "t_langchain",
+    "catboost":            "t_catboost",
+    "xgboost":             "t_xgboost",
+    "huggingface":         "t_huggingface",
+    "hugging face":        "t_huggingface",
+    "mlflow":              "t_mlflow",
+
+    "figma":               "t_figma",
+    "sketch":              "t_sketch",
+    "zeplin":              "t_zeplin",
+    "blender":             "t_blender",
+    "photoshop":           "t_photoshop",
+    "ps":                  "t_photoshop",
+
+    "jira":                "t_jira",
+    "confluence":          "t_confluence",
+    "trello":              "t_trello",
+    "notion":              "t_notion",
+    "miro":                "t_miro",
+    "youtrack":            "t_youtrack",
+    "clickup":             "t_clickup",
+
+    "jetpack compose":     "t_compose",
+    "compose":             "t_compose",
+    "retrofit":            "t_retrofit",
+    "room":                "t_room",
+    "dagger":              "t_dagger",
+    "hilt":                "t_dagger",
+    "dagger/hilt":         "t_dagger",
+    "dagger hilt":         "t_dagger",
+    "koin":                "t_koin",
+    "glide":               "t_glide",
+
+    "rest":                "st_rest",
+    "rest api":            "st_rest",
+    "restful":             "st_rest",
+    "rest ful":            "st_rest",
+    "http api":            "st_rest",
+
+    "grpc":                "st_grpc",
+
+    "soap":                "st_soap",
+
+    "websocket":           "st_websocket",
+    "websockets":          "st_websocket",
+    "ws":                  "st_websocket",
+
+    "openapi":             "st_openapi",
+    "swagger":             "st_openapi",
+    "openapi/swagger":     "st_openapi",
+
+    "oauth":               "st_oauth",
+    "oauth2":              "st_oauth",
+    "oauth 2.0":           "st_oauth",
+    "oidc":                "st_oauth",
+
+    "protobuf":            "t_protobuf",
+    "protocol buffers":    "t_protobuf",
+
+    "solid":               "st_solid",
+    "solid principles":    "st_solid",
+
+    "design patterns":     "st_patterns",
+    "patterns":            "st_patterns",
+
+    "tdd":                 "st_tdd",
+    "test driven development": "st_tdd",
+
+    "bdd":                 "st_bdd",
+
+    "clean code":          "st_clean",
+    "clean architecture":  "sk_clean_arch",
+
+    "microservices":       "sk_microservices",
+    "micro services":      "sk_microservices",
+    "microservice architecture": "sk_microservices",
+
+    "ddd":                 "sk_ddd",
+    "domain driven design": "sk_ddd",
+    "domain-driven design": "sk_ddd",
+
+    "cqrs":                "sk_cqrs",
+    "event sourcing":      "sk_cqrs",
+    "cqrs/es":             "sk_cqrs",
+
+    "algorithms":          "sk_algorithms",
+    "data structures":     "sk_algorithms",
+    "algorithms and data structures": "sk_algorithms",
+
+    "multithreading":      "sk_concurrency",
+    "concurrency":         "sk_concurrency",
+    "async":               "sk_concurrency",
+    "asynchronous programming": "sk_concurrency",
+
+    "security":            "sk_auth",
+    "authentication":      "sk_auth",
+    "authorization":       "sk_auth",
+    "auth":                "sk_auth",
+
+    "owasp":               "sk_owasp",
+    "web security":        "sk_owasp",
+
+    "mvvm":                "sk_mobile_arch",
+    "mvp":                 "sk_mobile_arch",
+    "mvi":                 "sk_mobile_arch",
+    "viper":               "sk_mobile_arch",
+
+    "agile":               "oc_agile",
+    "scrum":               "oc_agile",
+    "kanban":              "oc_agile",
+    "agile/scrum":         "oc_agile",
+
+    "highload":            "oc_highload",
+    "high load":           "oc_highload",
+    "high-load":           "oc_highload",
+
+    "fintech":             "ex_fintech",
+    "banking":             "ex_fintech",
+    "finance":             "ex_fintech",
+
+    "e-commerce":          "ex_ecommerce",
+    "ecommerce":           "ex_ecommerce",
+    "retail":              "ex_ecommerce",
+
+    "healthcare":          "ex_healthcare",
+    "medtech":             "ex_healthcare",
+    "healthtech":          "ex_healthcare",
+
+    "gamedev":             "ex_gamedev",
+    "game development":    "ex_gamedev"
+  },
+
+  "_positionAliases": {
+    "_comment": "Maps free-form job title → positionId",
+
+    "frontend developer":  "pos_frontend",
+    "frontend engineer":   "pos_frontend",
+    "front-end developer": "pos_frontend",
+    "фронтенд разработчик": "pos_frontend",
+    "фронтенд":            "pos_frontend",
+
+    "backend developer":   "pos_backend",
+    "backend engineer":    "pos_backend",
+    "back-end developer":  "pos_backend",
+    "бэкенд разработчик":  "pos_backend",
+    "бэкенд":              "pos_backend",
+    "server-side developer": "pos_backend",
+
+    "fullstack developer": "pos_fullstack",
+    "full stack developer": "pos_fullstack",
+    "full-stack developer": "pos_fullstack",
+    "фулстек":             "pos_fullstack",
+    "фуллстек разработчик": "pos_fullstack",
+
+    "ios developer":       "pos_ios",
+    "ios engineer":        "pos_ios",
+    "ios разработчик":     "pos_ios",
+    "swift developer":     "pos_ios",
+    "mobile developer ios": "pos_ios",
+
+    "android developer":   "pos_android",
+    "android engineer":    "pos_android",
+    "android разработчик": "pos_android",
+    "kotlin developer":    "pos_android",
+    "mobile developer android": "pos_android",
+
+    "devops engineer":     "pos_devops",
+    "devops":              "pos_devops",
+    "sre":                 "pos_devops",
+    "site reliability engineer": "pos_devops",
+    "platform engineer":   "pos_devops",
+
+    "qa engineer":         "pos_qa",
+    "qa":                  "pos_qa",
+    "tester":              "pos_qa",
+    "тестировщик":         "pos_qa",
+    "quality assurance":   "pos_qa",
+    "automation qa":       "pos_qa",
+    "sdet":                "pos_qa",
+
+    "data scientist":      "pos_ds",
+    "ml engineer":         "pos_ds",
+    "machine learning engineer": "pos_ds",
+    "data scientist / ml": "pos_ds",
+    "специалист по данным": "pos_ds",
+
+    "data engineer":       "pos_data_engineer",
+    "data pipeline engineer": "pos_data_engineer",
+
+    "system analyst":      "pos_analyst",
+    "systems analyst":     "pos_analyst",
+    "business analyst":    "pos_analyst",
+    "аналитик":            "pos_analyst",
+    "системный аналитик":  "pos_analyst",
+
+    "product manager":     "pos_pm",
+    "project manager":     "pos_pm",
+    "pm":                  "pos_pm",
+    "менеджер проекта":    "pos_pm",
+    "product owner":       "pos_pm",
+
+    "ux designer":         "pos_designer",
+    "ui designer":         "pos_designer",
+    "ui/ux designer":      "pos_designer",
+    "product designer":    "pos_designer",
+    "дизайнер":            "pos_designer"
+  }
+}

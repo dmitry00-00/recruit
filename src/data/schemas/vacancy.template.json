@@ -1,0 +1,52 @@
+{
+  "_comment": "Canonical template for importing a vacancy. All fields with '?' are optional.",
+  "_version": "1.0",
+
+  "positionId": "pos_frontend",
+  "companyName": "Яндекс",
+  "companyLogoUrl": "https://example.com/logo.png",
+
+  "grade": "senior",
+
+  "salaryFrom": 300000,
+  "salaryTo": 450000,
+  "currency": "RUB",
+
+  "workFormat": "hybrid",
+  "employmentType": "full",
+  "location": "Москва",
+
+  "status": "open",
+  "sourceUrl": "https://hh.ru/vacancy/12345678",
+  "publishedAt": "2026-04-01",
+
+  "notes": "Команда поиска. Обязателен опыт в highload.",
+
+  "minRequirements": [
+    { "toolId": "t_js",    "minYears": 4 },
+    { "toolId": "t_ts",    "minYears": 3 },
+    { "toolId": "t_react", "minYears": 3 },
+    { "toolId": "t_git",   "minYears": 3 }
+  ],
+
+  "maxRequirements": [
+    { "toolId": "t_js",      "minYears": 4 },
+    { "toolId": "t_ts",      "minYears": 3 },
+    { "toolId": "t_react",   "minYears": 3 },
+    { "toolId": "t_nextjs",  "minYears": 1 },
+    { "toolId": "t_git",     "minYears": 3 },
+    { "toolId": "t_docker",  "minYears": 1 }
+  ],
+
+  "_fieldGuide": {
+    "positionId": "string — ID должности из defaultPositions.json (pos_frontend, pos_backend, pos_fullstack, pos_ios, pos_android, pos_devops, pos_qa, pos_analyst, pos_ds …)",
+    "grade": "one of: intern | junior | middle | senior | lead | principal | staff",
+    "currency": "one of: RUB | USD | EUR | KZT",
+    "workFormat": "one of: office | remote | hybrid",
+    "employmentType": "one of: full | part | contract | freelance",
+    "status": "one of: open | closed | offer_made | hired",
+    "publishedAt": "ISO date string YYYY-MM-DD",
+    "minRequirements": "Обязательные требования. toolId — ID инструмента из toolTree.json. minYears — минимальный опыт в годах (number, опционально).",
+    "maxRequirements": "Желательные требования (superset of min). Те же поля."
+  }
+}

@@ -1,5 +1,5 @@
-export { configureLLM, getLLMConfig, checkOllamaConnection, listModels, generateCompletion, extractJSON } from './llmService';
-export type { LLMConfig, LLMStreamCallbacks } from './llmService';
+export { configureLLM, getLLMConfig, checkOllamaConnection, checkDeepseekConnection, checkConnection, listModels, generateCompletion, extractJSON } from './llmService';
+export type { LLMConfig, LLMStreamCallbacks, LLMProvider } from './llmService';
 export { fetchPageContent, extractTextFromHTML, detectSourceType, normalizeTelegramUrl, truncateText } from './scraperService';
 export type { SourceType } from './scraperService';
 export { parseVacanciesFromUrl, parseVacanciesFromText, resolveToolId } from './vacancyParser';

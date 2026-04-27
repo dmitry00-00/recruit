@@ -1,0 +1,75 @@
+{
+  "_comment": "Canonical template for a Position (role mask). Defines which subcategories are relevant.",
+  "_version": "1.0",
+
+  "id": "pos_frontend",
+  "name": "Frontend Developer",
+  "category": "developer",
+  "subcategory": "Frontend",
+  "icon": "Monitor",
+
+  "grades": ["intern", "junior", "middle", "senior", "lead"],
+
+  "description": "Разработчик пользовательских интерфейсов для веб-приложений",
+
+  "requiredCategories": [
+    {
+      "categoryId": "cat_tools",
+      "subcategoryIds": ["sub_languages", "sub_vcs", "sub_testing"]
+    },
+    {
+      "categoryId": "cat_skills",
+      "subcategoryIds": ["sub_arch"]
+    },
+    {
+      "categoryId": "cat_standards",
+      "subcategoryIds": ["sub_api_standards", "sub_code_standards"]
+    }
+  ],
+
+  "_fieldGuide": {
+    "id": "string — уникальный ID должности, начинается с 'pos_'",
+    "category": "one of: developer | qa | analyst | devops | designer | manager | data",
+    "grades": "array of: intern | junior | middle | senior | lead | principal | staff",
+    "requiredCategories[].categoryId": "ID категории из toolTree.json (cat_tools, cat_skills, cat_standards, cat_platforms, cat_domains, cat_context …)",
+    "requiredCategories[].subcategoryIds": "Список sub-ID которые релевантны для этой должности. TreePicker будет фильтровать по ним."
+  },
+
+  "_availableCategories": {
+    "cat_tools": {
+      "sub_languages":   "Языки разработки (+ фреймворки как дочерние)",
+      "sub_html_css":    "HTML/CSS (sub_languages в домене web)",
+      "sub_databases":   "Базы данных (SQL + NoSQL)",
+      "sub_messaging":   "Брокеры сообщений (Kafka, RabbitMQ …)",
+      "sub_devops_tools":"Инфраструктура (Docker, K8s, CI/CD …)",
+      "sub_vcs":         "Контроль версий (Git, GitHub …)",
+      "sub_testing":     "Тестирование (Jest, Selenium, Playwright …)",
+      "sub_bigdata":     "Big Data (Spark, Airflow …)",
+      "sub_ml":          "ML / AI (TensorFlow, PyTorch …)",
+      "sub_mobile_native":"Нативная мобильная разработка (Xcode, Android Studio …)",
+      "sub_pm_tools":    "Управление проектами (Jira, Confluence …)",
+      "sub_design_tools":"Инструменты дизайна (Figma, Sketch …)"
+    },
+    "cat_skills": {
+      "sub_arch":        "Архитектура (Microservices, DDD, CQRS …)",
+      "sub_algorithms":  "Алгоритмы и структуры данных",
+      "sub_security":    "Безопасность (OWASP, Auth …)",
+      "sub_mobile_skills":"Мобильные навыки (MVVM, Offline-first …)"
+    },
+    "cat_standards": {
+      "sub_api_standards":  "API-стандарты (REST, gRPC, GraphQL …)",
+      "sub_code_standards": "Стандарты кода (SOLID, TDD, Clean Code …)",
+      "sub_db_standards":   "Стандарты БД (ACID, SQL92 …)"
+    },
+    "cat_platforms": {
+      "sub_cloud":    "Облака (AWS, Azure, GCP, Yandex Cloud)",
+      "sub_mobile_eco": "Экосистемы (Android, iOS, AWS …)"
+    },
+    "cat_domains": {
+      "sub_industry": "Отраслевой опыт (Fintech, E-commerce …)"
+    },
+    "cat_context": {
+      "sub_orgcontext": "Контекст организации (Startup, Highload, Agile …)"
+    }
+  }
+}
