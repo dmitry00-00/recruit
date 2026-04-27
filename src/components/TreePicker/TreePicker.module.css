@@ -189,7 +189,7 @@
 .groupHead {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 3px 8px;
   font-family: var(--font-sans);
   font-size: 9px;
@@ -201,6 +201,12 @@
   border-top: 1px solid var(--border-tertiary);
   border-bottom: 1px solid var(--border-tertiary);
   flex-shrink: 0;
+  user-select: none;
+}
+
+.groupHead:hover {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
 }
 
 .groupHeadFirst {

@@ -82,10 +82,12 @@ export function TreePicker({
 
   const [activeCatId, setActiveCatId] = useState(tree[0]?.id ?? '');
   const [expanded, setExpanded] = useState<Record<string, string | null>>({});
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
 
-  // Reset expanded subcategories when category changes
+  // Reset expanded state when category changes
   useEffect(() => { setExpanded({}); }, [activeCatId]);
+  useEffect(() => { setExpandedGroups(new Set()); }, [activeCatId]);
 
   // Auto-select first category that has visible subs (when filter applied)
   useEffect(() => {
@@ -153,6 +155,15 @@ export function TreePicker({
 
   const toggleSub = (domain: string, subId: string) =>
     setExpanded((p) => ({ ...p, [domain]: p[domain] === subId ? null : subId }));
+
+  const toggleGroup = (domain: ToolDomain, groupName: string) => {
+    const key = `${domain}__${groupName}`;
+    setExpandedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
 
   // ── Edit-mode local UI state ──────────────────────────────
   const [editingSubId, setEditingSubId] = useState<string | null>(null);
@@ -368,13 +379,21 @@ export function TreePicker({
     );
   };
 
-  // ── Group header + inline rename ──────────────────────────
-  const renderGroupHead = (groupName: string, count: number, isFirst: boolean) => (
-    <div className={`${styles.groupHead} ${isFirst ? styles.groupHeadFirst : ''}`}>
-      <span className={styles.groupLabel}>{groupName}</span>
-      {count > 0 && <span className={styles.groupCount}>{count}</span>}
-    </div>
-  );
+  // ── Group header — clickable collapse toggle ──────────────
+  const renderGroupHead = (groupName: string, count: number, isFirst: boolean, domain: ToolDomain) => {
+    const isExpanded = expandedGroups.has(`${domain}__${groupName}`);
+    return (
+      <div
+        className={`${styles.groupHead} ${isFirst ? styles.groupHeadFirst : ''}`}
+        onClick={() => toggleGroup(domain, groupName)}
+        style={{ cursor: 'pointer' }}
+      >
+        {isExpanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+        <span className={styles.groupLabel}>{groupName}</span>
+        {count > 0 && <span className={styles.groupCount}>{count}</span>}
+      </div>
+    );
+  };
 
   // ── Subcategory toggle ────────────────────────────────────
   const renderSubToggle = (sub: ToolSubcategory, domain: ToolDomain) => {
@@ -541,10 +560,11 @@ export function TreePicker({
           {groupOrder.map((g, gi) => {
             const list = grouped.get(g)!;
             const groupCount = list.reduce((a, s) => a + countSub(s), 0);
+            const isGroupExpanded = !g || expandedGroups.has(`${domain}__${g}`);
             return (
               <div key={g || `__ungrouped_${gi}`}>
-                {g && renderGroupHead(g, groupCount, gi === 0)}
-                {list.map((sub) => renderSubToggle(sub, domain))}
+                {g && renderGroupHead(g, groupCount, gi === 0, domain)}
+                {isGroupExpanded && list.map((sub) => renderSubToggle(sub, domain))}
               </div>
             );
           })}
