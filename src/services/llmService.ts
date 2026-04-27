@@ -94,6 +94,7 @@ async function generateOllama(
   prompt: string,
   systemPrompt: string | undefined,
   callbacks?: LLMStreamCallbacks,
+  jsonMode?: boolean,
 ): Promise<string> {
   const body: Record<string, unknown> = {
     model: currentConfig.model,
@@ -102,6 +103,7 @@ async function generateOllama(
     options: { temperature: currentConfig.temperature, num_predict: currentConfig.maxTokens },
   };
   if (systemPrompt) body.system = systemPrompt;
+  if (jsonMode) body.format = 'json';
 
   const res = await fetch(`${currentConfig.baseUrl}/api/generate`, {
     method: 'POST',
@@ -144,10 +146,14 @@ async function generateDeepseek(
   prompt: string,
   systemPrompt: string | undefined,
   callbacks?: LLMStreamCallbacks,
+  jsonMode?: boolean,
 ): Promise<string> {
   const messages: { role: string; content: string }[] = [];
   if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
   messages.push({ role: 'user', content: prompt });
+
+  // deepseek-reasoner (R1) does not support response_format
+  const supportsJsonMode = jsonMode && currentConfig.deepseekModel !== 'deepseek-reasoner';
 
   const res = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
@@ -161,6 +167,7 @@ async function generateDeepseek(
       stream: true,
       temperature: currentConfig.temperature,
       max_tokens: currentConfig.maxTokens,
+      ...(supportsJsonMode && { response_format: { type: 'json_object' } }),
     }),
   });
 
@@ -203,11 +210,12 @@ export async function generateCompletion(
   prompt: string,
   systemPrompt?: string,
   callbacks?: LLMStreamCallbacks,
+  jsonMode?: boolean,
 ): Promise<string> {
   if (currentConfig.provider === 'deepseek') {
-    return generateDeepseek(prompt, systemPrompt, callbacks);
+    return generateDeepseek(prompt, systemPrompt, callbacks, jsonMode);
   }
-  return generateOllama(prompt, systemPrompt, callbacks);
+  return generateOllama(prompt, systemPrompt, callbacks, jsonMode);
 }
 
 export function extractJSON(text: string): string {
