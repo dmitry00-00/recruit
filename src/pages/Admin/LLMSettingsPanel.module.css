@@ -275,6 +275,54 @@
   flex-shrink: 0;
 }
 
+.domainRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.domainRow .label {
+  white-space: nowrap;
+}
+
+.domainRow select.input {
+  flex: 1;
+  max-width: 280px;
+}
+
+.domainRow select.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.domainCount {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.domainPositions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: -2px;
+}
+
+.domainChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-mono, monospace);
+  background: color-mix(in srgb, var(--amber) 8%, var(--bg-primary));
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, var(--border-tertiary));
+  border-radius: 999px;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
 .promptTextarea {
   width: 100%;
   min-height: 280px;

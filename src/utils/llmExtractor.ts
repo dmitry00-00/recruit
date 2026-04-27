@@ -4,6 +4,8 @@
  */
 
 import { generateCompletion, extractJSON } from '@/services/llmService';
+import type { PromptDomain } from './promptComposer';
+import { composePrompt } from './promptComposer';
 
 // ── Default prompts ──────────────────────────────────────────────────────────
 
@@ -99,14 +101,44 @@ const KEYS = {
   candidate: 'llm_prompt_candidate',
 } as const;
 
+const DOMAIN_KEYS = {
+  vacancy:   'llm_prompt_domain_vacancy',
+  candidate: 'llm_prompt_domain_candidate',
+} as const;
+
 export type PromptType = keyof typeof KEYS;
 
+export function getPromptDomain(type: PromptType): PromptDomain {
+  const stored = localStorage.getItem(DOMAIN_KEYS[type]);
+  return (stored as PromptDomain) || 'any';
+}
+
+export function setPromptDomain(type: PromptType, domain: PromptDomain): void {
+  if (domain === 'any') {
+    localStorage.removeItem(DOMAIN_KEYS[type]);
+  } else {
+    localStorage.setItem(DOMAIN_KEYS[type], domain);
+  }
+}
+
+/**
+ * Effective system prompt:
+ *   1) full custom override saved by the user, if any
+ *   2) otherwise composed from base rules + selected domain templates
+ */
 export function getPrompt(type: PromptType): string {
-  return localStorage.getItem(KEYS[type]) ?? (type === 'vacancy' ? DEFAULT_VACANCY_PROMPT : DEFAULT_CANDIDATE_PROMPT);
+  const override = localStorage.getItem(KEYS[type]);
+  if (override !== null) return override;
+  return composePrompt(type, getPromptDomain(type));
+}
+
+export function getDefaultPrompt(type: PromptType): string {
+  return composePrompt(type, getPromptDomain(type));
 }
 
 export function setPrompt(type: PromptType, value: string): void {
-  if (value.trim() === (type === 'vacancy' ? DEFAULT_VACANCY_PROMPT : DEFAULT_CANDIDATE_PROMPT).trim()) {
+  const composed = composePrompt(type, getPromptDomain(type));
+  if (value.trim() === composed.trim()) {
     localStorage.removeItem(KEYS[type]);
   } else {
     localStorage.setItem(KEYS[type], value);

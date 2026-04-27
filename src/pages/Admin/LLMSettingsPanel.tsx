@@ -12,10 +12,17 @@ import {
   setPrompt,
   resetPrompt,
   isPromptCustomised,
-  DEFAULT_VACANCY_PROMPT,
-  DEFAULT_CANDIDATE_PROMPT,
+  getPromptDomain,
+  setPromptDomain,
+  getDefaultPrompt,
   type PromptType,
 } from '@/utils/llmExtractor';
+import {
+  PROMPT_DOMAINS,
+  PROMPT_DOMAIN_LABELS,
+  getPositionsForDomain,
+  type PromptDomain,
+} from '@/utils/promptComposer';
 import styles from './LLMSettingsPanel.module.css';
 
 export function LLMSettingsPanel() {
@@ -39,10 +46,14 @@ export function LLMSettingsPanel() {
   const [candidatePrompt, setCandidatePromptState] = useState(() => getPrompt('candidate'));
   const [vacancyCustom, setVacancyCustom] = useState(() => isPromptCustomised('vacancy'));
   const [candidateCustom, setCandidateCustom] = useState(() => isPromptCustomised('candidate'));
+  const [vacancyDomain, setVacancyDomainState] = useState<PromptDomain>(() => getPromptDomain('vacancy'));
+  const [candidateDomain, setCandidateDomainState] = useState<PromptDomain>(() => getPromptDomain('candidate'));
 
   const currentPrompt = activePromptTab === 'vacancy' ? vacancyPrompt : candidatePrompt;
   const currentCustom = activePromptTab === 'vacancy' ? vacancyCustom : candidateCustom;
-  const defaultPrompt = activePromptTab === 'vacancy' ? DEFAULT_VACANCY_PROMPT : DEFAULT_CANDIDATE_PROMPT;
+  const currentDomain = activePromptTab === 'vacancy' ? vacancyDomain : candidateDomain;
+  const defaultPrompt = getDefaultPrompt(activePromptTab);
+  const domainPositions = getPositionsForDomain(currentDomain);
 
   const handlePromptChange = (value: string) => {
     if (activePromptTab === 'vacancy') {
@@ -56,13 +67,26 @@ export function LLMSettingsPanel() {
     }
   };
 
+  const handleDomainChange = (domain: PromptDomain) => {
+    setPromptDomain(activePromptTab, domain);
+    if (activePromptTab === 'vacancy') {
+      setVacancyDomainState(domain);
+      // If user has no override, reload composed prompt to reflect the new domain
+      if (!isPromptCustomised('vacancy')) setVacancyPromptState(getPrompt('vacancy'));
+    } else {
+      setCandidateDomainState(domain);
+      if (!isPromptCustomised('candidate')) setCandidatePromptState(getPrompt('candidate'));
+    }
+  };
+
   const handleReset = () => {
     resetPrompt(activePromptTab);
+    const fresh = getPrompt(activePromptTab);
     if (activePromptTab === 'vacancy') {
-      setVacancyPromptState(DEFAULT_VACANCY_PROMPT);
+      setVacancyPromptState(fresh);
       setVacancyCustom(false);
     } else {
-      setCandidatePromptState(DEFAULT_CANDIDATE_PROMPT);
+      setCandidatePromptState(fresh);
       setCandidateCustom(false);
     }
   };
@@ -231,6 +255,34 @@ export function LLMSettingsPanel() {
                 Резюме {candidateCustom && <span className={styles.dot} />}
               </button>
             </div>
+
+            {/* Domain selector */}
+            <div className={styles.domainRow}>
+              <label className={styles.label}>Домен</label>
+              <select
+                className={styles.input}
+                value={currentDomain}
+                onChange={(e) => handleDomainChange(e.target.value as PromptDomain)}
+                disabled={currentCustom}
+                title={currentCustom ? 'Сначала сбросьте кастомный промпт, чтобы переключить домен' : 'Подмешать в промпт шаблоны должностей этого домена'}
+              >
+                {PROMPT_DOMAINS.map((d) => (
+                  <option key={d} value={d}>{PROMPT_DOMAIN_LABELS[d]}</option>
+                ))}
+              </select>
+              <span className={styles.domainCount}>
+                {domainPositions.length} {domainPositions.length === 1 ? 'должность' : 'должностей'}
+              </span>
+            </div>
+            {!currentCustom && domainPositions.length > 0 && (
+              <div className={styles.domainPositions}>
+                {domainPositions.map((p) => (
+                  <span key={p.id} className={styles.domainChip} title={p.description ?? p.name}>
+                    {p.id}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {/* Editor */}
             <textarea
