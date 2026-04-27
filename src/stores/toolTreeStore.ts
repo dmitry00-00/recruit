@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { ToolCategory, ToolSubcategory, Tool } from '@/entities';
 import seed from '@/data/toolTree.json';
 
-const STORAGE_KEY = 'toolTree.v1';
+const STORAGE_KEY = 'toolTree.v2';
 
 function loadTree(): ToolCategory[] {
   try {
@@ -49,13 +49,32 @@ interface ToolTreeState {
   addTool: (
     subId: string,
     name: string,
-    opts?: { logoUrl?: string | null; aliases?: string[] },
+    opts?: { logoUrl?: string | null; aliases?: string[]; parentToolId?: string },
   ) => string;
   updateTool: (
     toolId: string,
     patch: Partial<Pick<Tool, 'name' | 'logoUrl' | 'aliases'>>,
   ) => void;
   removeTool: (toolId: string) => void;
+}
+
+/** Recursively map a tool, applying `fn` to the matching id (including nested children). */
+function mapToolDeep(tools: Tool[], toolId: string, fn: (t: Tool) => Tool): Tool[] {
+  return tools.map((t) => {
+    if (t.id === toolId) return fn(t);
+    if (t.children) return { ...t, children: mapToolDeep(t.children, toolId, fn) };
+    return t;
+  });
+}
+
+/** Recursively remove a tool by id from a tools tree. */
+function removeToolDeep(tools: Tool[], toolId: string): Tool[] {
+  const out: Tool[] = [];
+  for (const t of tools) {
+    if (t.id === toolId) continue;
+    out.push(t.children ? { ...t, children: removeToolDeep(t.children, toolId) } : t);
+  }
+  return out;
 }
 
 export const useToolTreeStore = create<ToolTreeState>((set, get) => ({
@@ -120,11 +139,22 @@ export const useToolTreeStore = create<ToolTreeState>((set, get) => ({
       logoUrl: opts?.logoUrl ?? null,
       aliases: opts?.aliases,
     };
+    const parentId = opts?.parentToolId;
     const tree = get().tree.map((c) => ({
       ...c,
-      subcategories: c.subcategories.map((s) =>
-        s.id === subId ? { ...s, tools: [...s.tools, newTool] } : s,
-      ),
+      subcategories: c.subcategories.map((s) => {
+        if (s.id !== subId) return s;
+        if (parentId) {
+          return {
+            ...s,
+            tools: mapToolDeep(s.tools, parentId, (p) => ({
+              ...p,
+              children: [...(p.children ?? []), newTool],
+            })),
+          };
+        }
+        return { ...s, tools: [...s.tools, newTool] };
+      }),
     }));
     persist(tree);
     set({ tree });
@@ -136,7 +166,7 @@ export const useToolTreeStore = create<ToolTreeState>((set, get) => ({
       ...c,
       subcategories: c.subcategories.map((s) => ({
         ...s,
-        tools: s.tools.map((t) => (t.id === toolId ? { ...t, ...patch } : t)),
+        tools: mapToolDeep(s.tools, toolId, (t) => ({ ...t, ...patch })),
       })),
     }));
     persist(tree);
@@ -148,7 +178,7 @@ export const useToolTreeStore = create<ToolTreeState>((set, get) => ({
       ...c,
       subcategories: c.subcategories.map((s) => ({
         ...s,
-        tools: s.tools.filter((t) => t.id !== toolId),
+        tools: removeToolDeep(s.tools, toolId),
       })),
     }));
     persist(tree);

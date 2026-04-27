@@ -26,6 +26,8 @@ export interface Tool {
   name: string;
   logoUrl?: string | null;
   aliases?: string[];
+  /** Optional nested tools — used for frameworks/libraries under a parent language. */
+  children?: Tool[];
 }
 
 // ── Grades & Enums ───────────────────────────────────────────

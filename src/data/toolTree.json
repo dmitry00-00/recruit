@@ -6,14 +6,122 @@
       "icon": "Wrench",
       "subcategories": [
         {
-          "id": "sub_javascript",
+          "id": "sub_languages",
           "categoryId": "cat_tools",
-          "name": "JavaScript / TypeScript",
+          "name": "Языки разработки",
+          "group": "Языки разработки",
           "tools": [
             {
               "id": "t_js",
               "name": "JavaScript",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+              "children": [
+                {
+                  "id": "t_react",
+                  "name": "React",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                },
+                {
+                  "id": "t_nextjs",
+                  "name": "Next.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+                },
+                {
+                  "id": "t_vue",
+                  "name": "Vue.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
+                },
+                {
+                  "id": "t_nuxt",
+                  "name": "Nuxt.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nuxtjs/nuxtjs-original.svg"
+                },
+                {
+                  "id": "t_angular",
+                  "name": "Angular",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg"
+                },
+                {
+                  "id": "t_svelte",
+                  "name": "Svelte",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg"
+                },
+                {
+                  "id": "t_nodejs",
+                  "name": "Node.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+                },
+                {
+                  "id": "t_nestjs",
+                  "name": "NestJS",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg"
+                },
+                {
+                  "id": "t_express",
+                  "name": "Express.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg"
+                },
+                {
+                  "id": "t_redux",
+                  "name": "Redux",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg"
+                },
+                {
+                  "id": "t_mobx",
+                  "name": "MobX",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_rxjs",
+                  "name": "RxJS",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_webpack",
+                  "name": "Webpack",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg"
+                },
+                {
+                  "id": "t_vite",
+                  "name": "Vite",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg"
+                },
+                {
+                  "id": "t_jest",
+                  "name": "Jest",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg"
+                },
+                {
+                  "id": "t_graphql",
+                  "name": "GraphQL",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg"
+                },
+                {
+                  "id": "t_d3",
+                  "name": "D3.js",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/d3js/d3js-original.svg"
+                },
+                {
+                  "id": "t_threejs",
+                  "name": "Three.js",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_expo",
+                  "name": "Expo",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_reactnative",
+                  "name": "React Native",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                },
+                {
+                  "id": "t_storybook",
+                  "name": "Storybook",
+                  "logoUrl": null
+                }
+              ]
             },
             {
               "id": "t_ts",
@@ -21,521 +129,447 @@
               "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
             },
             {
-              "id": "t_react",
-              "name": "React",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-            },
-            {
-              "id": "t_nextjs",
-              "name": "Next.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
-            },
-            {
-              "id": "t_vue",
-              "name": "Vue.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
-            },
-            {
-              "id": "t_nuxt",
-              "name": "Nuxt.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nuxtjs/nuxtjs-original.svg"
-            },
-            {
-              "id": "t_angular",
-              "name": "Angular",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg"
-            },
-            {
-              "id": "t_svelte",
-              "name": "Svelte",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg"
-            },
-            {
-              "id": "t_nodejs",
-              "name": "Node.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
-            },
-            {
-              "id": "t_nestjs",
-              "name": "NestJS",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg"
-            },
-            {
-              "id": "t_express",
-              "name": "Express.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg"
-            },
-            {
-              "id": "t_redux",
-              "name": "Redux",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg"
-            },
-            {
-              "id": "t_mobx",
-              "name": "MobX",
-              "logoUrl": null
-            },
-            {
-              "id": "t_rxjs",
-              "name": "RxJS",
-              "logoUrl": null
-            },
-            {
-              "id": "t_webpack",
-              "name": "Webpack",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg"
-            },
-            {
-              "id": "t_vite",
-              "name": "Vite",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg"
-            },
-            {
-              "id": "t_jest",
-              "name": "Jest",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg"
-            },
-            {
-              "id": "t_graphql",
-              "name": "GraphQL",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg"
-            },
-            {
-              "id": "t_d3",
-              "name": "D3.js",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/d3js/d3js-original.svg"
-            },
-            {
-              "id": "t_threejs",
-              "name": "Three.js",
-              "logoUrl": null
-            },
-            {
-              "id": "t_expo",
-              "name": "Expo",
-              "logoUrl": null
-            },
-            {
-              "id": "t_reactnative",
-              "name": "React Native",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-            },
-            {
-              "id": "t_storybook",
-              "name": "Storybook",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_python",
-          "categoryId": "cat_tools",
-          "name": "Python",
-          "tools": [
-            {
               "id": "t_python",
               "name": "Python",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+              "children": [
+                {
+                  "id": "t_django",
+                  "name": "Django",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg"
+                },
+                {
+                  "id": "t_fastapi",
+                  "name": "FastAPI",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_flask",
+                  "name": "Flask",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg"
+                },
+                {
+                  "id": "t_celery",
+                  "name": "Celery",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_aiohttp",
+                  "name": "aiohttp",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_sqlalchemy",
+                  "name": "SQLAlchemy",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_pydantic",
+                  "name": "Pydantic",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_alembic",
+                  "name": "Alembic",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_pytest",
+                  "name": "pytest",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_pandas",
+                  "name": "Pandas",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg"
+                },
+                {
+                  "id": "t_numpy",
+                  "name": "NumPy",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg"
+                },
+                {
+                  "id": "t_scipy",
+                  "name": "SciPy",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_poetry",
+                  "name": "Poetry",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_django",
-              "name": "Django",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg"
-            },
-            {
-              "id": "t_fastapi",
-              "name": "FastAPI",
-              "logoUrl": null
-            },
-            {
-              "id": "t_flask",
-              "name": "Flask",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg"
-            },
-            {
-              "id": "t_celery",
-              "name": "Celery",
-              "logoUrl": null
-            },
-            {
-              "id": "t_aiohttp",
-              "name": "aiohttp",
-              "logoUrl": null
-            },
-            {
-              "id": "t_sqlalchemy",
-              "name": "SQLAlchemy",
-              "logoUrl": null
-            },
-            {
-              "id": "t_pydantic",
-              "name": "Pydantic",
-              "logoUrl": null
-            },
-            {
-              "id": "t_alembic",
-              "name": "Alembic",
-              "logoUrl": null
-            },
-            {
-              "id": "t_pytest",
-              "name": "pytest",
-              "logoUrl": null
-            },
-            {
-              "id": "t_pandas",
-              "name": "Pandas",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg"
-            },
-            {
-              "id": "t_numpy",
-              "name": "NumPy",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg"
-            },
-            {
-              "id": "t_scipy",
-              "name": "SciPy",
-              "logoUrl": null
-            },
-            {
-              "id": "t_poetry",
-              "name": "Poetry",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_java",
-          "categoryId": "cat_tools",
-          "name": "Java",
-          "tools": [
             {
               "id": "t_java",
               "name": "Java",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+              "children": [
+                {
+                  "id": "t_spring",
+                  "name": "Spring",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg"
+                },
+                {
+                  "id": "t_springboot",
+                  "name": "Spring Boot",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg"
+                },
+                {
+                  "id": "t_hibernate",
+                  "name": "Hibernate",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_maven",
+                  "name": "Maven",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/maven/maven-original.svg"
+                },
+                {
+                  "id": "t_gradle",
+                  "name": "Gradle",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-plain.svg"
+                },
+                {
+                  "id": "t_junit",
+                  "name": "JUnit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_mockito",
+                  "name": "Mockito",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_lombok",
+                  "name": "Lombok",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_rxjava",
+                  "name": "RxJava",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_quarkus",
+                  "name": "Quarkus",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_kafka_java",
+                  "name": "Kafka (Java)",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_spring",
-              "name": "Spring",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg"
-            },
-            {
-              "id": "t_springboot",
-              "name": "Spring Boot",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg"
-            },
-            {
-              "id": "t_hibernate",
-              "name": "Hibernate",
-              "logoUrl": null
-            },
-            {
-              "id": "t_maven",
-              "name": "Maven",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/maven/maven-original.svg"
-            },
-            {
-              "id": "t_gradle",
-              "name": "Gradle",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-plain.svg"
-            },
-            {
-              "id": "t_junit",
-              "name": "JUnit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_mockito",
-              "name": "Mockito",
-              "logoUrl": null
-            },
-            {
-              "id": "t_lombok",
-              "name": "Lombok",
-              "logoUrl": null
-            },
-            {
-              "id": "t_rxjava",
-              "name": "RxJava",
-              "logoUrl": null
-            },
-            {
-              "id": "t_quarkus",
-              "name": "Quarkus",
-              "logoUrl": null
-            },
-            {
-              "id": "t_kafka_java",
-              "name": "Kafka (Java)",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_csharp",
-          "categoryId": "cat_tools",
-          "name": "C# / .NET",
-          "tools": [
             {
               "id": "t_csharp",
               "name": "C#",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+              "children": [
+                {
+                  "id": "t_dotnet",
+                  "name": ".NET",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg"
+                },
+                {
+                  "id": "t_aspnet",
+                  "name": "ASP.NET",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_ef_core",
+                  "name": "Entity Framework Core",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_wpf",
+                  "name": "WPF",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_signalr",
+                  "name": "SignalR",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_masstransit",
+                  "name": "MassTransit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_nunit",
+                  "name": "NUnit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_xunit",
+                  "name": "xUnit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_dapper",
+                  "name": "Dapper",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_linq",
+                  "name": "LINQ",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_dotnet",
-              "name": ".NET",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg"
-            },
-            {
-              "id": "t_aspnet",
-              "name": "ASP.NET",
-              "logoUrl": null
-            },
-            {
-              "id": "t_ef_core",
-              "name": "Entity Framework Core",
-              "logoUrl": null
-            },
-            {
-              "id": "t_wpf",
-              "name": "WPF",
-              "logoUrl": null
-            },
-            {
-              "id": "t_signalr",
-              "name": "SignalR",
-              "logoUrl": null
-            },
-            {
-              "id": "t_masstransit",
-              "name": "MassTransit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_nunit",
-              "name": "NUnit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_xunit",
-              "name": "xUnit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_dapper",
-              "name": "Dapper",
-              "logoUrl": null
-            },
-            {
-              "id": "t_linq",
-              "name": "LINQ",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_golang",
-          "categoryId": "cat_tools",
-          "name": "Go",
-          "tools": [
             {
               "id": "t_go",
               "name": "Go",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
+              "children": [
+                {
+                  "id": "t_gin",
+                  "name": "Gin",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_echo_go",
+                  "name": "Echo",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_grpc_go",
+                  "name": "gRPC (Go)",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_testify",
+                  "name": "Testify",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_gin",
-              "name": "Gin",
-              "logoUrl": null
-            },
-            {
-              "id": "t_echo_go",
-              "name": "Echo",
-              "logoUrl": null
-            },
-            {
-              "id": "t_grpc_go",
-              "name": "gRPC (Go)",
-              "logoUrl": null
-            },
-            {
-              "id": "t_testify",
-              "name": "Testify",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_kotlin",
-          "categoryId": "cat_tools",
-          "name": "Kotlin",
-          "tools": [
             {
               "id": "t_kotlin",
               "name": "Kotlin",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+              "children": [
+                {
+                  "id": "t_kotlin_corout",
+                  "name": "Coroutines",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_ktor",
+                  "name": "Ktor",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_kmm",
+                  "name": "Kotlin Multiplatform",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_compose_kmp",
+                  "name": "Compose Multiplatform",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_sqldelight",
+                  "name": "SQLDelight",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_kotlin_corout",
-              "name": "Coroutines",
-              "logoUrl": null
-            },
-            {
-              "id": "t_ktor",
-              "name": "Ktor",
-              "logoUrl": null
-            },
-            {
-              "id": "t_kmm",
-              "name": "Kotlin Multiplatform",
-              "logoUrl": null
-            },
-            {
-              "id": "t_compose_kmp",
-              "name": "Compose Multiplatform",
-              "logoUrl": null
-            },
-            {
-              "id": "t_sqldelight",
-              "name": "SQLDelight",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_swift",
-          "categoryId": "cat_tools",
-          "name": "Swift",
-          "tools": [
             {
               "id": "t_swift",
               "name": "Swift",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+              "children": [
+                {
+                  "id": "t_swiftui",
+                  "name": "SwiftUI",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_uikit",
+                  "name": "UIKit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_combine",
+                  "name": "Combine",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_rxswift",
+                  "name": "RxSwift",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_alamofire",
+                  "name": "Alamofire",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_snapkit",
+                  "name": "SnapKit",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_kingfisher",
+                  "name": "Kingfisher",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_spm",
+                  "name": "Swift Package Manager",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_cocoapods",
+                  "name": "CocoaPods",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_swiftui",
-              "name": "SwiftUI",
-              "logoUrl": null
-            },
-            {
-              "id": "t_uikit",
-              "name": "UIKit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_combine",
-              "name": "Combine",
-              "logoUrl": null
-            },
-            {
-              "id": "t_rxswift",
-              "name": "RxSwift",
-              "logoUrl": null
-            },
-            {
-              "id": "t_alamofire",
-              "name": "Alamofire",
-              "logoUrl": null
-            },
-            {
-              "id": "t_snapkit",
-              "name": "SnapKit",
-              "logoUrl": null
-            },
-            {
-              "id": "t_kingfisher",
-              "name": "Kingfisher",
-              "logoUrl": null
-            },
-            {
-              "id": "t_spm",
-              "name": "Swift Package Manager",
-              "logoUrl": null
-            },
-            {
-              "id": "t_cocoapods",
-              "name": "CocoaPods",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_objc",
-          "categoryId": "cat_tools",
-          "name": "Objective-C",
-          "tools": [
             {
               "id": "t_objc",
               "name": "Objective-C",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/objectivec/objectivec-plain.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/objectivec/objectivec-plain.svg",
+              "children": [
+                {
+                  "id": "t_afnetwork",
+                  "name": "AFNetworking",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_afnetwork",
-              "name": "AFNetworking",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_php",
-          "categoryId": "cat_tools",
-          "name": "PHP",
-          "tools": [
             {
               "id": "t_php",
               "name": "PHP",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+              "children": [
+                {
+                  "id": "t_laravel",
+                  "name": "Laravel",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg"
+                },
+                {
+                  "id": "t_symfony",
+                  "name": "Symfony",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/symfony/symfony-original.svg"
+                },
+                {
+                  "id": "t_wordpress",
+                  "name": "WordPress",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
+                },
+                {
+                  "id": "t_bitrix",
+                  "name": "Bitrix",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_yii",
+                  "name": "Yii",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_phpunit",
+                  "name": "PHPUnit",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_laravel",
-              "name": "Laravel",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg"
-            },
-            {
-              "id": "t_symfony",
-              "name": "Symfony",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/symfony/symfony-original.svg"
-            },
-            {
-              "id": "t_wordpress",
-              "name": "WordPress",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            },
-            {
-              "id": "t_bitrix",
-              "name": "Bitrix",
-              "logoUrl": null
-            },
-            {
-              "id": "t_yii",
-              "name": "Yii",
-              "logoUrl": null
-            },
-            {
-              "id": "t_phpunit",
-              "name": "PHPUnit",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_cpp",
-          "categoryId": "cat_tools",
-          "name": "C / C++",
-          "tools": [
             {
               "id": "t_cpp",
               "name": "C++",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
+              "children": [
+                {
+                  "id": "t_qt",
+                  "name": "Qt",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg"
+                },
+                {
+                  "id": "t_boost",
+                  "name": "Boost",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_cmake",
+                  "name": "CMake",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_stl",
+                  "name": "STL",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_posix",
+                  "name": "POSIX",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_gcc",
+                  "name": "GCC",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_clang",
+                  "name": "Clang / LLVM",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_openmp",
+                  "name": "OpenMP",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_dpdk",
+                  "name": "DPDK",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_winapi",
+                  "name": "WinAPI / Win32",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_opengl",
+                  "name": "OpenGL",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opengl/opengl-original.svg"
+                },
+                {
+                  "id": "t_vulkan",
+                  "name": "Vulkan",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_cuda",
+                  "name": "CUDA",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_zeromq",
+                  "name": "ZeroMQ",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_gtest",
+                  "name": "GTest / GoogleTest",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_valgrind",
+                  "name": "Valgrind",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_conan",
+                  "name": "Conan",
+                  "logoUrl": null
+                }
+              ]
             },
             {
               "id": "t_c",
@@ -543,154 +577,49 @@
               "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg"
             },
             {
-              "id": "t_qt",
-              "name": "Qt",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg"
-            },
-            {
-              "id": "t_boost",
-              "name": "Boost",
-              "logoUrl": null
-            },
-            {
-              "id": "t_cmake",
-              "name": "CMake",
-              "logoUrl": null
-            },
-            {
-              "id": "t_stl",
-              "name": "STL",
-              "logoUrl": null
-            },
-            {
-              "id": "t_posix",
-              "name": "POSIX",
-              "logoUrl": null
-            },
-            {
-              "id": "t_gcc",
-              "name": "GCC",
-              "logoUrl": null
-            },
-            {
-              "id": "t_clang",
-              "name": "Clang / LLVM",
-              "logoUrl": null
-            },
-            {
-              "id": "t_openmp",
-              "name": "OpenMP",
-              "logoUrl": null
-            },
-            {
-              "id": "t_dpdk",
-              "name": "DPDK",
-              "logoUrl": null
-            },
-            {
-              "id": "t_winapi",
-              "name": "WinAPI / Win32",
-              "logoUrl": null
-            },
-            {
-              "id": "t_opengl",
-              "name": "OpenGL",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opengl/opengl-original.svg"
-            },
-            {
-              "id": "t_vulkan",
-              "name": "Vulkan",
-              "logoUrl": null
-            },
-            {
-              "id": "t_cuda",
-              "name": "CUDA",
-              "logoUrl": null
-            },
-            {
-              "id": "t_zeromq",
-              "name": "ZeroMQ",
-              "logoUrl": null
-            },
-            {
-              "id": "t_gtest",
-              "name": "GTest / GoogleTest",
-              "logoUrl": null
-            },
-            {
-              "id": "t_valgrind",
-              "name": "Valgrind",
-              "logoUrl": null
-            },
-            {
-              "id": "t_conan",
-              "name": "Conan",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_dart",
-          "categoryId": "cat_tools",
-          "name": "Dart / Flutter",
-          "tools": [
-            {
               "id": "t_dart",
               "name": "Dart",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg",
+              "children": [
+                {
+                  "id": "t_flutter",
+                  "name": "Flutter",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg"
+                },
+                {
+                  "id": "t_bloc",
+                  "name": "BLoC",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_riverpod",
+                  "name": "Riverpod",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_getit",
+                  "name": "GetIt",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_flutter",
-              "name": "Flutter",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg"
-            },
-            {
-              "id": "t_bloc",
-              "name": "BLoC",
-              "logoUrl": null
-            },
-            {
-              "id": "t_riverpod",
-              "name": "Riverpod",
-              "logoUrl": null
-            },
-            {
-              "id": "t_getit",
-              "name": "GetIt",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_ruby",
-          "categoryId": "cat_tools",
-          "name": "Ruby",
-          "tools": [
             {
               "id": "t_ruby",
               "name": "Ruby",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg",
+              "children": [
+                {
+                  "id": "t_ror",
+                  "name": "Ruby on Rails",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rails/rails-plain.svg"
+                },
+                {
+                  "id": "t_rspec",
+                  "name": "RSpec",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_ror",
-              "name": "Ruby on Rails",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rails/rails-plain.svg"
-            },
-            {
-              "id": "t_rspec",
-              "name": "RSpec",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_scala",
-          "categoryId": "cat_tools",
-          "name": "Scala / Rust / другие",
-          "tools": [
             {
               "id": "t_scala",
               "name": "Scala",
@@ -730,63 +659,49 @@
               "id": "t_solidity",
               "name": "Solidity",
               "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_1c",
-          "categoryId": "cat_tools",
-          "name": "1С",
-          "tools": [
+            },
             {
               "id": "t_1c",
               "name": "1С",
-              "logoUrl": null
+              "logoUrl": null,
+              "children": [
+                {
+                  "id": "t_1c_erp",
+                  "name": "1С ERP",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_1c_buh",
+                  "name": "1С Бухгалтерия",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_1c_zup",
+                  "name": "1С ЗУП",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_1c_ut",
+                  "name": "1С УТ",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_1c_bss",
+                  "name": "БСП (Библиотека стандартных подсистем)",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_1c_kd",
+                  "name": "Конвертация данных",
+                  "logoUrl": null
+                },
+                {
+                  "id": "t_onescript",
+                  "name": "OneScript",
+                  "logoUrl": null
+                }
+              ]
             },
-            {
-              "id": "t_1c_erp",
-              "name": "1С ERP",
-              "logoUrl": null
-            },
-            {
-              "id": "t_1c_buh",
-              "name": "1С Бухгалтерия",
-              "logoUrl": null
-            },
-            {
-              "id": "t_1c_zup",
-              "name": "1С ЗУП",
-              "logoUrl": null
-            },
-            {
-              "id": "t_1c_ut",
-              "name": "1С УТ",
-              "logoUrl": null
-            },
-            {
-              "id": "t_1c_bss",
-              "name": "БСП (Библиотека стандартных подсистем)",
-              "logoUrl": null
-            },
-            {
-              "id": "t_1c_kd",
-              "name": "Конвертация данных",
-              "logoUrl": null
-            },
-            {
-              "id": "t_onescript",
-              "name": "OneScript",
-              "logoUrl": null
-            }
-          ],
-          "group": "Языки разработки"
-        },
-        {
-          "id": "sub_html_css",
-          "categoryId": "cat_tools",
-          "name": "HTML / CSS",
-          "tools": [
             {
               "id": "t_html",
               "name": "HTML",
@@ -795,25 +710,26 @@
             {
               "id": "t_css",
               "name": "CSS",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
-            },
-            {
-              "id": "t_sass",
-              "name": "SASS/SCSS",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg"
-            },
-            {
-              "id": "t_tailwind",
-              "name": "Tailwind CSS",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg"
-            },
-            {
-              "id": "t_bootstrap",
-              "name": "Bootstrap",
-              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg"
+              "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+              "children": [
+                {
+                  "id": "t_sass",
+                  "name": "SASS/SCSS",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg"
+                },
+                {
+                  "id": "t_tailwind",
+                  "name": "Tailwind CSS",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg"
+                },
+                {
+                  "id": "t_bootstrap",
+                  "name": "Bootstrap",
+                  "logoUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg"
+                }
+              ]
             }
-          ],
-          "group": "Языки разработки"
+          ]
         },
         {
           "id": "sub_db_sql",

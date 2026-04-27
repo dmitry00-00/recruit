@@ -18,8 +18,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_javascript",
-            "sub_html_css",
+            "sub_languages",
             "sub_vcs",
             "sub_testing"
           ]
@@ -57,12 +56,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_python",
-            "sub_java",
-            "sub_csharp",
-            "sub_golang",
-            "sub_php",
-            "sub_ruby",
+            "sub_languages",
             "sub_db_sql",
             "sub_db_nosql",
             "sub_messaging",
@@ -104,11 +98,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_javascript",
-            "sub_html_css",
-            "sub_python",
-            "sub_java",
-            "sub_csharp",
+            "sub_languages",
             "sub_db_sql",
             "sub_db_nosql",
             "sub_vcs",
@@ -148,8 +138,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_swift",
-            "sub_objc",
+            "sub_languages",
             "sub_mobile_ios",
             "sub_vcs",
             "sub_testing"
@@ -187,8 +176,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_kotlin",
-            "sub_java",
+            "sub_languages",
             "sub_mobile_android",
             "sub_vcs",
             "sub_testing"
@@ -224,9 +212,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_dart",
-            "sub_javascript",
-            "sub_kotlin",
+            "sub_languages",
             "sub_vcs",
             "sub_testing"
           ]
@@ -256,8 +242,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_scala",
-            "sub_python",
+            "sub_languages",
             "sub_devops",
             "sub_cloud",
             "sub_vcs",
@@ -324,9 +309,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_python",
-            "sub_java",
-            "sub_javascript",
+            "sub_languages",
             "sub_testing",
             "sub_vcs"
           ]
@@ -387,8 +370,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_python",
-            "sub_scala",
+            "sub_languages",
             "sub_db_sql",
             "sub_db_nosql",
             "sub_bigdata"
@@ -419,9 +401,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_python",
-            "sub_scala",
-            "sub_java",
+            "sub_languages",
             "sub_db_sql",
             "sub_db_nosql",
             "sub_bigdata",
@@ -454,7 +434,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_python",
+            "sub_languages",
             "sub_ml",
             "sub_bigdata",
             "sub_cloud",
@@ -543,7 +523,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_1c",
+            "sub_languages",
             "sub_db_sql"
           ]
         },
@@ -572,7 +552,7 @@
         {
           "categoryId": "cat_tools",
           "subcategoryIds": [
-            "sub_cpp",
+            "sub_languages",
             "sub_db_sql",
             "sub_messaging",
             "sub_devops",

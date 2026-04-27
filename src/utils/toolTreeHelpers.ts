@@ -32,10 +32,8 @@ export const DOMAIN_ICONS: Record<ToolDomain, string> = {
  */
 const SEED_DOMAIN_SUB_MAP: Record<ToolDomain, string[]> = {
   dev: [
-    // Languages (now grouped inside cat_tools under "Языки разработки")
-    'sub_javascript', 'sub_python', 'sub_java', 'sub_csharp', 'sub_golang',
-    'sub_kotlin', 'sub_swift', 'sub_objc', 'sub_php', 'sub_cpp', 'sub_dart',
-    'sub_ruby', 'sub_scala', 'sub_1c', 'sub_html_css',
+    // Languages — single subcategory with parent languages and child frameworks
+    'sub_languages',
     // Tools: data stores, messaging, vcs, mobile SDKs
     'sub_db_sql', 'sub_db_nosql', 'sub_messaging', 'sub_vcs',
     'sub_mobile_ios', 'sub_mobile_android',
@@ -107,17 +105,36 @@ export function getToolTree(): ToolCategory[] {
   return currentCategories();
 }
 
+/** Recursively collect a tool and all its descendants. */
+function flattenTool(tool: Tool): Tool[] {
+  const out: Tool[] = [tool];
+  if (tool.children) for (const c of tool.children) out.push(...flattenTool(c));
+  return out;
+}
+
+/** Recursively find a tool by id within a tool subtree. */
+function findToolInTree(tools: Tool[], toolId: string): Tool | undefined {
+  for (const t of tools) {
+    if (t.id === toolId) return t;
+    if (t.children) {
+      const found = findToolInTree(t.children, toolId);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
 export function getAllTools(): Tool[] {
   return currentCategories().flatMap((cat) =>
-    cat.subcategories.flatMap((sub) => sub.tools)
+    cat.subcategories.flatMap((sub) => sub.tools.flatMap(flattenTool))
   );
 }
 
 export function getToolById(toolId: string): Tool | undefined {
   for (const cat of currentCategories()) {
     for (const sub of cat.subcategories) {
-      const tool = sub.tools.find((t) => t.id === toolId);
-      if (tool) return tool;
+      const found = findToolInTree(sub.tools, toolId);
+      if (found) return found;
     }
   }
   return undefined;
@@ -132,7 +149,7 @@ export function getToolSubcategoryMap(): Map<string, string> {
   for (const cat of currentCategories()) {
     for (const sub of cat.subcategories) {
       for (const tool of sub.tools) {
-        map.set(tool.id, sub.id);
+        for (const t of flattenTool(tool)) map.set(t.id, sub.id);
       }
     }
   }

@@ -330,6 +330,38 @@
   background: var(--bg-secondary);
 }
 
+.toolRowChild {
+  border-left: 2px solid var(--border-tertiary);
+  margin-left: 4px;
+}
+
+.toolChevronBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.toolChevronBtn:hover {
+  color: var(--amber);
+  background: var(--bg-tertiary);
+}
+
+.toolChevronSpacer {
+  display: inline-block;
+  width: 14px;
+  flex-shrink: 0;
+}
+
 .toolCb {
   accent-color: var(--amber);
   width: 13px;

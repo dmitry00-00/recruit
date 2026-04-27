@@ -122,14 +122,24 @@ export function TreePicker({
     minSet.has(id) ? 'min' : maxSet.has(id) ? 'max' : 'none';
 
   // ── Count helpers ──────────────────────────────────────────
+  const flattenTools = (tools: Tool[]): Tool[] => {
+    const out: Tool[] = [];
+    for (const t of tools) {
+      out.push(t);
+      if (t.children) out.push(...flattenTools(t.children));
+    }
+    return out;
+  };
+
   const countSub = (sub: ToolSubcategory) => {
+    const all = flattenTools(sub.tools);
     switch (mode) {
-      case 'vacancy':       return sub.tools.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length;
-      case 'compare':       return sub.tools.filter((t) => compareAll.has(t.id)).length;
-      case 'candidate-agg': return sub.tools.filter((t) => yearsMap[t.id] != null).length;
+      case 'vacancy':       return all.filter((t) => minSet.has(t.id) || maxSet.has(t.id)).length;
+      case 'compare':       return all.filter((t) => compareAll.has(t.id)).length;
+      case 'candidate-agg': return all.filter((t) => yearsMap[t.id] != null).length;
       case 'position':      return selectedSet.has(sub.id) ? 1 : 0;
-      case 'edit':          return sub.tools.length;
-      default:              return sub.tools.filter((t) => selectedSet.has(t.id)).length;
+      case 'edit':          return all.length;
+      default:              return all.filter((t) => selectedSet.has(t.id)).length;
     }
   };
 
@@ -170,19 +180,32 @@ export function TreePicker({
   const [editingSubName, setEditingSubName] = useState('');
   const [newSubDraft, setNewSubDraft] = useState<Record<string, string>>({});
   const [newToolDraft, setNewToolDraft] = useState<Record<string, string>>({});
+  const [newChildDraft, setNewChildDraft] = useState<Record<string, string>>({});
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
   const [editingToolName, setEditingToolName] = useState('');
+  const [expandedTools, setExpandedTools] = useState<Set<string>>(new Set());
+
+  const toggleToolChildren = (toolId: string) => {
+    setExpandedTools((prev) => {
+      const next = new Set(prev);
+      if (next.has(toolId)) next.delete(toolId); else next.add(toolId);
+      return next;
+    });
+  };
 
   // ── Tool row renderer ─────────────────────────────────────
-  const renderTool = (tool: Tool) => {
+  const renderTool = (tool: Tool, depth = 0): ReactNode => {
     const isLocked   = lockedSet.has(tool.id);
     const isSelected = selectedSet.has(tool.id);
     const vacState   = getVacState(tool.id);
     const isMatched  = matchedSet.has(tool.id);
     const isGap      = gapSet.has(tool.id);
     const isExtra    = extraSet.has(tool.id);
+    const hasChildren = !!(tool.children && tool.children.length > 0);
+    const isChildOpen = expandedTools.has(tool.id);
 
     let cls = styles.toolRow;
+    if (depth > 0) cls += ` ${styles.toolRowChild}`;
     if (mode === 'vacancy') {
       if (vacState === 'min') cls += ` ${styles.toolRowMin}`;
       else if (vacState === 'max') cls += ` ${styles.toolRowMax}`;
@@ -196,17 +219,41 @@ export function TreePicker({
 
     const clickable = !isReadonly && !isLocked && !isEdit;
     const isToolEditing = editingToolId === tool.id;
+    const newChildValue = newChildDraft[tool.id] ?? '';
+    const submitNewChild = () => {
+      const name = newChildValue.trim();
+      if (!name) return;
+      addTool(tool.subcategoryId, name, { parentToolId: tool.id });
+      setNewChildDraft((d) => ({ ...d, [tool.id]: '' }));
+      setExpandedTools((p) => new Set(p).add(tool.id));
+    };
 
     return (
-      <div
-        key={tool.id}
-        className={cls}
-        onClick={clickable ? () => {
-          if (mode === 'vacancy') { onVacancyClick?.(tool.id, vacState); }
-          else { if (!onChange) return; isSelected ? onChange(selected.filter((id) => id !== tool.id)) : onChange([...selected, tool.id]); }
-        } : undefined}
-        style={clickable ? { cursor: 'pointer' } : undefined}
-      >
+      <div key={tool.id}>
+        <div
+          className={cls}
+          style={{
+            ...(clickable ? { cursor: 'pointer' } : null),
+            paddingLeft: depth > 0 ? `${6 + depth * 14}px` : undefined,
+          }}
+          onClick={clickable ? () => {
+            if (mode === 'vacancy') { onVacancyClick?.(tool.id, vacState); }
+            else { if (!onChange) return; isSelected ? onChange(selected.filter((id) => id !== tool.id)) : onChange([...selected, tool.id]); }
+          } : undefined}
+        >
+          {hasChildren ? (
+            <button
+              type="button"
+              className={styles.toolChevronBtn}
+              onClick={(e) => { e.stopPropagation(); toggleToolChildren(tool.id); }}
+              title={isChildOpen ? 'Свернуть' : 'Развернуть'}
+            >
+              {isChildOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+            </button>
+          ) : (
+            <span className={styles.toolChevronSpacer} />
+          )}
+
         {(mode === 'vacancy-min' || mode === 'vacancy-max' || mode === 'candidate') && (
           <input type="checkbox" className={styles.toolCb} checked={isSelected} disabled={isLocked} readOnly />
         )}
@@ -332,6 +379,16 @@ export function TreePicker({
                   <Pencil size={11} />
                 </button>
                 <button
+                  className={styles.editBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpandedTools((p) => new Set(p).add(tool.id));
+                  }}
+                  title="Добавить дочерний инструмент"
+                >
+                  <Plus size={11} />
+                </button>
+                <button
                   className={`${styles.editBtn} ${styles.editBtnDanger}`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -344,6 +401,34 @@ export function TreePicker({
               </>
             )}
           </span>
+        )}
+        </div>
+
+        {(isChildOpen || isEdit) && hasChildren && (
+          <div>{tool.children!.map((c) => renderTool(c, depth + 1))}</div>
+        )}
+
+        {isEdit && (isChildOpen || hasChildren) && (
+          <div
+            className={styles.inlineAddRow}
+            style={{ marginLeft: `${(depth + 1) * 14}px` }}
+          >
+            <Plus size={12} />
+            <input
+              className={styles.inlineAddInput}
+              placeholder="Дочерний инструмент…"
+              value={newChildValue}
+              onChange={(e) => setNewChildDraft((d) => ({ ...d, [tool.id]: e.target.value }))}
+              onKeyDown={(e) => { if (e.key === 'Enter') submitNewChild(); }}
+            />
+            <button
+              className={styles.inlineAddBtn}
+              onClick={submitNewChild}
+              disabled={!newChildValue.trim()}
+            >
+              Добавить
+            </button>
+          </div>
         )}
       </div>
     );
