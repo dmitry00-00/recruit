@@ -1,0 +1,187 @@
+.bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Trigger button (the "dropdown button") ───── */
+.wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px 7px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 120ms, background 120ms, color 120ms;
+  width: 100%;
+  text-align: left;
+}
+
+.trigger:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.triggerActive {
+  color: var(--amber);
+  background: var(--amber-bg);
+  border-color: var(--amber);
+}
+
+.triggerOpen {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 2px var(--amber-bg);
+}
+
+.triggerLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.triggerLogo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.triggerChevron {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* ── Dropdown panel ─────────────────────────── */
+.panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  max-width: 320px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  overflow-y: auto;
+  z-index: 50;
+  padding: 4px;
+}
+
+.group + .group {
+  border-top: 1px solid var(--border-tertiary);
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.groupLabel {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  padding: 4px 8px 2px;
+}
+
+.optBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.optBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.optBtnActive {
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.optLogo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.optLogoStub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 8px;
+  font-weight: 700;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: 2px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.optName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty {
+  padding: 12px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    width: 100%;
+  }
+  .wrap {
+    flex: 1 1 auto;
+    min-width: 0 !important;
+  }
+}

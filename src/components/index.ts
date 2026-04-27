@@ -10,3 +10,5 @@ export { KanbanBoard } from './KanbanBoard';
 export { Spine, RoleBadge, GradeChevrons, ToolStrip } from './Spine';
 export { TabletView } from './Tablet';
 export { SpinePopover } from './SpinePopover';
+export { PositionSpecPicker } from './PositionSpecPicker';
+export type { PositionSpec, SpecToolIds } from './PositionSpecPicker';

@@ -2,13 +2,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePositionStore, useVacancyStore } from '@/stores';
 import { TreePicker, type VacancyToolState } from '@/components/TreePicker';
+import { PositionSpecPicker, type PositionSpec } from '@/components/PositionSpecPicker';
 import { Button } from '@/components/ui';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import type { Grade, Currency, WorkFormat, EmploymentType, VacancyRequirement, VacancyStatus } from '@/entities';
 import { flattenRequiredSubIds } from '@/utils';
 import styles from './VacancyForm.module.css';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 3;
 
 export function VacancyForm() {
   const navigate = useNavigate();
@@ -18,10 +19,10 @@ export function VacancyForm() {
 
   useEffect(() => { loadPositions(); }, [loadPositions]);
 
-  // Step 1: Position
-  const [positionId, setPositionId] = useState('');
+  // Header: position + spec
+  const [posSpec, setPosSpec] = useState<PositionSpec>({ positionId: '', specToolIds: ['', ''] });
 
-  // Step 2: Company
+  // Step 1: Company info
   const [companyName, setCompanyName] = useState('');
   const [companyLogoUrl, setCompanyLogoUrl] = useState('');
   const [grade, setGrade] = useState<Grade>('middle');
@@ -33,16 +34,28 @@ export function VacancyForm() {
   const [sourceUrl, setSourceUrl] = useState('');
   const [location, setLocation] = useState('');
 
-  // Step 3: Requirements (min + max combined via vacancy mode)
+  // Step 2: Requirements (min + max combined via vacancy mode)
   const [minTools, setMinTools] = useState<string[]>([]);
   const [maxTools, setMaxTools] = useState<string[]>([]);
   const [minYearsMap, setMinYearsMap] = useState<Record<string, number>>({});
   const [maxYearsMap, setMaxYearsMap] = useState<Record<string, number>>({});
 
   const filteredSubIds = useMemo(() => {
-    const position = positions.find((p) => p.id === positionId);
+    const position = positions.find((p) => p.id === posSpec.positionId);
     return flattenRequiredSubIds(position?.requiredCategories);
-  }, [positionId, positions]);
+  }, [posSpec.positionId, positions]);
+
+  /** Sync spec-tool selection into MIN/MAX requirements. */
+  const handleSpecDiff = (added: string[], removed: string[]) => {
+    if (removed.length) {
+      setMinTools((p) => p.filter((id) => !removed.includes(id)));
+      setMaxTools((p) => p.filter((id) => !removed.includes(id)));
+    }
+    if (added.length) {
+      setMinTools((p) => Array.from(new Set([...p, ...added])));
+      setMaxTools((p) => Array.from(new Set([...p, ...added])));
+    }
+  };
 
   const handleVacancyClick = (toolId: string, state: VacancyToolState) => {
     let nextMin = [...minTools];
@@ -77,7 +90,7 @@ export function VacancyForm() {
     }));
 
     const id = await addVacancy({
-      positionId: positionId || 'custom',
+      positionId: posSpec.positionId || 'custom',
       companyName,
       companyLogoUrl: companyLogoUrl || undefined,
       grade,
@@ -100,6 +113,15 @@ export function VacancyForm() {
     <div className={styles.page}>
       <h1 className={styles.title}>Новая вакансия</h1>
 
+      <div className={styles.headerBar}>
+        <PositionSpecPicker
+          positions={positions}
+          value={posSpec}
+          onChange={setPosSpec}
+          onSpecDiff={handleSpecDiff}
+        />
+      </div>
+
       <div className={styles.steps}>
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
           <div
@@ -110,20 +132,6 @@ export function VacancyForm() {
       </div>
 
       {step === 1 && (
-        <div className={styles.formSection}>
-          <div className={styles.field}>
-            <label className={styles.label}>Должность</label>
-            <select className={styles.select} value={positionId} onChange={(e) => setPositionId(e.target.value)}>
-              <option value="">Свободный выбор (без должности)</option>
-              {positions.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-
-      {step === 2 && (
         <div className={styles.formSection}>
           <div className={styles.field}>
             <label className={styles.label}>Компания *</label>
@@ -192,13 +200,13 @@ export function VacancyForm() {
         </div>
       )}
 
-      {step === 3 && (
+      {step === 2 && (
         <div className={styles.formSection}>
           <label className={styles.label}>Требования</label>
           <p style={{ fontSize: 11, color: 'var(--text-tertiary)', margin: '0 0 8px' }}>
             1 клик — обязательное (MIN) &nbsp;|&nbsp; 2 клика — желательное (MAX) &nbsp;|&nbsp; 3 клика — убрать
           </p>
-          {positionId && filteredSubIds.length === 0 && (
+          {posSpec.positionId && filteredSubIds.length === 0 && (
             <p style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 8 }}>
               Должность без заданных требований — показываем всё дерево.
             </p>
@@ -216,7 +224,7 @@ export function VacancyForm() {
         </div>
       )}
 
-      {step === 4 && (
+      {step === 3 && (
         <div className={styles.formSection}>
           <h3>Подтверждение</h3>
           <p><strong>Компания:</strong> {companyName}</p>
@@ -232,7 +240,7 @@ export function VacancyForm() {
           {step > 1 ? 'Назад' : 'Отмена'}
         </Button>
         {step < TOTAL_STEPS ? (
-          <Button onClick={() => setStep(step + 1)} disabled={step === 2 && !companyName}>
+          <Button onClick={() => setStep(step + 1)} disabled={step === 1 && !companyName}>
             Далее
           </Button>
         ) : (

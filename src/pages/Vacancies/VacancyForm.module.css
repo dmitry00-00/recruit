@@ -11,6 +11,16 @@
   margin-bottom: 20px;
 }
 
+.headerBar {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-md);
+}
+
 .steps {
   display: flex;
   gap: 4px;

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { usePositionStore, useCandidateStore } from '@/stores';
 import { TreePicker } from '@/components/TreePicker';
+import { PositionSpecPicker, type SpecToolIds } from '@/components/PositionSpecPicker';
 import { Button } from '@/components/ui';
 import { GRADE_ORDER, GRADE_LABELS } from '@/entities';
 import type { Grade, Currency, WorkFormat, WorkEntry } from '@/entities';
@@ -12,6 +13,7 @@ import styles from '../Vacancies/VacancyForm.module.css';
 interface WorkEntryDraft {
   companyName: string;
   positionId: string;
+  specToolIds: SpecToolIds;
   grade: Grade;
   startDate: string;
   endDate: string;
@@ -25,6 +27,7 @@ interface WorkEntryDraft {
 const emptyEntry = (): WorkEntryDraft => ({
   companyName: '',
   positionId: '',
+  specToolIds: ['', ''],
   grade: 'middle',
   startDate: '',
   endDate: '',
@@ -88,6 +91,7 @@ export function CandidateForm() {
         setEntries(workEntries.map((e) => ({
           companyName: e.companyName,
           positionId: e.positionId,
+          specToolIds: ['', ''] as SpecToolIds,
           grade: e.grade,
           startDate: e.startDate ? new Date(e.startDate).toISOString().slice(0, 10) : '',
           endDate: e.endDate ? new Date(e.endDate).toISOString().slice(0, 10) : '',
@@ -229,14 +233,11 @@ export function CandidateForm() {
           </div>
           <div className={styles.field}>
             <label className={styles.label}>Должность</label>
-            <select
-              className={styles.select}
-              value={candidatePositionId}
-              onChange={(e) => setCandidatePositionId(e.target.value)}
-            >
-              <option value="">—</option>
-              {positions.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
+            <PositionSpecPicker
+              positions={positions}
+              value={{ positionId: candidatePositionId, specToolIds: ['', ''] }}
+              onChange={(next) => setCandidatePositionId(next.positionId)}
+            />
           </div>
           <div className={styles.row}>
             <div className={styles.field}>
@@ -301,20 +302,32 @@ export function CandidateForm() {
             <label className={styles.label}>Компания *</label>
             <input className={styles.input} value={current.companyName} onChange={(e) => updateEntry(activeEntry, { companyName: e.target.value })} />
           </div>
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label className={styles.label}>Должность</label>
-              <select className={styles.select} value={current.positionId} onChange={(e) => updateEntry(activeEntry, { positionId: e.target.value })}>
-                <option value="">—</option>
-                {positions.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>Грейд</label>
-              <select className={styles.select} value={current.grade} onChange={(e) => updateEntry(activeEntry, { grade: e.target.value as Grade })}>
-                {GRADE_ORDER.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
-              </select>
-            </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Должность</label>
+            <PositionSpecPicker
+              positions={positions}
+              value={{ positionId: current.positionId, specToolIds: current.specToolIds }}
+              onChange={(next) =>
+                updateEntry(activeEntry, {
+                  positionId: next.positionId,
+                  specToolIds: next.specToolIds,
+                })
+              }
+              onSpecDiff={(added, removed) => {
+                const nextTools = current.tools
+                  .filter((id) => !removed.includes(id))
+                  .concat(added.filter((id) => !current.tools.includes(id)));
+                const nextYears = { ...current.yearsMap };
+                for (const id of removed) delete nextYears[id];
+                updateEntry(activeEntry, { tools: nextTools, yearsMap: nextYears });
+              }}
+            />
+          </div>
+          <div className={styles.field} style={{ maxWidth: 220 }}>
+            <label className={styles.label}>Грейд</label>
+            <select className={styles.select} value={current.grade} onChange={(e) => updateEntry(activeEntry, { grade: e.target.value as Grade })}>
+              {GRADE_ORDER.map((g) => <option key={g} value={g}>{GRADE_LABELS[g]}</option>)}
+            </select>
           </div>
           <div className={styles.row}>
             <div className={styles.field}>
