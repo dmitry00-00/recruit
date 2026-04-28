@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import {
   Code2, Palette, BarChart2, Bug, Shield, GitBranch, LayoutGrid,
-  ChevronRight, ChevronDown, Plus, Trash2, Pencil, Check, X,
+  ChevronRight, ChevronDown, Plus, Trash2, Pencil, Check, X, BarChart3,
 } from 'lucide-react';
 import {
   getToolTree, searchTools, DOMAIN_SUB_MAP,
@@ -44,6 +44,9 @@ interface TreePickerProps {
   sidebarFooter?: ReactNode;
   fullHeight?: boolean;
   filteredSubIds?: string[];
+  /** Edit-mode only: callbacks to open stats pages. */
+  onSubcategoryStats?: (subId: string) => void;
+  onToolStats?: (toolId: string) => void;
 }
 
 const ICON_MAP: Record<ToolDomain | 'misc', React.ComponentType<{ size?: number }>> = {
@@ -62,6 +65,7 @@ export function TreePicker({
   candidateYearsMap = {}, requirementsYearsMap = {},
   sidebarFooter, fullHeight = false,
   filteredSubIds,
+  onSubcategoryStats, onToolStats,
 }: TreePickerProps) {
   // Subscribe to the store so tree edits propagate into render.
   const storeTree = useToolTreeStore((s) => s.tree);
@@ -367,6 +371,15 @@ export function TreePicker({
               </>
             ) : (
               <>
+                {onToolStats && (
+                  <button
+                    className={styles.editBtn}
+                    onClick={(e) => { e.stopPropagation(); onToolStats(tool.id); }}
+                    title="Сводка по инструменту"
+                  >
+                    <BarChart3 size={11} />
+                  </button>
+                )}
                 <button
                   className={styles.editBtn}
                   onClick={(e) => {
@@ -567,6 +580,15 @@ export function TreePicker({
                 </>
               ) : (
                 <>
+                  {onSubcategoryStats && (
+                    <button
+                      className={styles.editBtn}
+                      onClick={(e) => { e.stopPropagation(); onSubcategoryStats(sub.id); }}
+                      title="Сравнительная таблица подкатегории"
+                    >
+                      <BarChart3 size={11} />
+                    </button>
+                  )}
                   <button
                     className={styles.editBtn}
                     onClick={(e) => {

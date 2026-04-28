@@ -51,7 +51,12 @@ export function ToolsEditor() {
       </p>
 
       <div style={{ height: 'calc(100vh - 200px)', minHeight: 500 }}>
-        <TreePicker mode="edit" fullHeight />
+        <TreePicker
+          mode="edit"
+          fullHeight
+          onSubcategoryStats={(subId) => navigate(`/tools/sub/${subId}`)}
+          onToolStats={(toolId) => navigate(`/tools/tool/${toolId}`)}
+        />
       </div>
     </div>
   );
