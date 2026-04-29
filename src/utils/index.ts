@@ -53,3 +53,7 @@ export {
   PRIMARY_DOMAINS,
 } from './toolTreeHelpers';
 export type { ToolDomain } from './toolTreeHelpers';
+export { hhToNormalizedVacancy } from './hhConverter';
+export type { HHConvertOptions } from './hhConverter';
+export { HH_CATEGORIES, HH_GROUP_LABELS, getHHCategoryById, groupHHCategories } from './hhCategories';
+export type { HHCategory, HHGroupId } from './hhCategories';

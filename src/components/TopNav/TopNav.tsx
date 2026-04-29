@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Moon, Sun, Plus, User, LogOut, LayoutDashboard, Briefcase, Users, ChevronDown, Wrench, Sparkles } from 'lucide-react';
+import { Menu, Moon, Sun, Plus, User, LogOut, LayoutDashboard, Briefcase, Users, ChevronDown, Wrench, Sparkles, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore, useUiStore, useAuthStore } from '@/stores';
 import { useScrollDirection } from '@/hooks';
@@ -138,6 +138,10 @@ export function TopNav() {
               <button className={styles.dropdownItem} onClick={() => { navigate('/admin/import'); setAddOpen(false); }}>
                 <Sparkles size={13} />
                 Импорт через LLM
+              </button>
+              <button className={styles.dropdownItem} onClick={() => { navigate('/admin/hh'); setAddOpen(false); }}>
+                <Globe size={13} />
+                Импорт с HH.ru
               </button>
             </div>
           )}

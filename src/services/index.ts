@@ -6,3 +6,5 @@ export { parseVacanciesFromUrl, parseVacanciesFromText, resolveToolId } from './
 export type { ParsedVacancy, ParsedRequirement, ParseProgress } from './vacancyParser';
 export { parseResumesFromText, parseResumesFromFiles, parsedCandidateToStoreFormat, readFileContent } from './resumeParser';
 export type { ParsedCandidate, ParsedWorkEntry, ResumeParseProgress } from './resumeParser';
+export { searchVacancies, searchVacanciesPaged, getVacancyDetail, stripHtml, sleep } from './hhApi';
+export type { HHVacancyListItem, HHVacancyDetail, HHSearchParams, HHSearchResponse } from './hhApi';

@@ -11,7 +11,7 @@ import { ComparePage } from '@/pages/Compare';
 import { PipelinePage } from '@/pages/Pipeline';
 import { LoginPage, RegisterPage, ProfilePage } from '@/pages/Auth';
 import { ToolsEditor, ToolDetail, SubcategoryDetail } from '@/pages/Tools';
-import { AdminImport } from '@/pages/Admin';
+import { AdminImport, HHImporter } from '@/pages/Admin';
 import { ErrorBoundary } from '@/components/ui';
 import { seedIfEmpty, patchSeedData } from '@/db';
 import { usePositionStore, useAuthStore } from '@/stores';
@@ -64,6 +64,7 @@ export function App() {
           <Route path="/tools/sub/:subId" element={<ProtectedRoute><SubcategoryDetail /></ProtectedRoute>} />
           <Route path="/tools/tool/:toolId" element={<ProtectedRoute><ToolDetail /></ProtectedRoute>} />
           <Route path="/admin/import" element={<ProtectedRoute roles={['admin', 'recruiter']}><AdminImport /></ProtectedRoute>} />
+          <Route path="/admin/hh" element={<ProtectedRoute roles={['admin', 'recruiter']}><HHImporter /></ProtectedRoute>} />
           <Route path="/roadmap/:positionId" element={<ProtectedRoute><PositionDetail /></ProtectedRoute>} />
         </Routes>
         </ErrorBoundary>
