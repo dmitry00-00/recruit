@@ -417,11 +417,14 @@ export function HHImporter() {
                           {customised && <span className={styles.customMark} title="настроено">●</span>}
                         </span>
                         {p && (
-                          <span className={`${styles.chipProgress} ${styles[`progress_${p.status}`]}`}>
+                          <span
+                            className={`${styles.chipProgress} ${styles[`progress_${p.status}`]}`}
+                            title={p.error ?? undefined}
+                          >
                             {p.status === 'running' && <Loader2 size={10} className={styles.spin} />}
                             {p.status === 'done'    && <CheckCircle2 size={10} />}
                             {p.status === 'error'   && <AlertCircle size={10} />}
-                            {p.collected}/{p.total}
+                            {p.status !== 'running' ? `${p.collected}/${p.total}` : p.collected}
                           </span>
                         )}
                       </button>
@@ -468,6 +471,24 @@ export function HHImporter() {
       </div>
 
       {globalError && <div className={styles.error}><AlertCircle size={14} /> {globalError}</div>}
+
+      {/* Per-category errors */}
+      {Object.entries(progress).some(([, p]) => p.status === 'error') && (
+        <div className={styles.catErrors}>
+          {Object.entries(progress)
+            .filter(([, p]) => p.status === 'error')
+            .map(([catId, p]) => {
+              const cat = HH_CATEGORIES.find((c) => c.id === catId);
+              return (
+                <div key={catId} className={styles.catError}>
+                  <AlertCircle size={12} />
+                  <strong>{cat?.label ?? catId}:</strong> {p.error ?? 'Ошибка запроса'}
+                </div>
+              );
+            })}
+        </div>
+      )}
+
       {savedCount > 0 && (
         <div className={styles.success}>
           <CheckCircle2 size={14} /> Сохранено вакансий: {savedCount}

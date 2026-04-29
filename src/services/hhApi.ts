@@ -11,8 +11,9 @@
  * polite. Pagination cap: HH returns max 2000 results per query (page*per_page).
  */
 
-const HH_BASE = 'https://api.hh.ru';
-const USER_AGENT = 'recruit-app/1.0 (local dev)';
+/** In dev the Vite proxy at /hh-api → api.hh.ru bypasses CORS.
+ *  In production (no proxy) we fall back to the direct URL. */
+const HH_BASE = '/hh-api';
 
 export interface HHSalary {
   from?: number | null;
@@ -81,7 +82,8 @@ export interface HHSearchParams {
 }
 
 async function hhGet<T>(path: string, params?: Record<string, string | string[]>): Promise<T> {
-  const url = new URL(`${HH_BASE}${path}`);
+  const base = `${window.location.origin}${HH_BASE}${path}`;
+  const url = new URL(base);
   if (params) {
     for (const [k, v] of Object.entries(params)) {
       if (Array.isArray(v)) {
@@ -93,14 +95,13 @@ async function hhGet<T>(path: string, params?: Record<string, string | string[]>
   }
 
   const res = await fetch(url.toString(), {
-    headers: {
-      'User-Agent': USER_AGENT,
-      'Accept': 'application/json',
-    },
+    headers: { 'Accept': 'application/json' },
   });
 
   if (!res.ok) {
-    throw new Error(`HH.ru API error: ${res.status} ${res.statusText}`);
+    let detail = '';
+    try { detail = await res.text(); } catch { /* ignore */ }
+    throw new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
   }
   return res.json() as Promise<T>;
 }

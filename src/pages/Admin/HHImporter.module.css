@@ -306,6 +306,29 @@
   margin-bottom: 10px;
 }
 
+.catErrors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+}
+
+.catError {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #ef4444;
+  line-height: 1.4;
+}
+.catError strong {
+  flex-shrink: 0;
+}
+
 .success {
   display: inline-flex;
   align-items: center;
