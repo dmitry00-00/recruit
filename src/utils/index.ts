@@ -55,5 +55,9 @@ export {
 export type { ToolDomain } from './toolTreeHelpers';
 export { hhToNormalizedVacancy } from './hhConverter';
 export type { HHConvertOptions } from './hhConverter';
-export { HH_CATEGORIES, HH_GROUP_LABELS, getHHCategoryById, groupHHCategories } from './hhCategories';
+export {
+  HH_CATEGORIES, HH_GROUP_LABELS,
+  getHHCategoryById, groupHHCategories,
+  getAliases, setAliases, resetAliases, isAliasesCustomised,
+} from './hhCategories';
 export type { HHCategory, HHGroupId } from './hhCategories';

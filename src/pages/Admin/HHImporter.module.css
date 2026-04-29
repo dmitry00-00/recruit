@@ -173,31 +173,89 @@
   padding-left: 24px;
 }
 
-.chip {
+/* Wrapper combines selection chip + edit pencil button. */
+.chipWrap {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--border-tertiary);
+  border-radius: 14px;
+  background: var(--bg-primary);
+  overflow: hidden;
+  transition: border-color 0.12s;
+}
+.chipWrap:hover { border-color: var(--amber); }
+
+.chipWrapActive {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.chipWrapEditing {
+  outline: 1px dashed var(--amber);
+  outline-offset: 1px;
+}
+
+.chipBody {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px;
+  padding: 5px 8px 5px 10px;
   font-size: 12px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-tertiary);
-  border-radius: 14px;
+  background: transparent;
+  border: none;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.12s;
+  transition: color 0.12s;
 }
-.chip:hover { border-color: var(--amber); color: var(--text-primary); }
-.chip:disabled { cursor: not-allowed; opacity: 0.6; }
+.chipBody:hover { color: var(--text-primary); }
+.chipBody:disabled { cursor: not-allowed; opacity: 0.6; }
+.chipWrapActive .chipBody {
+  color: #1a1a1a;
+}
+.chipWrapActive .chipBody:hover { color: #1a1a1a; }
 
-.chipActive {
-  background: var(--amber);
-  border-color: var(--amber);
+.aliasCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
+}
+.chipWrapActive .aliasCount { background: rgba(0, 0, 0, 0.18); }
+
+.customMark {
+  font-size: 8px;
+  color: #22c55e;
+  margin-left: 1px;
+}
+.chipWrapActive .customMark { color: #1a1a1a; }
+
+.chipEditBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border-tertiary);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.chipEditBtn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--amber);
+}
+.chipEditBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.chipWrapActive .chipEditBtn {
+  border-left-color: rgba(0, 0, 0, 0.15);
   color: #1a1a1a;
 }
-.chipActive:hover {
-  background: var(--amber);
-  color: #1a1a1a;
-}
+.chipWrapActive .chipEditBtn:hover { background: rgba(0, 0, 0, 0.12); }
 
 .chipProgress {
   display: inline-flex;
@@ -340,3 +398,133 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ── Alias editor ─────────────────────────────────────── */
+
+.aliasEditor {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aliasEditorHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.aliasEditorTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.aliasEditorHint {
+  flex: 1;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.aliasEditorClose {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.aliasEditorClose:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
+.aliasList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.aliasRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aliasInput {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.12s;
+}
+.aliasInput:focus { border-color: var(--amber); }
+
+.aliasRowBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: 1px solid var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.aliasRowBtn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+.aliasRowBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.aliasAddBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: transparent;
+  border: 1px dashed var(--border-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.aliasAddBtn:hover {
+  border-color: var(--amber);
+  border-style: solid;
+  color: var(--amber);
+}
+
+.aliasActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-tertiary);
+}
+
+.aliasResetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.aliasResetBtn:hover { color: var(--text-primary); background: var(--bg-tertiary); }

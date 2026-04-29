@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Download, Loader2, Save, Search, Globe, AlertCircle, CheckCircle2, X,
+  Pencil, Plus, RotateCcw,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useVacancyStore } from '@/stores';
 import {
   HH_CATEGORIES, HH_GROUP_LABELS, hhToNormalizedVacancy,
+  getAliases, setAliases, resetAliases, isAliasesCustomised,
   type HHCategory, type HHGroupId, type NormalizedVacancy,
 } from '@/utils';
 import {
@@ -73,11 +75,24 @@ export function HHImporter() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [savedCount, setSavedCount] = useState(0);
 
+  /** id of category whose alias editor is currently open, or null. */
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
+  /** Bumped on alias save/reset to force re-read of localStorage values. */
+  const [aliasVersion, setAliasVersion] = useState(0);
+
   const grouped = useMemo(() => {
     const g: Record<HHGroupId, HHCategory[]> = { developer: [], analyst: [], qa: [] };
     for (const c of HH_CATEGORIES) g[c.groupId].push(c);
     return g;
   }, []);
+
+  /** Active aliases for each category — reads localStorage, refreshed on aliasVersion bump. */
+  const aliasesByCat = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    for (const c of HH_CATEGORIES) map[c.id] = getAliases(c.id);
+    return map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aliasVersion]);
 
   const totalSelected = selectedCats.size;
   const expectedTotal = totalSelected * perCategory;
@@ -106,6 +121,18 @@ export function HHImporter() {
   const selectAll = () => setSelectedCats(new Set(HH_CATEGORIES.map((c) => c.id)));
   const clearAll = () => setSelectedCats(new Set());
 
+  // ── Alias editor ───────────────────────────────────────────────────────────
+
+  const handleSaveAliases = (catId: string, list: string[]) => {
+    setAliases(catId, list);
+    setAliasVersion((v) => v + 1);
+  };
+
+  const handleResetAliases = (catId: string) => {
+    resetAliases(catId);
+    setAliasVersion((v) => v + 1);
+  };
+
   // ── Fetch ──────────────────────────────────────────────────────────────────
 
   const handleFetch = async () => {
@@ -127,18 +154,39 @@ export function HHImporter() {
 
     for (const cat of cats) {
       try {
-        const list = await searchVacanciesPaged(
-          {
-            text: cat.text,
-            professionalRoles: cat.professionalRoles,
-            area: areaId === 113 ? undefined : areaId,
-            dateFrom,
-            searchField: searchOnlyTitle ? 'name' : undefined,
-            perPage: 50,
-          },
-          perCategory,
-          (n) => setProgress((p) => ({ ...p, [cat.id]: { ...p[cat.id], collected: n } })),
-        );
+        const aliases = aliasesByCat[cat.id] ?? [];
+        // Per-category dedup by HH id (different aliases hit overlapping vacancies).
+        const seenInCat = new Set<string>();
+        const list: HHVacancyListItem[] = [];
+
+        for (const alias of aliases) {
+          if (list.length >= perCategory) break;
+          const remaining = perCategory - list.length;
+          // Each alias may pull up to the remaining slot count, capped at 50/page.
+          const partial = await searchVacanciesPaged(
+            {
+              text: alias,
+              professionalRoles: cat.professionalRoles,
+              area: areaId === 113 ? undefined : areaId,
+              dateFrom,
+              searchField: searchOnlyTitle ? 'name' : undefined,
+              perPage: 50,
+            },
+            remaining,
+            (n) => setProgress((p) => ({
+              ...p,
+              [cat.id]: { ...p[cat.id], collected: list.length + n },
+            })),
+          );
+
+          for (const item of partial) {
+            if (seenInCat.has(item.id)) continue;
+            seenInCat.add(item.id);
+            list.push(item);
+            if (list.length >= perCategory) break;
+          }
+          await sleep(200);
+        }
 
         let detailed: (HHVacancyListItem | HHVacancyDetail)[] = list;
         if (fetchDetails) {
@@ -250,6 +298,8 @@ export function HHImporter() {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
+  const editingCat = editingCatId ? HH_CATEGORIES.find((c) => c.id === editingCatId) : null;
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
@@ -346,31 +396,62 @@ export function HHImporter() {
                 {grouped[gid].map((cat) => {
                   const p = progress[cat.id];
                   const on = selectedCats.has(cat.id);
+                  const aliases = aliasesByCat[cat.id] ?? [];
+                  const customised = isAliasesCustomised(cat.id);
+                  const isEditing = editingCatId === cat.id;
                   return (
-                    <button
+                    <div
                       key={cat.id}
-                      className={`${styles.chip} ${on ? styles.chipActive : ''}`}
-                      onClick={() => toggleCat(cat.id)}
-                      type="button"
-                      disabled={running}
-                      title={cat.text}
+                      className={`${styles.chipWrap} ${on ? styles.chipWrapActive : ''} ${isEditing ? styles.chipWrapEditing : ''}`}
                     >
-                      <span>{cat.label}</span>
-                      {p && (
-                        <span className={`${styles.chipProgress} ${styles[`progress_${p.status}`]}`}>
-                          {p.status === 'running' && <Loader2 size={10} className={styles.spin} />}
-                          {p.status === 'done'    && <CheckCircle2 size={10} />}
-                          {p.status === 'error'   && <AlertCircle size={10} />}
-                          {p.collected}/{p.total}
+                      <button
+                        className={styles.chipBody}
+                        onClick={() => toggleCat(cat.id)}
+                        type="button"
+                        disabled={running}
+                        title={aliases.join(' · ')}
+                      >
+                        <span>{cat.label}</span>
+                        <span className={styles.aliasCount}>
+                          {aliases.length}
+                          {customised && <span className={styles.customMark} title="настроено">●</span>}
                         </span>
-                      )}
-                    </button>
+                        {p && (
+                          <span className={`${styles.chipProgress} ${styles[`progress_${p.status}`]}`}>
+                            {p.status === 'running' && <Loader2 size={10} className={styles.spin} />}
+                            {p.status === 'done'    && <CheckCircle2 size={10} />}
+                            {p.status === 'error'   && <AlertCircle size={10} />}
+                            {p.collected}/{p.total}
+                          </span>
+                        )}
+                      </button>
+                      <button
+                        className={styles.chipEditBtn}
+                        onClick={() => setEditingCatId(isEditing ? null : cat.id)}
+                        type="button"
+                        title="Алиасы для поиска"
+                        disabled={running}
+                      >
+                        <Pencil size={11} />
+                      </button>
+                    </div>
                   );
                 })}
               </div>
             </div>
           );
         })}
+
+        {editingCat && (
+          <AliasEditor
+            key={editingCat.id}
+            category={editingCat}
+            initial={aliasesByCat[editingCat.id] ?? []}
+            onSave={(list) => handleSaveAliases(editingCat.id, list)}
+            onReset={() => handleResetAliases(editingCat.id)}
+            onClose={() => setEditingCatId(null)}
+          />
+        )}
       </div>
 
       {/* Run button */}
@@ -433,6 +514,95 @@ export function HHImporter() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Alias editor ───────────────────────────────────────────────
+
+interface AliasEditorProps {
+  category: HHCategory;
+  initial: string[];
+  onSave: (list: string[]) => void;
+  onReset: () => void;
+  onClose: () => void;
+}
+
+function AliasEditor({ category, initial, onSave, onReset, onClose }: AliasEditorProps) {
+  const [list, setList] = useState<string[]>(initial.length ? initial : ['']);
+
+  const update = (i: number, value: string) =>
+    setList((prev) => prev.map((v, idx) => (idx === i ? value : v)));
+
+  const remove = (i: number) =>
+    setList((prev) => prev.filter((_, idx) => idx !== i));
+
+  const add = () => setList((prev) => [...prev, '']);
+
+  const save = () => {
+    const cleaned = list.map((s) => s.trim()).filter(Boolean);
+    if (cleaned.length === 0) {
+      onReset();
+    } else {
+      onSave(cleaned);
+    }
+    onClose();
+  };
+
+  const reset = () => {
+    onReset();
+    setList(category.defaultAliases);
+  };
+
+  return (
+    <div className={styles.aliasEditor}>
+      <div className={styles.aliasEditorHeader}>
+        <span className={styles.aliasEditorTitle}>
+          Алиасы для поиска: <strong>{category.label}</strong>
+        </span>
+        <span className={styles.aliasEditorHint}>
+          Каждая строка — отдельный поисковый запрос HH.ru. Результаты по всем алиасам
+          объединяются и дедуплицируются.
+        </span>
+        <button className={styles.aliasEditorClose} onClick={onClose} type="button" title="Закрыть">
+          <X size={12} />
+        </button>
+      </div>
+
+      <div className={styles.aliasList}>
+        {list.map((value, i) => (
+          <div key={i} className={styles.aliasRow}>
+            <input
+              className={styles.aliasInput}
+              value={value}
+              onChange={(e) => update(i, e.target.value)}
+              placeholder="например: backend developer"
+              autoFocus={i === list.length - 1 && value === ''}
+            />
+            <button
+              className={styles.aliasRowBtn}
+              onClick={() => remove(i)}
+              type="button"
+              title="Убрать"
+              disabled={list.length === 1}
+            >
+              <X size={12} />
+            </button>
+          </div>
+        ))}
+        <button className={styles.aliasAddBtn} onClick={add} type="button">
+          <Plus size={12} /> добавить алиас
+        </button>
+      </div>
+
+      <div className={styles.aliasActions}>
+        <button className={styles.aliasResetBtn} onClick={reset} type="button">
+          <RotateCcw size={11} /> по умолчанию ({category.defaultAliases.length})
+        </button>
+        <div className={styles.spacer} />
+        <Button variant="secondary" size="sm" onClick={onClose}>Отмена</Button>
+        <Button size="sm" onClick={save}>Сохранить</Button>
+      </div>
     </div>
   );
 }
