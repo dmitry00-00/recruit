@@ -16,8 +16,8 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/hh-api/, ''),
         headers: {
-          'User-Agent': 'RecruitApp/1.0 (admin@recruit.local)',
-          'HH-User-Agent': 'RecruitApp/1.0 (admin@recruit.local)',
+          'User-Agent': 'RecruitApp/1.0 (serzpobedinski@gmail.com)',
+          'HH-User-Agent': 'RecruitApp/1.0 (serzpobedinski@gmail.com)',
         },
       },
     },
