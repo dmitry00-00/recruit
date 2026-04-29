@@ -620,7 +620,7 @@ export function TreePicker({
 
         {(isOpen || isEdit) && mode !== 'position' && (
           <div className={styles.toolsPanel}>
-            {sub.tools.map(renderTool)}
+            {sub.tools.map((t) => renderTool(t))}
             {isEdit && renderAddToolRow(sub.id)}
           </div>
         )}
@@ -751,7 +751,7 @@ export function TreePicker({
           <div className={styles.searchResults}>
             {searchResults.length === 0
               ? <div className={styles.emptyTools}>Ничего не найдено</div>
-              : searchResults.map(renderTool)}
+              : searchResults.map((t) => renderTool(t))}
           </div>
         ) : (
           <div className={styles.grid}>
