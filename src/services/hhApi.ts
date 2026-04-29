@@ -9,11 +9,21 @@
  *
  * Rate limit: ~5 rps without auth. We add a small inter-request delay to stay
  * polite. Pagination cap: HH returns max 2000 results per query (page*per_page).
+ *
+ * Transport strategy:
+ *   1. Vite dev-proxy /hh-api → api.hh.ru (dev only, no CORS issue)
+ *   2. CORS proxy fallback (allorigins.win → corsproxy.io) when proxy returns 403
  */
 
-/** In dev the Vite proxy at /hh-api → api.hh.ru bypasses CORS.
- *  In production (no proxy) we fall back to the direct URL. */
-const HH_BASE = '/hh-api';
+/** Vite proxy path: /hh-api → https://api.hh.ru */
+const HH_PROXY_BASE = '/hh-api';
+/** Direct URL used when building CORS-proxy URLs */
+const HH_DIRECT_BASE = 'https://api.hh.ru';
+
+const CORS_PROXIES = [
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+];
 
 export interface HHSalary {
   from?: number | null;
@@ -81,29 +91,64 @@ export interface HHSearchParams {
   onlyWithSalary?: boolean;
 }
 
-async function hhGet<T>(path: string, params?: Record<string, string | string[]>): Promise<T> {
-  const base = `${window.location.origin}${HH_BASE}${path}`;
-  const url = new URL(base);
+function buildParams(params?: Record<string, string | string[]>): URLSearchParams {
+  const sp = new URLSearchParams();
   if (params) {
     for (const [k, v] of Object.entries(params)) {
       if (Array.isArray(v)) {
-        for (const item of v) url.searchParams.append(k, item);
+        for (const item of v) sp.append(k, item);
       } else if (v !== undefined && v !== '') {
-        url.searchParams.set(k, v);
+        sp.set(k, v);
       }
     }
   }
+  return sp;
+}
 
-  const res = await fetch(url.toString(), {
-    headers: { 'Accept': 'application/json' },
-  });
+async function hhGet<T>(path: string, params?: Record<string, string | string[]>): Promise<T> {
+  const sp = buildParams(params);
+  const qs = sp.toString();
 
-  if (!res.ok) {
-    let detail = '';
-    try { detail = await res.text(); } catch { /* ignore */ }
-    throw new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
+  // 1. Try Vite dev-server proxy
+  const proxyUrl = `${window.location.origin}${HH_PROXY_BASE}${path}${qs ? `?${qs}` : ''}`;
+  try {
+    const res = await fetch(proxyUrl, {
+      headers: { 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(15000),
+    });
+    if (res.ok) return res.json() as Promise<T>;
+    if (res.status !== 403 && res.status !== 0) {
+      let detail = '';
+      try { detail = await res.text(); } catch { /* ignore */ }
+      throw new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
+    }
+    // 403 → fall through to CORS proxies
+  } catch (err) {
+    // Only swallow network/403 errors; re-throw explicit API errors
+    if (err instanceof Error && err.message.startsWith('HH.ru ')) throw err;
+    // Otherwise fall through
   }
-  return res.json() as Promise<T>;
+
+  // 2. CORS proxy fallback — browser cannot set HH-User-Agent, but the proxy
+  //    server fetches from its own IP which is typically not rate-limited.
+  const directUrl = `${HH_DIRECT_BASE}${path}${qs ? `?${qs}` : ''}`;
+  let lastErr: Error = new Error('All transports failed');
+
+  for (const makeProxy of CORS_PROXIES) {
+    try {
+      const res = await fetch(makeProxy(directUrl), {
+        signal: AbortSignal.timeout(20000),
+      });
+      if (res.ok) return res.json() as Promise<T>;
+      let detail = '';
+      try { detail = await res.text(); } catch { /* ignore */ }
+      lastErr = new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
+    } catch (e) {
+      if (e instanceof Error) lastErr = e;
+    }
+  }
+
+  throw lastErr;
 }
 
 export async function searchVacancies(p: HHSearchParams): Promise<HHSearchResponse> {
