@@ -1,29 +1,32 @@
 /**
  * HH.ru public API client.
  *
- * Used for harvesting vacancies into the local DB. The vacancy search endpoint
- * is open (no auth, no key) and returns structured JSON with key_skills,
- * salary, area, schedule, etc. Detail endpoint adds full HTML description and
- * complete `key_skills` list — needed because list responses sometimes return
- * a truncated subset.
+ * Used for harvesting vacancies into the local DB. As of late 2024, HH.ru
+ * tightened access — even "public" endpoints like /vacancies search now
+ * require an OAuth2 access token. Register an app at https://dev.hh.ru/admin
+ * and paste the token into the importer UI; we store it in localStorage
+ * and pass it as `Authorization: Bearer <token>` on every request.
  *
- * Rate limit: ~5 rps without auth. We add a small inter-request delay to stay
+ * Rate limit: ~5 rps with token. We add a small inter-request delay to stay
  * polite. Pagination cap: HH returns max 2000 results per query (page*per_page).
  *
- * Transport strategy:
- *   1. Vite dev-proxy /hh-api → api.hh.ru (dev only, no CORS issue)
- *   2. CORS proxy fallback (allorigins.win → corsproxy.io) when proxy returns 403
+ * Transport: Vite dev-server middleware at /hh-api forwards to api.hh.ru
+ * with controlled headers (no browser-header leakage that triggers the WAF).
  */
 
-/** Vite proxy path: /hh-api → https://api.hh.ru */
 const HH_PROXY_BASE = '/hh-api';
-/** Direct URL used when building CORS-proxy URLs */
-const HH_DIRECT_BASE = 'https://api.hh.ru';
+const TOKEN_STORAGE_KEY = 'hh_access_token';
 
-const CORS_PROXIES = [
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-];
+export function getHHToken(): string | null {
+  try { return localStorage.getItem(TOKEN_STORAGE_KEY); } catch { return null; }
+}
+
+export function setHHToken(token: string | null): void {
+  try {
+    if (token && token.trim()) localStorage.setItem(TOKEN_STORAGE_KEY, token.trim());
+    else localStorage.removeItem(TOKEN_STORAGE_KEY);
+  } catch { /* ignore */ }
+}
 
 export interface HHSalary {
   from?: number | null;
@@ -108,47 +111,26 @@ function buildParams(params?: Record<string, string | string[]>): URLSearchParam
 async function hhGet<T>(path: string, params?: Record<string, string | string[]>): Promise<T> {
   const sp = buildParams(params);
   const qs = sp.toString();
+  const url = `${window.location.origin}${HH_PROXY_BASE}${path}${qs ? `?${qs}` : ''}`;
 
-  // 1. Try Vite dev-server proxy
-  const proxyUrl = `${window.location.origin}${HH_PROXY_BASE}${path}${qs ? `?${qs}` : ''}`;
-  try {
-    const res = await fetch(proxyUrl, {
-      headers: { 'Accept': 'application/json' },
-      signal: AbortSignal.timeout(15000),
-    });
-    if (res.ok) return res.json() as Promise<T>;
-    if (res.status !== 403 && res.status !== 0) {
-      let detail = '';
-      try { detail = await res.text(); } catch { /* ignore */ }
-      throw new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
+  const headers: Record<string, string> = { 'Accept': 'application/json' };
+  const token = getHHToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(url, {
+    headers,
+    signal: AbortSignal.timeout(20000),
+  });
+
+  if (!res.ok) {
+    let detail = '';
+    try { detail = await res.text(); } catch { /* ignore */ }
+    if (res.status === 403 && !token) {
+      throw new Error('HH.ru 403: требуется access token. Получите его на https://dev.hh.ru/admin и сохраните в настройках импортера.');
     }
-    // 403 → fall through to CORS proxies
-  } catch (err) {
-    // Only swallow network/403 errors; re-throw explicit API errors
-    if (err instanceof Error && err.message.startsWith('HH.ru ')) throw err;
-    // Otherwise fall through
+    throw new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 160)}` : ''}`);
   }
-
-  // 2. CORS proxy fallback — browser cannot set HH-User-Agent, but the proxy
-  //    server fetches from its own IP which is typically not rate-limited.
-  const directUrl = `${HH_DIRECT_BASE}${path}${qs ? `?${qs}` : ''}`;
-  let lastErr: Error = new Error('All transports failed');
-
-  for (const makeProxy of CORS_PROXIES) {
-    try {
-      const res = await fetch(makeProxy(directUrl), {
-        signal: AbortSignal.timeout(20000),
-      });
-      if (res.ok) return res.json() as Promise<T>;
-      let detail = '';
-      try { detail = await res.text(); } catch { /* ignore */ }
-      lastErr = new Error(`HH.ru ${res.status}: ${res.statusText}${detail ? ` — ${detail.slice(0, 120)}` : ''}`);
-    } catch (e) {
-      if (e instanceof Error) lastErr = e;
-    }
-  }
-
-  throw lastErr;
+  return res.json() as Promise<T>;
 }
 
 export async function searchVacancies(p: HHSearchParams): Promise<HHSearchResponse> {

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Download, Loader2, Save, Search, Globe, AlertCircle, CheckCircle2, X,
-  Pencil, Plus, RotateCcw,
+  Pencil, Plus, RotateCcw, Key,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useVacancyStore } from '@/stores';
@@ -13,6 +13,7 @@ import {
 } from '@/utils';
 import {
   searchVacanciesPaged, getVacancyDetail, sleep,
+  getHHToken, setHHToken,
   type HHVacancyListItem, type HHVacancyDetail,
 } from '@/services';
 import type { Currency, Grade, WorkFormat, EmploymentType, VacancyStatus } from '@/entities';
@@ -79,6 +80,11 @@ export function HHImporter() {
   const [editingCatId, setEditingCatId] = useState<string | null>(null);
   /** Bumped on alias save/reset to force re-read of localStorage values. */
   const [aliasVersion, setAliasVersion] = useState(0);
+
+  /** OAuth2 access token from dev.hh.ru. HH.ru requires it for /vacancies since late 2024. */
+  const [tokenInput, setTokenInput] = useState<string>(() => getHHToken() ?? '');
+  const [tokenPanelOpen, setTokenPanelOpen] = useState<boolean>(() => !getHHToken());
+  const tokenSaved = !!getHHToken() && tokenInput.trim() === (getHHToken() ?? '');
 
   const grouped = useMemo(() => {
     const g: Record<HHGroupId, HHCategory[]> = { developer: [], analyst: [], qa: [] };
@@ -310,6 +316,61 @@ export function HHImporter() {
           Парсинг через открытое API hh.ru. Без ключа, ~5 запросов/сек. Структурированные
           данные, никакого LLM. Только IT-специальности.
         </p>
+      </div>
+
+      {/* Access token */}
+      <div className={styles.filterBlock}>
+        <div className={styles.tokenHeader}>
+          <button
+            type="button"
+            className={styles.tokenToggle}
+            onClick={() => setTokenPanelOpen((v) => !v)}
+          >
+            <Key size={14} />
+            <span>HH.ru access token</span>
+            <span className={tokenSaved ? styles.tokenStatusOk : styles.tokenStatusMissing}>
+              {tokenSaved ? '● сохранён' : '○ не задан — обязателен с конца 2024'}
+            </span>
+          </button>
+        </div>
+        {tokenPanelOpen && (
+          <div className={styles.tokenBody}>
+            <p className={styles.tokenHint}>
+              HH.ru закрыл публичный поиск вакансий. Зарегистрируйте приложение на{' '}
+              <a href="https://dev.hh.ru/admin" target="_blank" rel="noopener noreferrer" className={styles.sourceLink}>
+                dev.hh.ru/admin
+              </a>{' '}
+              и вставьте access_token. Хранится локально в браузере.
+            </p>
+            <div className={styles.tokenRow}>
+              <input
+                type="password"
+                className={styles.input}
+                placeholder="Bearer token (без префикса Bearer)"
+                value={tokenInput}
+                onChange={(e) => setTokenInput(e.target.value)}
+                disabled={running}
+                style={{ flex: 1 }}
+              />
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => { setHHToken(tokenInput); setTokenPanelOpen(false); }}
+                disabled={running || !tokenInput.trim()}
+              >
+                Сохранить
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => { setHHToken(null); setTokenInput(''); }}
+                disabled={running || !getHHToken()}
+              >
+                Очистить
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Filters */}

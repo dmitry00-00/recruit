@@ -18,15 +18,21 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use('/hh-api', async (req, res) => {
           const upstreamUrl = `https://api.hh.ru${req.url ?? ''}`;
+          const headers: Record<string, string> = {
+            'Accept':          'application/json',
+            'Accept-Encoding': 'identity',
+            'User-Agent':      HH_USER_AGENT,
+            'HH-User-Agent':   HH_USER_AGENT,
+          };
+          // Forward the OAuth2 bearer token from the browser. HH.ru requires
+          // it for /vacancies search and detail endpoints since late 2024.
+          const auth = req.headers['authorization'];
+          if (typeof auth === 'string') headers['Authorization'] = auth;
+
           try {
             const upstream = await fetch(upstreamUrl, {
               method: req.method,
-              headers: {
-                'Accept':         'application/json',
-                'Accept-Encoding': 'identity',
-                'User-Agent':     HH_USER_AGENT,
-                'HH-User-Agent':  HH_USER_AGENT,
-              },
+              headers,
             });
             const body = await upstream.text();
             res.statusCode = upstream.status;
