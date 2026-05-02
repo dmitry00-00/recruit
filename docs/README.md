@@ -11,6 +11,7 @@
 | [**PROMPT_MASTER.md**](./PROMPT_MASTER.md) | Tech-lead, AI-агент | Главный промпт, общий контекст, порядок работы |
 | [**ROADMAP.md**](./ROADMAP.md) | PM, tech-lead | 4 фазы: MVP → UX → real-time → ML, критерии перехода |
 | [**SCHEMA.md**](./SCHEMA.md) | Backend, DBA | Полная схема PostgreSQL: таблицы, индексы, RLS, триггеры |
+| [**SCHEMA_AUDIT.md**](./SCHEMA_AUDIT.md) | Tech-lead, импорт | Аудит полей hh × LinkedIn × Habr → канонический формат, план расширения `entities` |
 | [**OPTIMIZATION.md**](./OPTIMIZATION.md) | Все инженеры | Рекомендации по perf: frontend, backend, DB |
 | [**PROMPT_BACKEND.md**](./PROMPT_BACKEND.md) | Backend команда | Детальное ТЗ для FastAPI |
 | [**PROMPT_FRONTEND.md**](./PROMPT_FRONTEND.md) | Frontend команда | Детальное ТЗ для миграции SPA |
