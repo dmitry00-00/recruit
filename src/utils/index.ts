@@ -61,3 +61,16 @@ export {
   getAliases, setAliases, resetAliases, isAliasesCustomised,
 } from './hhCategories';
 export type { HHCategory, HHGroupId } from './hhCategories';
+
+// ── Schema audit steps 2 & 3: versioning + source parsers ───
+export {
+  getOntologyVersion, bumpOntologyVersion,
+  getMaskVersion, bumpMaskVersion,
+  getLegacyOntologyVersion, getLegacyMaskVersion,
+} from './versioning';
+export { parseSalaryString, hhSalaryToFields } from './parseSalary';
+export type { ParsedSalary } from './parseSalary';
+export { parseAddressString, hhAreaToAddress, addressToString } from './parseAddress';
+export { parseExperienceMonths, monthsAgoToDate } from './parseExperience';
+export { parseLanguageString, parseEducationLevel } from './parseLanguage';
+export { parseOpenToWorkString } from './parseOpenToWork';
