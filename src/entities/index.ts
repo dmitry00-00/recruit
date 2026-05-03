@@ -79,6 +79,96 @@ export type WorkFormat = 'office' | 'remote' | 'hybrid';
 export type EmploymentType = 'full' | 'part' | 'contract' | 'freelance';
 export type VacancyStatus = 'open' | 'closed' | 'offer_made' | 'hired';
 
+// ── Extended enums (SCHEMA_AUDIT.md) ─────────────────────────
+
+export type ExtractionSource = 'hh' | 'linkedin' | 'habr' | 'manual' | 'llm';
+
+export type EducationLevel =
+  | 'secondary'        // среднее
+  | 'vocational'       // СПО
+  | 'bachelor'
+  | 'master'
+  | 'phd'
+  | 'self_taught';
+
+export type LanguageLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'native';
+
+export type OpenToWorkStatus = 'looking' | 'considering' | 'not_looking';
+
+export type SalaryPeriod = 'hour' | 'month' | 'year';
+
+// ── Common embedded types (SCHEMA_AUDIT.md) ─────────────────
+
+export interface ExtractionMeta {
+  source: ExtractionSource;
+  /** ID на платформе-источнике, для дедупа и обратных ссылок. */
+  externalId?: string;
+  /** Когда экстрагировано (импортировано), не путать с createdAt. */
+  extractedAt: Date;
+  /** Имя модели, если экстракцию делала LLM (например 'deepseek-v4-flash'). */
+  extractionModel?: string;
+  /** Версия маски-должности, например 'pos_backend@1.3'. */
+  maskVersion?: string;
+  /** Версия дерева инструментов, например 'tooltree@2.1'. */
+  ontologyVersion?: string;
+  /** Confidence экстрактора, 0..1. */
+  extractionQuality?: number;
+}
+
+export interface Address {
+  country?: string;
+  city?: string;
+  street?: string;
+  postalCode?: string;
+  lat?: number;
+  lng?: number;
+  /** Свободная строка-исходник, если структуру разобрать не удалось. */
+  raw?: string;
+}
+
+export interface Education {
+  institution: string;
+  faculty?: string;
+  specialty?: string;
+  level?: EducationLevel;
+  startYear?: number;
+  endYear?: number;
+  isCurrent?: boolean;
+}
+
+export interface Certification {
+  name: string;
+  issuer?: string;
+  issuedAt?: Date;
+  expiresAt?: Date;
+  credentialUrl?: string;
+}
+
+export interface Language {
+  /** ISO 639-1 (например 'ru', 'en'). */
+  code: string;
+  level: LanguageLevel;
+}
+
+export interface ProfileUrls {
+  github?: string;
+  gitlab?: string;
+  bitbucket?: string;
+  stackoverflow?: string;
+  habrCareer?: string;
+  linkedin?: string;
+  /** Личный сайт. */
+  personal?: string;
+  portfolio?: string;
+}
+
+export interface RecruiterContact {
+  name?: string;
+  email?: string;
+  phone?: string;
+  telegramHandle?: string;
+}
+
 // ── Position (шаблон/маска) ───────────────────────────────────
 
 export interface PositionRequiredCategory {
@@ -129,6 +219,35 @@ export interface Vacancy {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
+
+  // ── Extended fields (SCHEMA_AUDIT.md) ─────────────────────
+  /** Исходный заголовок с платформы-источника. Для дедупа и поиска. */
+  title?: string;
+  /** Дополнительные роли — multi-role вакансии «Backend / Fullstack / Lead». */
+  alternatePositionIds?: string[];
+  /** Сектор: финтех, e-com, геймдев, edtech, … */
+  industry?: string;
+  /** Plain-text описание (с платформы-источника). */
+  description?: string;
+  /** Сырой HTML описания — для re-extraction при смене канона. */
+  descriptionHtml?: string;
+  responsibilities?: string[];
+  qualifications?: string[];
+  benefits?: string[];
+  educationLevel?: EducationLevel;
+  /** Период оплаты — час/месяц/год. Если не задан — month для РФ-площадок, year для LinkedIn. */
+  salaryPeriod?: SalaryPeriod;
+  /** До налогов или после. По умолчанию — net. */
+  salaryGross?: boolean;
+  /** Структурированный адрес (заполняется при импорте из источников, у которых он есть). */
+  address?: Address;
+  /** URL для отклика, если отличается от sourceUrl. */
+  applyUrl?: string;
+  recruiterContact?: RecruiterContact;
+  /** Когда вакансия истекает / закрывается автоматически. */
+  validThrough?: Date;
+  /** Метаданные экстракции — источник, версия маски, версия онтологии. */
+  extractionMeta?: ExtractionMeta;
 }
 
 // ── Candidate (кандидат) ──────────────────────────────────────
@@ -151,7 +270,20 @@ export interface WorkEntry {
   tools: WorkEntryTool[];
   salary?: number;
   currency: Currency;
+  /** Свободный текст: чем занимался на этой работе. */
   responsibilities?: string;
+
+  // ── Extended fields (SCHEMA_AUDIT.md) ─────────────────────
+  /** Сырой HTML описания работы — для re-extraction при смене канона. */
+  descriptionHtml?: string;
+  /** Дополнительные роли в этом периоде (редко: Backend + DevOps в одной должности). */
+  alternatePositionIds?: string[];
+  /** Сектор работодателя — финтех, e-com, … (для аналитики «бэкенд в финтехе vs геймдеве»). */
+  industry?: string;
+  /** Тип проекта: e-com, b2b-saas, gamedev, … (для project templates). */
+  projectType?: string[];
+  /** Размер команды — сигнал о грейде/типе компании. */
+  teamSize?: number;
 }
 
 export interface Candidate {
@@ -175,6 +307,35 @@ export interface Candidate {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
+
+  // ── Extended fields (SCHEMA_AUDIT.md) ─────────────────────
+  /** Дополнительные роли — multi-role профили «DevOps / Sysadmin / Network Engineer». */
+  alternatePositionIds?: string[];
+  /** Одностроковая самопрезентация. У LinkedIn — `headline`, у Habr — первая строка `Стек`. */
+  headline?: string;
+  /** Plain-text «Обо мне» / summary. */
+  summary?: string;
+  /** Сырой HTML «Обо мне» — для re-extraction. */
+  summaryHtml?: string;
+  education?: Education[];
+  certifications?: Certification[];
+  languages?: Language[];
+  /** Публичные профили (GitHub, Bitbucket, Stack Overflow и т. п.) — НЕ messenger'ы. */
+  profileUrls?: ProfileUrls;
+  /** Когда последний раз был активен на платформе-источнике. Сигнал актуальности профиля. */
+  lastActiveAt?: Date;
+  /** Когда зарегистрировался на платформе-источнике. */
+  registeredAt?: Date;
+  /** Статус поиска: ищет / рассмотрит / не ищет. */
+  openToWork?: OpenToWorkStatus;
+  /** Период оплаты ожидаемой зарплаты — час/месяц/год. */
+  salaryPeriod?: SalaryPeriod;
+  /** До или после налогов. */
+  salaryGross?: boolean;
+  /** Структурированный адрес (если есть). `city` / `country` остаются для обратной совместимости. */
+  address?: Address;
+  /** Метаданные экстракции — источник, версия маски, версия онтологии. */
+  extractionMeta?: ExtractionMeta;
 }
 
 // ── Aggregated Candidate Profile (computed) ──────────────────
