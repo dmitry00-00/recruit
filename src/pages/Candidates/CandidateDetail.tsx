@@ -59,7 +59,9 @@ export function CandidateDetail() {
     setAggregation(aggregateCandidate(candidate, entries));
   }, [candidate, getWorkEntries]);
 
-  useEffect(() => { refreshEntries(); }, [refreshEntries]);
+  // Fetch-on-mount: load this candidate's work entries once they are available.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { void refreshEntries(); }, [refreshEntries]);
 
   // ── Active entry (for TreePicker edit mode) ───────────────
   const activeEntry = selectedIdx !== null ? workEntries[selectedIdx] : null;
@@ -200,9 +202,13 @@ export function CandidateDetail() {
     setMatchLoading(false);
   }, [vacancies, aggregation, candidate]);
 
-  useEffect(() => {
-    if (matchOpen) computeMatches();
-  }, [matchOpen, computeMatches]);
+  const toggleMatch = () => {
+    setMatchOpen((v) => {
+      const next = !v;
+      if (next) computeMatches();
+      return next;
+    });
+  };
 
   const addToPipeline = async (vacancyId: string, scoreMin: number) => {
     if (!candidate) return;
@@ -337,7 +343,7 @@ export function CandidateDetail() {
         <Button
           size="sm"
           variant={matchOpen ? 'primary' : 'secondary'}
-          onClick={() => setMatchOpen((v) => !v)}
+          onClick={toggleMatch}
         >
           <Briefcase size={13} /> Подобрать
         </Button>

@@ -138,7 +138,7 @@ export function AdminImport() {
       let content: string;
       try {
         content = await readFileContent(item.file);
-      } catch (e) {
+      } catch {
         updateFileStatus(item.id, { status: 'error', error: 'Не удалось прочитать файл' });
         continue;
       }
@@ -209,7 +209,12 @@ export function AdminImport() {
   // ── Selection ───────────────────────────────────────────────────────────────
 
   const toggleAll = () => setSelected(allSelected ? new Set() : new Set(results.map((_, i) => i)));
-  const toggleOne = (i: number) => setSelected((prev) => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; });
+  const toggleOne = (i: number) => setSelected((prev) => {
+    const n = new Set(prev);
+    if (n.has(i)) n.delete(i);
+    else n.add(i);
+    return n;
+  });
 
   const removeOne = (i: number) => {
     if (mode === 'vacancy') setVacancies((prev) => prev.filter((_, idx) => idx !== i));

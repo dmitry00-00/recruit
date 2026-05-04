@@ -57,8 +57,10 @@ export function VacancyDetail() {
   const [minYearsMap, setMinYearsMap] = useState<Record<string, number>>({});
   const [maxYearsMap, setMaxYearsMap] = useState<Record<string, number>>({});
 
-  useEffect(() => {
-    if (!vacancy) return;
+  // Sync local state from vacancy when it changes (React 19 prev-state pattern).
+  const [prevVacancyId, setPrevVacancyId] = useState<string | undefined>(vacancy?.id);
+  if (vacancy && prevVacancyId !== vacancy.id) {
+    setPrevVacancyId(vacancy.id);
     setMinIds(vacancy.minRequirements.map((r) => r.toolId));
     setMaxIds(vacancy.maxRequirements.map((r) => r.toolId));
     const minY: Record<string, number> = {};
@@ -67,7 +69,7 @@ export function VacancyDetail() {
     const maxY: Record<string, number> = {};
     for (const r of vacancy.maxRequirements) if (r.minYears) maxY[r.toolId] = r.minYears;
     setMaxYearsMap(maxY);
-  }, [vacancy?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }
 
   // ── Info modal state ─────────────────────────────────────
   const [infoOpen, setInfoOpen]             = useState(false);
@@ -208,9 +210,13 @@ export function VacancyDetail() {
     setMatchLoading(false);
   }, [vacancy, candidates, getWorkEntries]);
 
-  useEffect(() => {
-    if (matchOpen) computeMatches();
-  }, [matchOpen, computeMatches]);
+  const toggleMatch = () => {
+    setMatchOpen((v) => {
+      const next = !v;
+      if (next) void computeMatches();
+      return next;
+    });
+  };
 
   const addToPipeline = async (candidateId: string, scoreMin: number) => {
     if (!vacancy) return;
@@ -236,22 +242,31 @@ export function VacancyDetail() {
   const { section } = useFilterStore();
   const [vacancyOpt, setVacancyOpt] = useState<VacancyOptimization | null>(null);
 
+  const analyticsActive = section === 'analytics' && !!vacancy && candidates.length > 0;
+
+  // Drop stale result during render when prerequisites change (React 19 prev-state pattern).
+  const [prevAnalyticsKey, setPrevAnalyticsKey] = useState<string | null>(null);
+  const analyticsKey = analyticsActive ? `${vacancy?.id}:${candidates.length}` : null;
+  if (prevAnalyticsKey !== analyticsKey) {
+    setPrevAnalyticsKey(analyticsKey);
+    if (!analyticsActive) setVacancyOpt(null);
+  }
+
   useEffect(() => {
-    if (section !== 'analytics' || !vacancy || candidates.length === 0) {
-      setVacancyOpt(null);
-      return;
-    }
-    const compute = async () => {
+    if (!analyticsActive || !vacancy) return;
+    let cancelled = false;
+    (async () => {
       const aggs: CandidateAggregation[] = [];
       for (const c of candidates) {
         const entries = await getWorkEntries(c.id);
         aggs.push(aggregateCandidate(c, entries));
       }
+      if (cancelled) return;
       const opt = computeVacancyOptimization(vacancy, aggs);
-      setVacancyOpt(opt);
-    };
-    compute();
-  }, [section, vacancy, candidates, getWorkEntries]);
+      if (!cancelled) setVacancyOpt(opt);
+    })();
+    return () => { cancelled = true; };
+  }, [analyticsActive, vacancy, candidates, getWorkEntries]);
 
   if (!vacancy) return <div style={{ padding: 24 }}>Вакансия не найдена</div>;
 
@@ -300,7 +315,7 @@ export function VacancyDetail() {
         <Button
           size="sm"
           variant={matchOpen ? 'primary' : 'secondary'}
-          onClick={() => setMatchOpen((v) => !v)}
+          onClick={toggleMatch}
         >
           <Users size={13} /> Подобрать
         </Button>

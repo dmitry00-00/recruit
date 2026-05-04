@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, type ReactNode } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import {
   Code2, Palette, BarChart2, Bug, Shield, GitBranch, LayoutGrid,
   ChevronRight, ChevronDown, Plus, Trash2, Pencil, Check, X, BarChart3,
@@ -89,18 +89,26 @@ export function TreePicker({
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
 
-  // Reset expanded state when category changes
-  useEffect(() => { setExpanded({}); }, [activeCatId]);
-  useEffect(() => { setExpandedGroups(new Set()); }, [activeCatId]);
+  // Reset expanded state when active category changes (React 19 prev-state pattern).
+  const [prevCatId, setPrevCatId] = useState(activeCatId);
+  if (prevCatId !== activeCatId) {
+    setPrevCatId(activeCatId);
+    setExpanded({});
+    setExpandedGroups(new Set());
+  }
 
-  // Auto-select first category that has visible subs (when filter applied)
-  useEffect(() => {
-    if (!filterSet) return;
-    const current = tree.find((c) => c.id === activeCatId);
-    if (current && current.subcategories.some((s) => filterSet.has(s.id))) return;
-    const first = tree.find((c) => c.subcategories.some((s) => filterSet.has(s.id)));
-    if (first) setActiveCatId(first.id);
-  }, [filterSet]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Auto-select first category that has visible subs (when filter applied).
+  const [prevFilterSet, setPrevFilterSet] = useState(filterSet);
+  if (prevFilterSet !== filterSet) {
+    setPrevFilterSet(filterSet);
+    if (filterSet) {
+      const current = tree.find((c) => c.id === activeCatId);
+      if (!current || !current.subcategories.some((s) => filterSet.has(s.id))) {
+        const first = tree.find((c) => c.subcategories.some((s) => filterSet.has(s.id)));
+        if (first) setActiveCatId(first.id);
+      }
+    }
+  }
 
   const activeCat = tree.find((c) => c.id === activeCatId);
 
@@ -241,8 +249,12 @@ export function TreePicker({
             paddingLeft: depth > 0 ? `${6 + depth * 14}px` : undefined,
           }}
           onClick={clickable ? () => {
-            if (mode === 'vacancy') { onVacancyClick?.(tool.id, vacState); }
-            else { if (!onChange) return; isSelected ? onChange(selected.filter((id) => id !== tool.id)) : onChange([...selected, tool.id]); }
+            if (mode === 'vacancy') {
+              onVacancyClick?.(tool.id, vacState);
+            } else if (onChange) {
+              if (isSelected) onChange(selected.filter((id) => id !== tool.id));
+              else onChange([...selected, tool.id]);
+            }
           } : undefined}
         >
           {hasChildren ? (

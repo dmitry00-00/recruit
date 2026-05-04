@@ -94,15 +94,18 @@ export function Dashboard() {
     return () => { cancelled = true; };
   }, [candidates]);
 
-  // Reset pages when primary filters change
-  useEffect(() => {
-    setVacancyPage(1);
-    setCandidatePage(1);
-  }, [
+  // Reset pages when primary filters change (React 19 prev-state pattern).
+  const filterKey = JSON.stringify([
     positionCategory, positionSubcategory,
     companyFilter, positionIdFilter, cityFilter, statusFilter,
     gradeFilter, salaryMin, salaryMax, workFormatFilter,
   ]);
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey);
+    setVacancyPage(1);
+    setCandidatePage(1);
+  }
 
   // ── Position lookup ─────────────────────────────────────────
   const positionMap = useMemo(() => {

@@ -68,25 +68,34 @@ export function CandidateForm() {
   const [entries, setEntries] = useState<WorkEntryDraft[]>([emptyEntry()]);
   const [activeEntry, setActiveEntry] = useState(0);
 
-  // Load existing candidate data for edit mode
+  // Load existing candidate data for edit mode — one-shot prefill on candidates load.
+  const candidateForEdit = isEditMode && !loaded
+    ? candidates.find((c) => c.id === editId)
+    : undefined;
+
+  // Sync personal-block state during render via React 19 prev-state pattern.
+  const [prefilledFor, setPrefilledFor] = useState<string | undefined>();
+  if (candidateForEdit && prefilledFor !== candidateForEdit.id) {
+    setPrefilledFor(candidateForEdit.id);
+    setFirstName(candidateForEdit.firstName);
+    setLastName(candidateForEdit.lastName);
+    setEmail(candidateForEdit.email ?? '');
+    setPhone(candidateForEdit.phone ?? '');
+    setTelegramHandle(candidateForEdit.telegramHandle ?? '');
+    setCity(candidateForEdit.city ?? '');
+    setCandidatePositionId(candidateForEdit.positionId ?? '');
+    setWorkFormat(candidateForEdit.workFormat);
+    setRelocate(candidateForEdit.relocate);
+    setSalaryExpected(candidateForEdit.salaryExpected ? String(candidateForEdit.salaryExpected) : '');
+    setCurrency(candidateForEdit.currency);
+  }
+
+  // Load work entries asynchronously in an effect.
   useEffect(() => {
-    if (!isEditMode || loaded) return;
-    const candidate = candidates.find((c) => c.id === editId);
-    if (!candidate) return;
-
-    setFirstName(candidate.firstName);
-    setLastName(candidate.lastName);
-    setEmail(candidate.email ?? '');
-    setPhone(candidate.phone ?? '');
-    setTelegramHandle(candidate.telegramHandle ?? '');
-    setCity(candidate.city ?? '');
-    setCandidatePositionId(candidate.positionId ?? '');
-    setWorkFormat(candidate.workFormat);
-    setRelocate(candidate.relocate);
-    setSalaryExpected(candidate.salaryExpected ? String(candidate.salaryExpected) : '');
-    setCurrency(candidate.currency);
-
-    getWorkEntries(candidate.id).then((workEntries) => {
+    if (!candidateForEdit) return;
+    let cancelled = false;
+    void getWorkEntries(candidateForEdit.id).then((workEntries) => {
+      if (cancelled) return;
       if (workEntries.length > 0) {
         setEntries(workEntries.map((e) => ({
           companyName: e.companyName,
@@ -104,7 +113,8 @@ export function CandidateForm() {
       }
       setLoaded(true);
     });
-  }, [isEditMode, editId, candidates, loaded, getWorkEntries]);
+    return () => { cancelled = true; };
+  }, [candidateForEdit, getWorkEntries]);
 
   const updateEntry = (idx: number, data: Partial<WorkEntryDraft>) => {
     setEntries((prev) => prev.map((e, i) => (i === idx ? { ...e, ...data } : e)));
@@ -170,21 +180,25 @@ export function CandidateForm() {
     return flattenRequiredSubIds(position?.requiredCategories);
   }, [current?.positionId, candidatePositionId, positions]);
 
-  // Auto-prefill empty entries with candidate's position
-  useEffect(() => {
-    if (!candidatePositionId) return;
-    setEntries((prev) => {
-      let changed = false;
-      const next = prev.map((e) => {
-        if (!e.positionId) {
-          changed = true;
-          return { ...e, positionId: candidatePositionId };
-        }
-        return e;
+  // Auto-prefill empty work entries with the candidate's primary position.
+  // Adjust state during render when the source value changes (React 19 pattern).
+  const [prevPositionId, setPrevPositionId] = useState(candidatePositionId);
+  if (prevPositionId !== candidatePositionId) {
+    setPrevPositionId(candidatePositionId);
+    if (candidatePositionId) {
+      setEntries((prev) => {
+        let changed = false;
+        const next = prev.map((e) => {
+          if (!e.positionId) {
+            changed = true;
+            return { ...e, positionId: candidatePositionId };
+          }
+          return e;
+        });
+        return changed ? next : prev;
       });
-      return changed ? next : prev;
-    });
-  }, [candidatePositionId]);
+    }
+  }
 
   return (
     <div className={styles.page}>

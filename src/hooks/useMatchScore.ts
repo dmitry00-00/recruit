@@ -12,24 +12,29 @@ export function useMatchScore(
   const getCandidate = useCandidateStore((s) => s.getById);
   const getWorkEntries = useCandidateStore((s) => s.getWorkEntries);
 
+  // Drop stale result when inputs change (React 19 prev-state pattern).
+  const key = vacancyId && candidateId ? `${vacancyId}:${candidateId}` : '';
+  const [prevKey, setPrevKey] = useState(key);
+  if (prevKey !== key) {
+    setPrevKey(key);
+    if (result !== null) setResult(null);
+  }
+
   useEffect(() => {
-    if (!vacancyId || !candidateId) {
-      setResult(null);
-      return;
-    }
+    if (!vacancyId || !candidateId) return;
 
     const vacancy = getVacancy(vacancyId);
     const candidate = getCandidate(candidateId);
-    if (!vacancy || !candidate) {
-      setResult(null);
-      return;
-    }
+    if (!vacancy || !candidate) return;
 
-    getWorkEntries(candidateId).then((entries) => {
+    let cancelled = false;
+    void getWorkEntries(candidateId).then((entries) => {
+      if (cancelled) return;
       const aggregation = aggregateCandidate(candidate, entries);
       const match = computeMatchScore(vacancy, aggregation);
       setResult(match);
     });
+    return () => { cancelled = true; };
   }, [vacancyId, candidateId, getVacancy, getCandidate, getWorkEntries]);
 
   return result;

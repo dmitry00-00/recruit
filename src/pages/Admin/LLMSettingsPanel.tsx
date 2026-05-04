@@ -101,7 +101,9 @@ export function LLMSettingsPanel() {
     setChecking(false);
   }, []);
 
-  useEffect(() => { runCheck(); }, [runCheck]);
+  // Fetch-on-mount: connection probe runs once when LLM provider settings load.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { void runCheck(); }, [runCheck]);
 
   const handleProvider = (p: LLMProvider) => {
     setProvider(p);
